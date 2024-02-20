@@ -1,0 +1,15 @@
+export const screens = {
+  leadList: "Leads",
+  addLead: "Add lead",
+  leadListStack: "Lead List",
+  AddLeadStack: "Add Lead",
+  WebViewStack: "Web View",
+  WebView: "Web",
+  editLead: "Edit Lead",
+  pdListStack: "PD List",
+  pdList: "PD list",
+  pd: "PD",
+  cvListStack: "CV List",
+  cvList: "CV list",
+  cv: "Collateral Visit",
+};
