@@ -7,7 +7,6 @@ import { GetPicklistValues } from '../../../../common/functions/getPicklistValue
 import Accordion from '../../../../common/components/AccordionComponent/Accordion';
 import { useRole } from '../../../../store/context/RoleProvider';
 import { globalConstants } from '../../../../common/constants/globalConstants';
-import { GetBrManagerId } from '../Handlers/GetBranchManagerId';
 
 const LeadPersonalDetails = ({
   control,
@@ -16,35 +15,103 @@ const LeadPersonalDetails = ({
   collapsedError,
   pincodeMasterData,
   teamHeirarchyMasterData,
-  dsaBrJnData,
+  dsaBrJn,
   teamHeirarchyByUserId,
   watch,
 }) => {
   const [customerProfilePicklist, setCustomerProfilePicklist] = useState([]);
   const [pincodePicklist, setPincodePicklist] = useState([]);
+  const [brNamePicklist, setBrNamePicklist] = useState([]);
   console.log('Pincode Master', pincodeMasterData);
   const role = useRole();
 
-  const GetPincodePicklist = (role, leadSource) => {
+  const GetPincodePicklist = (leadSource, branchName, channelName) => {
     try {
       let pincodePicklist = [];
-      if (role === globalConstants.RoleNames.RM) {
-        if (
-          leadSource === 'UNICO Employee' ||
-          leadSource === 'Customer Referral'
-        ) {
-          pincodeMasterData.map((pin) => {
+      // if (role === globalConstants.RoleNames.RM) {
+      if (
+        leadSource === 'UNICO Employee' ||
+        leadSource === 'Customer Referral'
+        // ||
+        // leadSource === 'DSA' ||
+        // leadSource === 'UGA'
+      ) {
+        pincodeMasterData.map((pin) => {
+          pincodePicklist.push({
+            label: pin?.PinCode__r?.PIN__c,
+            value: pin?.PinCode__r?.PIN__c,
+          });
+        });
+      }
+      if (leadSource === 'Direct-RM' && branchName) {
+        pincodeMasterData.map((pin) => {
+          if (pin?.Bank_Branch__r?.Name === branchName) {
             pincodePicklist.push({
               label: pin?.PinCode__r?.PIN__c,
               value: pin?.PinCode__r?.PIN__c,
             });
-          });
-        }
+          }
+        });
       }
+      if ((leadSource === 'DSA' || leadSource === 'UGA') && channelName) {
+        let branch = dsaBrJn.find((dbr) => dbr.Account__r.Name === channelName);
+        console.log('Entered', channelName, branch, pincodeMasterData);
+        pincodeMasterData.map((pin) => {
+          if (branch?.BanchBrch__r.Name === pin?.Bank_Branch__r?.Name) {
+            pincodePicklist.push({
+              label: pin?.PinCode__r?.PIN__c,
+              value: pin?.PinCode__r?.PIN__c,
+            });
+          }
+        });
+      }
+      // }
+      return pincodePicklist;
     } catch (error) {
       console.log('Error GetPincodePicklist', error);
     }
   };
+
+  const GetBrNamePicklist = (pincode, pincodeMasterData, leadSource) => {
+    let brNPicklist = [];
+    if (
+      leadSource === 'UNICO Employee' ||
+      leadSource === 'Customer Referral' ||
+      leadSource === 'DSA' ||
+      leadSource === 'UGA'
+    ) {
+      pincodeMasterData.map((pin) => {
+        if (pincode === pin.PinCode__r?.PIN__c)
+          brNPicklist.push({
+            label: pin?.Bank_Branch__r?.Name,
+            value: pin?.Bank_Branch__r?.Name,
+          });
+      });
+    }
+
+    return brNPicklist;
+  };
+
+  useEffect(() => {
+    const pinPicklist = GetPincodePicklist(
+      watch().LeadSource,
+      teamHeirarchyByUserId?.EmpBrch__r.Name,
+      watch().Channel_Name
+    );
+    setPincodePicklist(pinPicklist);
+  }, [
+    watch().LeadSource,
+    teamHeirarchyByUserId?.EmpBrch__r.Name,
+    watch().Channel_Name,
+  ]);
+  useEffect(() => {
+    const brPicklist = GetBrNamePicklist(
+      watch().Pincode__c,
+      pincodeMasterData,
+      watch().LeadSource
+    );
+    setBrNamePicklist(brPicklist);
+  }, [watch().Pincode__c, pincodeMasterData, watch().LeadSource]);
 
   useEffect(() => {
     const picklist = GetPicklistValues(leadMetadata, 'Customer_Profile__c');
@@ -57,8 +124,6 @@ const LeadPersonalDetails = ({
       role === globalConstants.RoleNames.RM
     ) {
       setValue('Br_Manager_Br_Name', teamHeirarchyByUserId?.EmpBrch__r.Name);
-    } else {
-      !watch().Branch_Manager__c && setValue('Br_Manager_Br_Name', '');
     }
   }, [watch().LeadSource]);
 
@@ -143,12 +208,30 @@ const LeadPersonalDetails = ({
         // isDisabled={!editable}
       />
       <FormControl
-        compType={component.numberPad}
+        compType={component.smartSearch}
         label="Pincode"
         name="Pincode__c"
         control={control}
         setValue={setValue}
         required={true}
+        watch={watch}
+        options={pincodePicklist}
+        // isDisabled={!editable}
+      />
+      <FormControl
+        compType={component.searchDropdown}
+        label="Branch Name"
+        name="Br_Manager_Br_Name"
+        control={control}
+        setValue={setValue}
+        required={true}
+        options={brNamePicklist}
+        isVisible={
+          watch().LeadSource !== 'Direct-RM' &&
+          role === globalConstants.RoleNames.RM
+            ? true
+            : false
+        }
         // isDisabled={!editable}
       />
 

@@ -23,6 +23,7 @@ const objectName = soupConfig.userInfo.objectName;
 
 export const syncUserInfoData = async (userId) => {
   try {
+    // console.log('User Info Entered------', userId);
     const queryData = await query.getUserInfo(userId);
 
     // console.log('queryData', queryData);

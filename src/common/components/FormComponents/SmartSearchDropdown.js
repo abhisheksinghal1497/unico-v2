@@ -34,6 +34,7 @@ const SmartSearchDropdown = ({
   isDisabled = false,
 
   DropdownProps,
+  watch,
 
   required = false,
   isVisible = true,
@@ -116,6 +117,9 @@ const SmartSearchDropdown = ({
 
   const handleSelect = (item) => {
     setValue(name, item.value);
+    if (name === 'Pincode__c' && watch().LeadSource !== 'Direct-RM') {
+      setValue('Br_Manager_Br_Name', '');
+    }
 
     hideDialog();
   };

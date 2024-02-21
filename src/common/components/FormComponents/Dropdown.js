@@ -48,29 +48,15 @@ const CustomDropdown = ({
     // console.log('name and value', name, item.value);
     if (name === 'LeadSource') {
       setValue('Channel_Name__c', '');
+      setValue('Channel_Name', '');
       setValue('Customer_Name__c', '');
       setValue('DSA_Code__c', '');
+      setValue('Br_Manager_Br_Name', '');
+      setValue('Pincode__c', '');
     } else if (name === 'Product__c') {
-      setValue('Product_Sub_Type__c', '');
-      // setValue('Requested_loan_amount__c', '');
-      // setValue('Requested_tenure_in_Months__c', '');
+      setValue('ProductLookup', '');
     }
-    //  else if (
-    //   name === 'Product_Sub_Type__c' &&
-    //   item.value === 'Commercial Property Purchase'
-    // ) {
-    //   setValue('Property_Identified__c', '');
-    // } else if (name === 'Property_Identified__c') {
-    //   setValue('Property_Category__c', '');
-    // } else if (name === 'LeadSource') {
-    //   setValue('Channel_Name__c', '');
-    //   setValue('Referral_Employee_Code__c', '');
-    //   setValue('RM_SM_Name__c', '');
-    // } else if (name === 'Customer_Profile__c' && item.value === 'SALARIED') {
-    //   setValue('Constitution__c', 'INDIVIDUAL');
-    // } else if (name === 'Lead_Closure_Reason__c') {
-    //   setValue('Additional_Comments__c', '');
-    // }
+
     closeMenu();
   };
   if (!isVisible) {

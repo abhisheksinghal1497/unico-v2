@@ -33,7 +33,6 @@ import { PaperProvider } from 'react-native-paper';
 import customTheme from './src/common/colors/theme';
 import MainNavigator from './src/navigation/mainNavigation';
 import { Provider as Reduxprovider } from 'react-redux';
-import Toast from 'react-native-toast-message';
 
 import store from './src/store/redux';
 import { useEffect } from 'react';
@@ -54,9 +53,9 @@ export const App = function () {
         // console.log('Credentials', credentials, isOnline);
         // if (isOnline) {
 
+        credentials && (await syncUserInfoData(credentials?.userId));
         credentials && (await syncTeamHierarchyData(credentials?.userId));
         credentials && (await syncDSABrJnData(credentials?.userId));
-        credentials && (await syncUserInfoData(credentials?.userId));
         // }
         setIsLoading(false);
       },

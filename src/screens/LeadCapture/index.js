@@ -81,7 +81,7 @@ const AddLead = () => {
     (state) => state.masterData.pincodeMaster
   );
 
-  // console.log('Lead Meta Data', dsaBrJnData);
+  console.log('Lead Meta Data', productMappingData);
   useEffect(() => {
     dispatch(getProductMapping());
     dispatch(getLeadMetadata());
@@ -95,12 +95,14 @@ const AddLead = () => {
   //------------Default Values ---------------
   const defaultValues = {
     LeadSource: '',
+    Status: 'New Lead',
     RM_SM_Name: teamHeirarchyByUserId
       ? teamHeirarchyByUserId?.Employee__r.Name
       : '',
     // Referral_Employee_Code__c: '',
     RM_SM_Name__c: '',
     Channel_Name__c: '',
+    Channel_Name: '',
     Branch_Name__c: '',
     // BranchCode__c: '', No need to update as it is a formula field
     Employee_Code__c: '',
@@ -122,12 +124,13 @@ const AddLead = () => {
     Pincode__c: '',
     //--------------Loan Details------------//
     Product__c: '',
-    Product_Sub_Type__c: '',
+    // Product_Sub_Type__c: '',
+    ProductLookup__c: '',
+    ProductLookup: '',
     Property_Identified__c: '',
     // Property_Category__c: '',
     Requested_loan_amount__c: '',
     Requested_tenure_in_Months__c: '',
-    Status: 'New Lead',
     // ConsentType__c: 'OTP Consent',
     // Is_OTP_Limit_Reached__c: false,
     // OTP_Verified__c: false,
@@ -147,6 +150,13 @@ const AddLead = () => {
   });
 
   useEffect(() => {
+    reset(initialLeadData);
+  }, [postData]);
+  // ---------------------------------------------
+  const initialLeadData =
+    Object.keys(postData).length > 0 ? postData : defaultValues;
+
+  useEffect(() => {
     setHasErrors(Object.keys(errors).length > 0);
   }, [errors]);
 
@@ -157,35 +167,48 @@ const AddLead = () => {
     try {
       setAddLoading(true);
 
-      const GetBrFromBankBrMaster = (pincodeMasterData, branchCode) => {
-        try {
-          const branch = pincodeMasterData.find(
-            (br) => br?.Bank_Branch__r?.BrchCode__c === branchCode
-          );
-          return branch || null;
-        } catch (error) {
-          console.error('Error in GetBrFromBankBrMaster:', error);
-          return null;
-        }
-      };
+      // const GetBrFromBankBrMaster = (pincodeMasterData, branchCode) => {
+      //   try {
+      //     const branch = pincodeMasterData.find(
+      //       (br) => br?.Bank_Branch__r?.BrchCode__c === branchCode
+      //     );
+      //     return branch || null;
+      //   } catch (error) {
+      //     console.error('Error in GetBrFromBankBrMaster:', error);
+      //     return null;
+      //   }
+      // };
 
-      let userBranch = GetBrFromBankBrMaster();
+      // let userBranch = GetBrFromBankBrMaster();
 
-      await validatePincode(
+      // await validatePincode(
+      //   data,
+      //   setId,
+      //   id,
+      //   teamHeirarchyByUserId,
+      //   pincodeMasterData,
+      //   dsaBrJnData,
+      //   empRole,
+      //   isOnline,
+      //   setPostData,
+      //   userBranch,
+      //   userLocation,
+      //   alertVisible,
+      //   setAlertVisible,
+      //   setAddLoading
+      // );
+
+      OnSubmitLead(
         data,
         setId,
         id,
         teamHeirarchyByUserId,
-        pincodeMasterData,
         dsaBrJnData,
         empRole,
         isOnline,
         setPostData,
-        userBranch,
-        userLocation,
-        alertVisible,
-        setAlertVisible,
-        setAddLoading
+        teamHeirarchyMasterData,
+        productMappingData
       );
 
       setAddLoading(false);
@@ -207,7 +230,7 @@ const AddLead = () => {
     setCurrentPosition((prev) => prev - 1);
   };
 
-  // console.log('Employee Role', empRole);
+  // console.log('Lead MetaData', leadMetadata);
 
   return (
     <View style={addLeadStyle.container}>

@@ -25,10 +25,10 @@ const LeadAdditionalDetails = ({
     // console.log('Product Sub Type', productMapping, selectedPT, watch());
     let subType = [];
     productMapping?.map((item) => {
-      if (item?.ProdType__c === selectedPT) {
+      if (item?.Family === selectedPT) {
         subType.push({
-          label: item?.ProdSubType__c,
-          value: item?.ProdSubType__c,
+          label: item?.Name,
+          value: item?.Name,
         });
       }
     });
@@ -73,7 +73,7 @@ const LeadAdditionalDetails = ({
       <FormControl
         compType={component.dropdown}
         label="Product Sub Type"
-        name="Product_Sub_Type__c"
+        name="ProductLookup"
         control={control}
         required={false}
         options={productSubType}

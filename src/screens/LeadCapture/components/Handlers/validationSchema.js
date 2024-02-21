@@ -17,7 +17,7 @@ export const createValidationSchema = (pincodeMasterData) => {
     //   //-----------------Lead Source Details Validations----------//
     LeadSource: yup.string().required('Lead Source is required').nullable(),
 
-    Channel_Name__c: yup
+    Channel_Name: yup
       .string()
       .test({
         name: 'conditional',
@@ -99,28 +99,29 @@ export const createValidationSchema = (pincodeMasterData) => {
     //   .required('Pincode is required')
     //   .matches(pincodeRegex, 'Please enter a valid Pincode')
     //   .nullable(),
-    Pincode__c: yup
+    Pincode__c: yup.string().required('Pincode is required').nullable(),
+    Br_Manager_Br_Name: yup
       .string()
-      .required('Pincode is required')
-      .test({
-        name: 'conditional',
-        message: 'Invalid Pincode',
-        test: function (value) {
-          const { createError } = this;
-          // if (!value) {
-          //   return true;
-          // }
-          if (!pincodeRegex.test(value)) {
-            return createError({ message: 'Please enter a valid Pincode' });
-          }
-          // let isServiceable = isPincodeServiceable(pincodeMasterData,value);
-          if (!pincodeRegex.test(value)) {
-            return createError({ message: 'This Pincode is not Serviceable' });
-          }
-          return true;
-        },
-      })
+      .required('Branch Name is required')
       .nullable(),
+    // .test({
+    //   name: 'conditional',
+    //   message: 'Invalid Pincode',
+    //   test: function (value) {
+    //     const { createError } = this;
+    //     // if (!value) {
+    //     //   return true;
+    //     // }
+    //     if (!pincodeRegex.test(value)) {
+    //       return createError({ message: 'Please enter a valid Pincode' });
+    //     }
+    //     // let isServiceable = isPincodeServiceable(pincodeMasterData,value);
+    //     if (!pincodeRegex.test(value)) {
+    //       return createError({ message: 'This Pincode is not Serviceable' });
+    //     }
+    //     return true;
+    //   },
+    // }),
 
     //   //-------------------------Loan Validation scheme ------------------------//
     Product__c: yup.string().required('Product is required').nullable(),

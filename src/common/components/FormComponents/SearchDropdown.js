@@ -84,11 +84,10 @@ const SearchCustomDropdown = ({
     setValue(name, item.value);
     if (name === 'Branch_Name__c') {
       setValue('Employee_Code__c', '');
+    } else if (name === 'Channel_Name') {
+      setValue('Br_Manager_Br_Name', '');
+      setValue('Pincode__c', '');
     }
-    // if (name === 'Channel_Name__c') {
-    // setValue('DSA_Code__c', '');
-    // setValue('Customer_Name__c', '');
-    // }
     // else if (name === 'Constitution__c' && item.value !== 'INDIVIDUAL') {
     //   setValue('FirstName', '');
     //   setValue('LastName', '');

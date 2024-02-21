@@ -17,6 +17,7 @@ export const syncProductMappingData = async (teamHeirarchyByUserId) => {
   try {
     const { productType } = await getProductType(teamHeirarchyByUserId);
 
+    // console.log('product Type', productType);
     const queryData = query.getProductMapping(productType);
     // console.log('Query', teamHeirarchyByUserId);
     return await syncData(

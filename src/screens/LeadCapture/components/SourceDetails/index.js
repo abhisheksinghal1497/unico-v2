@@ -119,24 +119,24 @@ const LeadSourceDetails = ({
   useEffect(() => {
     if (watch().LeadSource === 'Customer Referral') {
       let customerName = customerMasterData?.find(
-        (value) => value.Name === watch().Channel_Name__c
+        (value) => value.Name === watch().Channel_Name
       );
       if (customerName) {
         setValue('Customer_Name__c', customerName?.Customer_Name__c);
       }
     }
-  }, [watch().leadSource, customerMasterData, watch().Channel_Name__c]);
+  }, [watch().leadSource, customerMasterData, watch().Channel_Name]);
 
   useEffect(() => {
     if (watch().LeadSource === 'DSA' || watch().LeadSource === 'UGA') {
       let dsaUgaCode = dsaBrJn?.find(
-        (value) => value?.Account__r?.Name === watch().Channel_Name__c
+        (value) => value?.Account__r?.Name === watch().Channel_Name
       );
       if (dsaUgaCode) {
         setValue('DSA_Code__c', dsaUgaCode?.DSA_UGA_Code__c);
       }
     }
-  }, [watch().leadSource, dsaBrJn, watch().Channel_Name__c]);
+  }, [watch().leadSource, dsaBrJn, watch().Channel_Name]);
 
   return (
     <Accordion
@@ -159,7 +159,7 @@ const LeadSourceDetails = ({
       <FormControl
         compType={component.searchDropdown}
         label="Channel Name"
-        name="Channel_Name__c"
+        name="Channel_Name"
         control={control}
         setValue={setValue}
         required={true}

@@ -48,7 +48,7 @@ const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
 
         <View>
           <Text style={styles.branchChannelName}>
-            {leadData?.Branch_Name__c ? leadData?.Branch_Name__c : ''}
+            {leadData?.Branch_Name__c ? leadData?.Bank_Branch__c : ''}
           </Text>
 
           <Text style={styles.branchChannelName}>

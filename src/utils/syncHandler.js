@@ -13,7 +13,7 @@ export const SyncHandler = async () => {
     //  else if(ROLES.LEAD_CAPTURE.includes(empRole)){
     let teamHeirarchyByUserId = await getThById();
     // console.log('teamHeirarchyByUserId---------->', teamHeirarchyByUserId);
-    teamHeirarchyByUserId?.length > 0 &&
+    teamHeirarchyByUserId &&
       (await syncProductMappingData(teamHeirarchyByUserId));
     await syncCustomerMasterData();
     // await syncbankBranchMasterData();

@@ -16,7 +16,11 @@ export const RoleProvider = ({ children }) => {
 
   const [empRole, setEmpRole] = useState('');
   const getRole = async (userInfoMasterData) => {
-    if (userInfoMasterData && userInfoMasterData[0].IsIntrnlUsr__c) {
+    if (
+      userInfoMasterData &&
+      userInfoMasterData?.length > 0 &&
+      userInfoMasterData[0].IsIntrnlUsr__c
+    ) {
       let teamHeirarchyByUserId = await getThById();
       let role = GetEmployeeRole(teamHeirarchyByUserId);
       setEmpRole(role ? role : '');
@@ -26,6 +30,7 @@ export const RoleProvider = ({ children }) => {
 
     if (
       userInfoMasterData &&
+      userInfoMasterData?.length > 0 &&
       !userInfoMasterData[0].IsIntrnlUsr__c &&
       dsaBrJnData &&
       dsaBrJnData?.length > 0
