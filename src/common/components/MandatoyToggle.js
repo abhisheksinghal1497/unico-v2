@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet,Linking,TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Button, Icon, Switch } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -13,16 +13,21 @@ import { colors } from '../colors';
 const LeadActivities = ({}) => {
   // -----Toggle handler---------
   // const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+
+  const onCallPressed = () =>{
+    console.log('Call clicked')
+    Linking.openURL(`tel:${9665306884}`)
+  }
   return (
     <View style={styles.toggleViewContainer}>
-      <View style={styles.labelAndSwitch}>
+      <TouchableOpacity onPress={()=>{onCallPressed()}} style={styles.labelAndSwitch}>
         <Ionicons
           size={25}
           name={'call-sharp'}
           color={customTheme.colors.primary}
         />
         <Text style={styles.toggleLabelStyle}>Call </Text>
-      </View>
+      </TouchableOpacity>
       <View style={styles.scheduleMeeting}>
         <Ionicons
           size={25}
