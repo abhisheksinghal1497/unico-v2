@@ -7,6 +7,7 @@ import SfWebView from '../screens/WebView';
 import { Platform } from 'react-native';
 import LeadList from '../screens/LeadList';
 import AddLead from '../screens/LeadCapture';
+import EditLeadScreen from '../screens/EditLead';
 
 const Stack = createStackNavigator();
 
@@ -41,7 +42,7 @@ const SharedStackNavigator = () => {
         /* Add Common screens here */
         <>
           <Stack.Screen name={screens.addLead} component={AddLead} />
-          {/* <Stack.Screen name={screens.editLead} component={EditLeadScreen} /> */}
+          <Stack.Screen name={screens.editLead} component={EditLeadScreen} />
         </>
       }
     </Stack.Navigator>

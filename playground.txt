@@ -1,0 +1,29 @@
+SCENARIO :- WHEN RM LOGS IN
+CASE -1
+if lead Source is Direct-Rm ---> Assign Lead to logged in Rm 
+update 	OwnerId with  Logged In User Id. Also update RM_SM__c with logged in RM User Id
+
+CASE 2
+if lead Source is DSA ---> Assign Lead to logged in Rm if selected branch is in the juridiction of Rm Else assign it to branch manager
+
+CASE 3
+if lead Source is UGA --->  Assign Lead to logged in Rm if selected branch is in the juridiction of Rm Else assign it to branch manager
+
+CASE 4
+if lead Source is UNICO Employee --->  Assign Lead to logged in Rm if selected branch is in the juridiction of Rm Else assign it to branch manager
+
+CASE 5
+if lead Source is Customer Referral --->  Assign Lead to logged in Rm if selected branch is in the juridiction of Rm Else assign it to branch manager
+
+SCENARIO :- WHEN DSA LOGS IN
+
+Assign Lead to Rm if selected branch is in the juridiction of Rm Else assign it to branch manager.
+
+SCENARIO :- WHEN UGA LOGS IN
+
+Assign Lead to the selected RM
+
+Update OwnerId with the assigned person
+update RM_SM__c if it is assigned to RM 
+
+

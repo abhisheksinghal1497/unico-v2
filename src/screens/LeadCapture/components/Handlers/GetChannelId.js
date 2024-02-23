@@ -15,3 +15,31 @@ export const GetChannelId = (channelList, channelName) => {
     // return '';
   }
 };
+
+export const GetRmSmName = (thData, rmId) => {
+  if (thData && thData?.length > 0) {
+    let th = thData?.find((t) => t.Employee__c === rmId);
+    // console.log('Th Data', th);
+    return th ? th?.Employee__r.Name : '';
+  }
+
+  return '';
+};
+export const GetRmBranchName = (thData, rmId) => {
+  if (thData && thData?.length > 0) {
+    let th = thData?.find((t) => t.Employee__c === rmId);
+    // console.log('Th Data', th);
+    return th ? th?.BanchBrch__r.Name : '';
+  }
+
+  return '';
+};
+export const GetRmIdByRmName = (thData, rmName) => {
+  if (thData && thData?.length > 0) {
+    let th = thData?.find((t) => t.Employee__r.Name === rmName);
+    // console.log('Th Data', th);
+    return th ? th?.Employee__c : '';
+  }
+
+  return '';
+};

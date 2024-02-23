@@ -24,7 +24,10 @@ const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
   // console.log('Is Online', leadData);
   const leadId = match ? match[1] : null;
   return (
-    <Touchable style={styles.item}>
+    <Touchable
+      style={styles.item}
+      onPress={() => handleRenderItem(leadData.Id)}
+    >
       <View style={styles.headWrapper}>
         <View style={styles.idWrapper}>
           <Text style={styles.id}>{leadData?.Lead_Id__c}</Text>

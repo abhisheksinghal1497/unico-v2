@@ -23,6 +23,7 @@ export const RoleProvider = ({ children }) => {
     ) {
       let teamHeirarchyByUserId = await getThById();
       let role = GetEmployeeRole(teamHeirarchyByUserId);
+      // setEmpRole('DSA');
       setEmpRole(role ? role : '');
       //   console.log('Role', dsaBrJnData);
       return;
@@ -50,10 +51,6 @@ export const RoleProvider = ({ children }) => {
     oauth.getAuthCredentials(async () => {
       await getRole(userInfoMasterData);
     });
-
-    // async () => {
-    //   await getRole();
-    // };
   }, [userInfoMasterData]);
 
   return (

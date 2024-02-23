@@ -8,3 +8,13 @@ export const GetProductId = (productMappingData, productSubType) => {
   }
   return '';
 };
+export const GetProductSubTypeName = (productMappingData, productId) => {
+  if (productId) {
+    let product = productMappingData.find(
+      (product) => product?.Id === productId
+    );
+
+    return product ? product?.Name : '';
+  }
+  return '';
+};

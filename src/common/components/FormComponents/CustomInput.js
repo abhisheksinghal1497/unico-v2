@@ -33,7 +33,7 @@ export default function CustomInput({
         field: { onChange, onBlur, value },
         fieldState: { error, invalid },
       }) => {
-        // console.log(`${name} error`, error);
+        console.log(`Rest Props`, rest);
         return (
           <View style={styles.container}>
             <View style={styles.labelContainer}>
@@ -67,7 +67,6 @@ export default function CustomInput({
               returnKeyType="done"
               error={error?.message}
               scrollEnabled={false}
-              autoCapitalize={type === 'decimal-pad' ? '' : 'characters'}
               //multiline={true}
               onChangeText={(value) => onChange(value)}
               value={value?.toString()}

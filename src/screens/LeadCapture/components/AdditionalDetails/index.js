@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { GetPicklistValues } from '../../../../common/functions/getPicklistValues';
 import { getProductType } from '../../../../common/functions/getProductType';
+import { useRole } from '../../../../store/context/RoleProvider';
+import { globalConstants } from '../../../../common/constants/globalConstants';
 
 const LeadAdditionalDetails = ({
   control,
@@ -21,6 +23,8 @@ const LeadAdditionalDetails = ({
   const [product, setProduct] = useState([]);
   const [productSubType, setProductSubType] = useState([]);
   const [propertyIdentified, setPropertyIdentified] = useState([]);
+  const role = useRole();
+
   const getProductSubType = (productMapping, selectedPT) => {
     // console.log('Product Sub Type', productMapping, selectedPT, watch());
     let subType = [];
@@ -41,8 +45,8 @@ const LeadAdditionalDetails = ({
       'Property_Identified__c'
     );
     setPropertyIdentified(propertyIdentifiedList);
-    const productPickList = getProductType(teamHeirarchyByUserId);
-    setProduct(productPickList?.productType);
+    const productPickList = getProductType(productMapping);
+    setProduct(productPickList);
     const productSubTypePicklist = getProductSubType(
       productMapping,
       watch().Product__c
@@ -86,6 +90,7 @@ const LeadAdditionalDetails = ({
         name="Requested_loan_amount__c"
         control={control}
         required={false}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
         // isDisabled={!editable}
       />
       <FormControl
@@ -94,6 +99,7 @@ const LeadAdditionalDetails = ({
         name="Requested_tenure_in_Months__c"
         control={control}
         required={false}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
         // isDisabled={!editable}
       />
       <FormControl
@@ -104,6 +110,7 @@ const LeadAdditionalDetails = ({
         required={false}
         options={propertyIdentified}
         setValue={setValue}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
         // isDisabled={!editable}
       />
     </Accordion>

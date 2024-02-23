@@ -41,6 +41,7 @@ import { syncTeamHierarchyData } from './src/store/soups/MasterDataSoups/TeamHie
 import { syncDSABrJnData } from './src/store/soups/MasterDataSoups/DsaBrachJunction';
 import { RoleProvider } from './src/store/context/RoleProvider';
 import { syncUserInfoData } from './src/store/soups/MasterDataSoups/UserInfoMaster';
+import Toast from 'react-native-toast-message';
 
 export const App = function () {
   const [isLoading, setIsLoading] = useState(false);
@@ -85,7 +86,7 @@ export const App = function () {
           </View>
         </Reduxprovider>
       </NavigationContainer>
-      {/* <Toast /> */}
+      <Toast />
     </PaperProvider>
   );
 };

@@ -22,6 +22,8 @@ import { BottomTabContext } from '../../navigation/mainNavigation';
 import { QuerySoup } from '../../services/QuerySoup';
 import { soupConfig } from '../../common/constants/soupConstants';
 import leadSyncUp from '../../store/soups/LeadSoup/LeadSyncUp';
+import { globalConstants } from '../../common/constants/globalConstants';
+import { useRole } from '../../store/context/RoleProvider';
 
 export default function LeadList({ navigation }) {
   const searchbarRef = useRef(null);
@@ -34,6 +36,7 @@ export default function LeadList({ navigation }) {
   const [refreshing, setRefreshing] = React.useState(false);
   const [pickerValue, setPickerValue] = React.useState([]);
   const isOnline = useInternet();
+  const empRole = useRole();
   const dispatch = useDispatch();
   const { hasError, leads, loading } = useSelector(
     (state) => state.leads?.lead
@@ -98,7 +101,11 @@ export default function LeadList({ navigation }) {
   }, [leadListData]);
 
   useEffect(() => {
-    setHideBottomTab(false);
+    if (globalConstants.RoleNames.RM === empRole) {
+      setHideBottomTab(false);
+    } else {
+      setHideBottomTab(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -210,8 +217,7 @@ export default function LeadList({ navigation }) {
       />
     );
   };
-  //console.log("refreshing", refreshing);
-  // console.log('isOnline', isOnline);
+
   return (
     <View style={LeadListStyles.container}>
       {loading && !refreshing && (
