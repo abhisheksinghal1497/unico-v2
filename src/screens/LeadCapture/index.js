@@ -74,11 +74,20 @@ const AddLead = () => {
     (state) => state.masterData.pincodeMaster
   );
 
-  // console.log('Lead Meta Data', productMappingData);
-  // const productTypes = [
-  //   ...new Set(productMappingData.map((product) => product.Family)),
-  // ];
-  // console.log('Product Type', productTypes);
+  const checkOwner = (teamHeirarchyByUserId) => {
+    if (id && id.length > 0) {
+      if (postData?.OwnerId === teamHeirarchyByUserId?.Employee__c) {
+        setFormEditable(false);
+        return;
+      }
+    }
+    setFormEditable(true);
+  };
+
+  useEffect(() => {
+    checkOwner();
+  }, [id, teamHeirarchyByUserId]);
+
   useEffect(() => {
     dispatch(getProductMapping());
     dispatch(getLeadMetadata());
@@ -181,7 +190,7 @@ const AddLead = () => {
           enabled
           keyboardVerticalOffset={Platform.select({ ios: 125, android: 500 })}
         >
-          <LeadActivities />
+          {isFormEditable && <LeadActivities />}
           <ScrollView>
             {globalConstants.RoleNames.RM === empRole && (
               <LeadSourceDetails
@@ -194,6 +203,7 @@ const AddLead = () => {
                 watch={watch}
                 collapsedError={hasErrors}
                 pincodeMasterData={pincodeMasterData}
+                isFormEditable={isFormEditable}
               />
             )}
             <LeadPersonalDetails
@@ -206,6 +216,7 @@ const AddLead = () => {
               teamHeirarchyByUserId={teamHeirarchyByUserId}
               dsaBrJn={dsaBrJnData}
               watch={watch}
+              isFormEditable={isFormEditable}
             />
             <LeadAdditionalDetails
               leadMetadata={leadMetadata}
@@ -215,6 +226,7 @@ const AddLead = () => {
               productMapping={productMappingData}
               watch={watch}
               collapsedError={hasErrors}
+              isFormEditable={isFormEditable}
             />
           </ScrollView>
         </KeyboardAvoidingView>

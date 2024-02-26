@@ -19,6 +19,7 @@ const LeadAdditionalDetails = ({
   productMapping,
   watch,
   collapsedError,
+  isFormEditable,
 }) => {
   const [product, setProduct] = useState([]);
   const [productSubType, setProductSubType] = useState([]);
@@ -72,7 +73,7 @@ const LeadAdditionalDetails = ({
         required={true}
         options={productTypeList}
         setValue={setValue}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.dropdown}
@@ -82,7 +83,8 @@ const LeadAdditionalDetails = ({
         required={false}
         options={productSubType}
         setValue={setValue}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
       />
       <FormControl
         compType={component.numberPad}
@@ -91,7 +93,7 @@ const LeadAdditionalDetails = ({
         control={control}
         required={false}
         isVisible={role === globalConstants.RoleNames.RM ? true : false}
-        // isDisabled={!editable}
+        // isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.numberPad}
@@ -100,7 +102,7 @@ const LeadAdditionalDetails = ({
         control={control}
         required={false}
         isVisible={role === globalConstants.RoleNames.RM ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.dropdown}
@@ -111,7 +113,7 @@ const LeadAdditionalDetails = ({
         options={propertyIdentified}
         setValue={setValue}
         isVisible={role === globalConstants.RoleNames.RM ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
     </Accordion>
   );

@@ -125,6 +125,19 @@ export default function EditLeadScreen({ navigation }) {
   }, []);
 
   const defaultValues = {};
+  const checkOwner = (teamHeirarchyByUserId) => {
+    if (id && id.length > 0) {
+      if (postData?.OwnerId === teamHeirarchyByUserId?.Employee__c) {
+        setFormEditable(false);
+        return;
+      }
+    }
+    setFormEditable(true);
+  };
+
+  useEffect(() => {
+    checkOwner();
+  }, [id, teamHeirarchyByUserId]);
 
   useEffect(() => {
     if (Object.keys(postData).length > 0) {
@@ -144,7 +157,7 @@ export default function EditLeadScreen({ navigation }) {
         teamHeirarchyMasterData,
         data.RM_SM_Name__c
       );
-      console.log('Data', data);
+      //   console.log('Data', data);
       data.Br_Manager_Br_Name = GetBrManagerBrName(
         teamHeirarchyMasterData,
         data.Branch_Manager__c
@@ -242,7 +255,7 @@ export default function EditLeadScreen({ navigation }) {
             android: 500,
           })}
         >
-          {/* <LeadActivities /> */}
+          {isFormEditable && <LeadActivities />}
           <ScrollView>
             {globalConstants.RoleNames.RM === empRole && (
               <LeadSourceDetails
@@ -255,6 +268,7 @@ export default function EditLeadScreen({ navigation }) {
                 watch={watch}
                 collapsedError={hasErrors}
                 pincodeMasterData={pincodeMasterData}
+                isFormEditable={isFormEditable}
               />
             )}
             <LeadPersonalDetails
@@ -267,6 +281,7 @@ export default function EditLeadScreen({ navigation }) {
               teamHeirarchyByUserId={teamHeirarchyByUserId}
               dsaBrJn={dsaBrJnData}
               watch={watch}
+              isFormEditable={isFormEditable}
             />
             <LeadAdditionalDetails
               leadMetadata={leadMetadata}
@@ -276,6 +291,7 @@ export default function EditLeadScreen({ navigation }) {
               productMapping={productMappingData}
               watch={watch}
               collapsedError={hasErrors}
+              isFormEditable={isFormEditable}
             />
           </ScrollView>
         </KeyboardAvoidingView>

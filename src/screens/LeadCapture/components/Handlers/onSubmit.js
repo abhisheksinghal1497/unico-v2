@@ -25,43 +25,22 @@ export const OnSubmitLead = async (
   productMappingData
 ) => {
   try {
-    // RM Data Mapping
+    // RM Data Mapping And Lead assignment
     if (empRole === globalConstants.RoleNames.RM) {
       data.Channel_Name__c = await GetChannelId(dsaBrJnData, data.Channel_Name);
 
       data.Bank_Branch__c = teamHeirarchyByUserId
         ? teamHeirarchyByUserId?.EmpBrch__c
         : '';
-    }
-
-    // UGA Data Mapping and Lead Assignment
-    if (empRole === globalConstants.RoleNames.UGA) {
-      data.RM_SM_Name__c = GetRmIdByRmName(
-        teamHeirarchyMasterData,
-        data.RM_Name
+      data.ProductLookup__c = GetProductId(
+        productMappingData,
+        data.ProductLookup
       );
-      data.Br_Manager_Br_Name = GetRmBranchName(
+      data.Branch_Manager__c = GetBrManagerId(
         teamHeirarchyMasterData,
-        data.RM_SM_Name__c
+        data.Br_Manager_Br_Name
       );
-      // assign Lead to selected Rm When UGA is logged in
-      data.OwnerId = data.RM_SM_Name__c;
-    }
-
-    // Common Data Mapping
-
-    data.ProductLookup__c = GetProductId(
-      productMappingData,
-      data.ProductLookup
-    );
-    data.Branch_Manager__c = GetBrManagerId(
-      teamHeirarchyMasterData,
-      data.Br_Manager_Br_Name
-    );
-
-    // Lead Assignment when RM Logs in
-
-    if (empRole === globalConstants.RoleNames.RM) {
+      // Lead Assignment when RM Logs in
       if (data.LeadSource === 'Direct-RM') {
         data.RM_SM_Name__c = teamHeirarchyByUserId
           ? teamHeirarchyByUserId?.Employee__c
@@ -89,9 +68,32 @@ export const OnSubmitLead = async (
       }
     }
 
-    // Lead Assignment When DSA Logs in
+    // UGA Data Mapping and Lead Assignment
+    if (empRole === globalConstants.RoleNames.UGA) {
+      data.RM_SM_Name__c = GetRmIdByRmName(
+        teamHeirarchyMasterData,
+        data.RM_Name
+      );
+      data.Br_Manager_Br_Name = GetRmBranchName(
+        teamHeirarchyMasterData,
+        data.RM_SM_Name__c
+      );
+      data.Branch_Manager__c = GetBrManagerId(
+        teamHeirarchyMasterData,
+        data.Br_Manager_Br_Name
+      );
+      // assign Lead to selected Rm When UGA is logged inm
+      data.OwnerId = data.RM_SM_Name__c;
+    }
+
+    // Lead Assignment and data mapping When DSA Logs in
 
     if (empRole === globalConstants.RoleNames.DSA) {
+      data.Branch_Manager__c = GetBrManagerId(
+        teamHeirarchyMasterData,
+        data.Br_Manager_Br_Name
+      );
+      // assigning lead to branch manager
       data.OwnerId = data.Branch_Manager__c;
     }
 
@@ -181,21 +183,3 @@ export const OnSubmitLead = async (
       });
   }
 };
-// let userPincodeExist =
-//   userLocation &&
-//   pincodeMasterData.find((pin) => {
-//     pin.City__c === userLocation?.Location__c &&
-//       pin?.PIN__c === data?.Pincode__c;
-//   });
-
-// // let  pincodeExist = userPincodes?.find((pin))
-// if (!userPincodeExist) {
-//   let pin = pincodeMasterData.find((p) => p.PIN__c === data?.Pincode__c);
-//   if (!pin) {
-//     alert(`Please enter a Servicable Pincode`);
-//   } else {
-//     alert(
-//       `Pincode of ${pin?.State__c} state entered. Kindly check the Pincode entered`
-//     );
-//   }
-// }

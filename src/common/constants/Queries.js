@@ -4,7 +4,7 @@ export const query = {
 
   getLeadByIdQuery: (id) =>
     `Select Lead_Id__c,Id,LeadSource,Status,RM_SM_Name__c,Channel_Name__c,Branch_Name__c,Employee_Code__c,Customer_Name__c,DSA_Code__c,Bank_Branch__c,
-Branch_Manager__c,Customer_Profile__c,MobilePhone,Alternative_Mobile_Number__c,FirstName,MiddleName,LastName,Email,Residential_Address__c,Pincode__c,Product__c,ProductLookup__c,Property_Identified__c,Requested_loan_amount__c,Requested_tenure_in_Months__c,CreatedDate from Lead WHERE Id='${id}' `,
+Branch_Manager__c,Customer_Profile__c,MobilePhone,Alternative_Mobile_Number__c,FirstName,MiddleName,LastName,Email,Residential_Address__c,Pincode__c,Product__c,ProductLookup__c,Property_Identified__c,Requested_loan_amount__c,Requested_tenure_in_Months__c,CreatedDate,OwnerId from Lead WHERE Id='${id}' `,
   filterLeadQuery: (status) =>
     `Select Id, Status, Name, LeadSource, Lead_Id__c,CreatedDate from Lead WHERE Status = '${status}' ORDER BY LASTMODIFIEDDATE DESC`,
   getLocationMasterQuery:

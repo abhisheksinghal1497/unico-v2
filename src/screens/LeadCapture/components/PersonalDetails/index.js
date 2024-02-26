@@ -18,6 +18,7 @@ const LeadPersonalDetails = ({
   dsaBrJn,
   teamHeirarchyByUserId,
   watch,
+  isFormEditable,
 }) => {
   const [customerProfilePicklist, setCustomerProfilePicklist] = useState([]);
   const [pincodePicklist, setPincodePicklist] = useState([]);
@@ -164,7 +165,7 @@ const LeadPersonalDetails = ({
         required={false}
         options={customerProfilePicklist}
         isVisible={role === globalConstants.RoleNames.RM ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.input}
@@ -174,7 +175,7 @@ const LeadPersonalDetails = ({
         setValue={setValue}
         required={true}
         autoCapitalize="characters"
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.input}
@@ -184,7 +185,7 @@ const LeadPersonalDetails = ({
         setValue={setValue}
         required={false}
         autoCapitalize="characters"
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.input}
@@ -194,7 +195,7 @@ const LeadPersonalDetails = ({
         setValue={setValue}
         required={true}
         autoCapitalize="characters"
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.numberPad}
@@ -203,7 +204,7 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={true}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.numberPad}
@@ -213,7 +214,7 @@ const LeadPersonalDetails = ({
         setValue={setValue}
         required={false}
         isVisible={role === globalConstants.RoleNames.RM ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.email}
@@ -223,7 +224,7 @@ const LeadPersonalDetails = ({
         setValue={setValue}
         required={false}
         isVisible={role === globalConstants.RoleNames.RM ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.textArea}
@@ -234,7 +235,7 @@ const LeadPersonalDetails = ({
         required={false}
         autoCapitalize="sentences"
         isVisible={role === globalConstants.RoleNames.RM ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.smartSearch}
@@ -245,7 +246,7 @@ const LeadPersonalDetails = ({
         required={true}
         watch={watch}
         options={pincodePicklist}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.searchDropdown}
@@ -263,7 +264,7 @@ const LeadPersonalDetails = ({
             ? true
             : false
         }
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.searchDropdown}
@@ -274,7 +275,7 @@ const LeadPersonalDetails = ({
         required={true}
         options={rmNamePicklist}
         isVisible={role === globalConstants.RoleNames.UGA ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
 
       <FormControl
@@ -290,7 +291,7 @@ const LeadPersonalDetails = ({
             ? true
             : false
         }
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
     </Accordion>
   );

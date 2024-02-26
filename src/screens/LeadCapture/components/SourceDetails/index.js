@@ -17,6 +17,7 @@ const LeadSourceDetails = ({
   teamHeirarchyMasterData,
   collapsedError,
   pincodeMasterData,
+  isFormEditable,
 }) => {
   const [leadSourcePicklist, setLeadSourcePicklist] = useState([]);
   const [channelNamePicklist, setChannelNamePicklist] = useState([]);
@@ -153,7 +154,7 @@ const LeadSourceDetails = ({
         setValue={setValue}
         required={true}
         options={leadSourcePicklist}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
 
       <FormControl
@@ -171,7 +172,7 @@ const LeadSourceDetails = ({
             ? true
             : false
         }
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.readOnly}
@@ -185,7 +186,7 @@ const LeadSourceDetails = ({
             ? true
             : false
         }
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.searchDropdown}
@@ -196,7 +197,7 @@ const LeadSourceDetails = ({
         required={true}
         options={branchNamePicklist}
         isVisible={watch().LeadSource === 'UNICO Employee' ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.searchDropdown}
@@ -207,7 +208,7 @@ const LeadSourceDetails = ({
         required={true}
         options={empCodePicklist}
         isVisible={watch().LeadSource === 'UNICO Employee' ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.readOnly}
@@ -217,7 +218,7 @@ const LeadSourceDetails = ({
         setValue={setValue}
         required={false}
         isVisible={watch().LeadSource === 'Direct-RM' ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.readOnly}
@@ -227,7 +228,7 @@ const LeadSourceDetails = ({
         setValue={setValue}
         required={false}
         isVisible={watch().LeadSource === 'Customer Referral' ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
     </Accordion>
   );

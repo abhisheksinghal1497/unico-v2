@@ -113,6 +113,7 @@ export const soupConfig = {
       'Property_Identified__c',
       'Requested_loan_amount__c',
       'Requested_tenure_in_Months__c',
+      'OwnerId',
     ],
   },
   contentVersion: {
