@@ -17,20 +17,22 @@ import { net } from 'react-native-force';
   });
 };
 export const OTPVerificationService = (LeadId, mobileNumber) =>{
-  return new Promise((resolve, reject) => {
-  net.sendRequest(
-    "/services/apexrest" ,
-     `/generateOTP?leadId=${LeadId}&mobileNumber=${mobileNumber}`,
-      (res) => {
-        console.log("Entered");
-        console.log("res",res);
-        resolve(res);
-      },
-      (error) => {
-        reject(error);
-      },
-      'GET',
-    );
-  });
+  // return new Promise((resolve, reject) => {
+  // net.sendRequest(
+  //   "/services/apexrest" ,
+  //    `/generateOTP?leadId=${LeadId}&mobileNumber=${mobileNumber}`,
+  //     (res) => {
+  //       console.log("Entered");
+  //       console.log("res",res);
+  //       resolve(res);
+  //     },
+  //     (error) => {
+  //       reject(error);
+  //     },
+  //     'GET',
+  //   );
+  // });
+  const otpValue = "123456";
+  return otpValue;
 }
 

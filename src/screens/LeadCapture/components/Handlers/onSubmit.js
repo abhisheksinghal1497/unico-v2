@@ -22,7 +22,9 @@ export const OnSubmitLead = async (
   isOnline,
   setPostData,
   teamHeirarchyMasterData,
-  productMappingData
+  productMappingData,
+  setCurrentPosition,
+  currentPosition,
 ) => {
   try {
     // RM Data Mapping And Lead assignment
@@ -163,9 +165,10 @@ export const OnSubmitLead = async (
           text1: 'Lead updated successfully',
           position: 'top',
         });
+        setCurrentPosition((prev) => prev + 1);
     } else {
       // setAddLoading(false);
-      //  setCurrentPosition(currentPosition);
+      setCurrentPosition(currentPosition);
     }
   } catch (error) {
     console.log('Error OnSubmitLead ', error);
