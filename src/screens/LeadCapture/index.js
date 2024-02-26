@@ -40,6 +40,7 @@ import Toast from "react-native-toast-message";
 import CustomAlert from "../../common/components/BottomPopover/CustomAlert";
 import { GetDefaultValues } from "./components/Handlers/GetDefaultValues";
 import MobileOtpConsent from "./components/OtpVerification/components/MobileOtpConsent";
+import LeadConverted from "./components/LeadConverted/LeadConverted";
 const AddLead = () => {
   // --------Define Variables Here----------//
 
@@ -51,6 +52,7 @@ const AddLead = () => {
   const [id, setId] = useState("");
   const [currentPosition, setCurrentPosition] = useState(0);
   const [isFormEditable, setFormEditable] = useState(true);
+  const [conversionResponse, setConversionResponse] = useState({});
   const [addLoading, setAddLoading] = useState(false);
   const [retryCounts, setRetryCounts] = useState([]);
   const [expectedOtp, setExpectedOtp] = useState(null);
@@ -110,7 +112,7 @@ const AddLead = () => {
     formState: { errors },
   } = useForm({
     defaultValues,
-    resolver: yupResolver(validationSchema),
+    //resolver: yupResolver(validationSchema),
     mode: "all",
   });
 
@@ -137,21 +139,21 @@ const AddLead = () => {
       //   position: 'top',
       // });
 
-      await OnSubmitLead(
-        data,
-        setId,
-        id,
-        teamHeirarchyByUserId,
-        dsaBrJnData,
-        empRole,
-        isOnline,
-        setPostData,
-        setCurrentPosition,
-        currentPosition,
-        teamHeirarchyMasterData,
-        productMappingData
-      );
-      //setCurrentPosition((prev) => prev + 1);
+      // await OnSubmitLead(
+      //   data,
+      //   setId,
+      //   id,
+      //   teamHeirarchyByUserId,
+      //   dsaBrJnData,
+      //   empRole,
+      //   isOnline,
+      //   setPostData,
+      //   setCurrentPosition,
+      //   currentPosition,
+      //   teamHeirarchyMasterData,
+      //   productMappingData
+      // );
+      setCurrentPosition((prev) => prev + 1);
       setAddLoading(false);
       // setIsPincodeConfirmed(false);
     } catch (error) {
@@ -165,6 +167,11 @@ const AddLead = () => {
       console.log("Error in handleSubmit: ", error);
     }
   };
+  const handleConvertButton = () => {
+    navigation.navigate(screens.leadList);
+  };
+
+  
 
   //------Step Handlers------//
   const handlePrevSubmit = () => {
@@ -246,6 +253,12 @@ const AddLead = () => {
           setAddLoading={setAddLoading}
           timer={timer}
           setTimer={setTimer}
+        />
+      )}
+        {currentPosition === 2 && (
+        <LeadConverted
+          handleConvertButton={handleConvertButton}
+          LeadCaptureData={conversionResponse}
         />
       )}
       <View style={addLeadStyle.buttonContainer}>

@@ -11,6 +11,7 @@ import customTheme from "../../../../../common/colors/theme";
 import { otpVerificationStyle } from "../styles/OtpVerificationStyle";
 import { horizontalScale, verticalScale } from "../../../../../utils/matrcis";
 import { OTPVerificationService } from "../../../../../services/PostRequestService/PostObjectData";
+import { updateObjectData } from "../../../../../services/PostRequestService/UpdateRecord";
 
 const MobileOtpConsent = ({
   control,
@@ -216,7 +217,9 @@ const MobileOtpConsent = ({
     try {
       const otpRes = await OTPVerificationService(LeadId, mobilePhone);
       setOtp("");
-      setExpectedOtp(otpRes[0]);
+      //setStateof setExpectedOtp value to once you get the proper response from otpRes
+     //setExpectedOtp(otpRes[0]);
+     setExpectedOtp(otpRes)
       setRetryCounts(newRetryCount);
       setValue("Is_OTP_Limit_Reached__c", false);
       resetTimer();
