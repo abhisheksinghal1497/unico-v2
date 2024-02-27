@@ -41,6 +41,8 @@ import CustomAlert from '../../common/components/BottomPopover/CustomAlert';
 import { GetDefaultValues } from './components/Handlers/GetDefaultValues';
 import MobileOtpConsent from './components/OtpVerification/components/MobileOtpConsent';
 import LeadConverted from './components/LeadConverted/LeadConverted';
+import ScheduleMeetComponent from '../../common/components/Modal/ScheduleMeetComponent';
+import EMICalculatorComponent from '../../common/components/Modal/EMICalculatorComponent';
 const AddLead = () => {
   // --------Define Variables Here----------//
 
@@ -56,6 +58,8 @@ const AddLead = () => {
   const [addLoading, setAddLoading] = useState(false);
   const [retryCounts, setRetryCounts] = useState(0);
   const [expectedOtp, setExpectedOtp] = useState(null);
+  const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
+  const [emiModalVisible, setEmiModalVisible] = useState(false);
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(globalConstants.otpTimer);
   const maxRetries = globalConstants.otpRetries;
@@ -66,12 +70,15 @@ const AddLead = () => {
   const { teamHeirarchyByUserId } = useSelector(
     (state) => state.teamHeirarchy.teamHeirarchyById
   );
+
   const { teamHeirarchyMasterData } = useSelector(
     (state) => state.teamHeirarchy.teamHeirarchyMaster
   );
+
   const { productMappingData } = useSelector(
     (state) => state.masterData.productMapping
   );
+
   const { dsaBrJnData } = useSelector((state) => state.masterData.dsaBrJn);
   const { customerMasterData } = useSelector(
     (state) => state.masterData.customerMaster
@@ -126,9 +133,12 @@ const AddLead = () => {
     mode: 'all',
   });
 
+  const schDate = watch('ScheduleDate');
+
   useEffect(() => {
+    console.log('scheduled date is ', schDate);
     reset(initialLeadData);
-  }, [postData]);
+  }, [postData, watch]);
   // ---------------------------------------------
   const initialLeadData =
     Object.keys(postData).length > 0 ? postData : defaultValues;
@@ -168,7 +178,6 @@ const AddLead = () => {
       // setIsPincodeConfirmed(false);
     } catch (error) {
       setAddLoading(false);
-
       Toast.show({
         type: 'error',
         text1: 'Failed to create lead',
@@ -189,6 +198,15 @@ const AddLead = () => {
   const convertToLAN = async () => {};
 
   // console.log('Lead MetaData', leadMetadata);
+
+  //-----Schedule Meeting Button------//
+
+  const toggleSchedule = () => {
+    setScheduleModalVisible(!scheduleModalVisible);
+  };
+  const toggleEmiCalculator = () => {
+    setEmiModalVisible(!emiModalVisible);
+  };
 
   return (
     <View style={addLeadStyle.container}>
@@ -213,7 +231,14 @@ const AddLead = () => {
           enabled
           keyboardVerticalOffset={Platform.select({ ios: 125, android: 500 })}
         >
-          {isFormEditable && <LeadActivities />}
+          {isFormEditable && (
+            <LeadActivities
+              id={id}
+              mobileNumber={watch().MobilePhone}
+              onScheduleClicked={toggleSchedule}
+              onEmiCalculatorClicked={toggleEmiCalculator}
+            />
+          )}
           <ScrollView>
             {globalConstants.RoleNames.RM === empRole && (
               <LeadSourceDetails
@@ -320,6 +345,23 @@ const AddLead = () => {
           </>
         )}
       </View>
+      <ScheduleMeetComponent
+        control={control}
+        onDismiss={() => {
+          setScheduleModalVisible(!scheduleModalVisible);
+        }}
+        setValue={setValue}
+        cancelBtnLabel={'Close'}
+        visible={scheduleModalVisible}
+      />
+      <EMICalculatorComponent
+        control={control}
+        cancelBtnLabel={'Close'}
+        visible={emiModalVisible}
+        onDismiss={() => {
+          setEmiModalVisible(!emiModalVisible);
+        }}
+      />
     </View>
   );
 };

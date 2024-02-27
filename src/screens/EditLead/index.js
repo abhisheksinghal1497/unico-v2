@@ -47,6 +47,8 @@ import LeadConverted from '../LeadCapture/components/LeadConverted/LeadConverted
 import { OnSubmitLead } from '../LeadCapture/components/Handlers/onSubmit';
 import { screens } from '../../common/constants/screen';
 import BackgroundTimer from 'react-native-background-timer';
+import EMICalculatorComponent from '../../common/components/Modal/EMICalculatorComponent';
+import ScheduleMeetComponent from '../../common/components/Modal/ScheduleMeetComponent';
 
 export default function EditLeadScreen({ navigation }) {
   const route = useRoute();
@@ -65,6 +67,8 @@ export default function EditLeadScreen({ navigation }) {
   const [expectedOtp, setExpectedOtp] = useState(null);
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(globalConstants.otpTimer);
+  const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
+  const [emiModalVisible, setEmiModalVisible] = useState(false);
   const maxRetries = globalConstants.otpRetries;
   const steps = ['Basic details', 'OTP Verification'];
   const dispatch = useDispatch();
@@ -252,7 +256,12 @@ export default function EditLeadScreen({ navigation }) {
       console.log('Error in handleSubmit: ', error);
     }
   };
-
+  const toggleSchedule = () => {
+    setScheduleModalVisible(!scheduleModalVisible);
+  };
+  const toggleEmiCalculator = () => {
+    setEmiModalVisible(!emiModalVisible);
+  };
   //   console.log('Watch Values', watch());
   const convertToLAN = async () => {};
   return (
@@ -280,7 +289,14 @@ export default function EditLeadScreen({ navigation }) {
             android: 500,
           })}
         >
-          {isFormEditable && <LeadActivities />}
+          {isFormEditable && (
+            <LeadActivities
+              id={id}
+              mobileNumber={watch().MobilePhone}
+              onScheduleClicked={toggleSchedule}
+              onEmiCalculatorClicked={toggleEmiCalculator}
+            />
+          )}
           <ScrollView>
             {globalConstants.RoleNames.RM === empRole && (
               <LeadSourceDetails
@@ -387,7 +403,23 @@ export default function EditLeadScreen({ navigation }) {
           </>
         )}
       </View>
-      {/* <Text>AddLead</Text> */}
+      <ScheduleMeetComponent
+        control={control}
+        onDismiss={() => {
+          setScheduleModalVisible(!scheduleModalVisible);
+        }}
+        setValue={setValue}
+        cancelBtnLabel={'Close'}
+        visible={scheduleModalVisible}
+      />
+      <EMICalculatorComponent
+        control={control}
+        cancelBtnLabel={'Close'}
+        visible={emiModalVisible}
+        onDismiss={() => {
+          setEmiModalVisible(!emiModalVisible);
+        }}
+      />
     </View>
   );
 }
