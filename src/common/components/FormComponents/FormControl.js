@@ -1,52 +1,56 @@
-import React from 'react';
-import CheckBox from './Checkbox';
-import CustomInput from './CustomInput';
-import CustomDatepicker from './Datepicker';
-import CustomDropdown from './Dropdown';
-import InputRadio from './InputRadio';
-import CustomMaskedInput from './MaskedInput';
-import CustomMultiSelect from './MultiSelect';
-import ReadOnly from './ReadOnly';
-import SearchCustomDropdown from './SearchDropdown';
-import SmartSearchDropdown from './SmartSearchDropdown';
-import OtpInput from './OtpInput';
-import CustomTextArea from './CustomTextArea';
+import React from "react";
+import CheckBox from "./Checkbox";
+import CustomInput from "./CustomInput";
+import CustomDatepicker from "./Datepicker";
+import CustomDropdown from "./Dropdown";
+import InputRadio from "./InputRadio";
+import CustomMaskedInput from "./MaskedInput";
+import CustomMultiSelect from "./MultiSelect";
+import ReadOnly from "./ReadOnly";
+import SearchCustomDropdown from "./SearchDropdown";
+import SmartSearchDropdown from "./SmartSearchDropdown";
+import OtpInput from "./OtpInput";
+import CustomTextArea from "./CustomTextArea";
 // import UploadPhotographs from "../../../screens/PdCapture/components/UploadPhotographs";
-import MultiSelectDropdown from './MultiSelect';
+import MultiSelectDropdown from "./MultiSelect";
+import CustomDateTimePicker from "./CustomDateTimePicker";
+import SliderAndInputComponent from "./SliderAndInputComponent";
 // import UploadVideo from "../../../screens/PdCapture/components/UploadVideo";
 // import CustomDateSelctor from '../DynamicFormComponents/components/DateSelector';
 // import DynamicDropdownComponent from '../DynamicFormComponents/components/DynamicDropdownComponent';
 
 export const component = {
-  readOnly: 'readOnly',
-  maskInput: 'maskInput',
-  input: 'input',
-  otpInput: 'otpInput',
-  textArea: 'textArea',
-  number: 'number',
-  photograph: 'photograph',
-  video: 'video',
-  dropdown: 'dropdown',
-  dynamicDropdown: 'dynamicDropdown',
-  searchDropdown: 'searchDropdown',
-  smartSearch: 'smartSearch',
-  multiselect: 'multiselect',
-  checkbox: 'checkbox',
-  datetime: 'datetime',
+  readOnly: "readOnly",
+  maskInput: "maskInput",
+  input: "input",
+  otpInput: "otpInput",
+  textArea: "textArea",
+  number: "number",
+  photograph: "photograph",
+  video: "video",
+  dropdown: "dropdown",
+  dynamicDropdown: "dynamicDropdown",
+  searchDropdown: "searchDropdown",
+  smartSearch: "smartSearch",
+  multiselect: "multiselect",
+  checkbox: "checkbox",
+  datetime: "datetime",
+  customdatetime: "dateandtime",
   // customDateSelctor: 'customDateSelctor',
-  radio: 'radio',
-  url: 'url',
-  email: 'email',
-  phonePad: 'phonePad',
-  numberPad: 'numberPad',
-  asciCapable: 'asciCapable',
-  numbersANDpunctuation: 'numbers-and-punctuation',
-  namePhonePad: 'name-phone-pad',
-  decimalPad: 'decimal-pad',
-  twitter: 'twitter',
-  webSearch: 'web-search',
-  asciiCapableNumberPad: 'ascii-capable-number-pad',
-  visiblePassword: 'visible-password',
+  radio: "radio",
+  url: "url",
+  email: "email",
+  phonePad: "phonePad",
+  numberPad: "numberPad",
+  asciCapable: "asciCapable",
+  numbersANDpunctuation: "numbers-and-punctuation",
+  namePhonePad: "name-phone-pad",
+  decimalPad: "decimal-pad",
+  twitter: "twitter",
+  webSearch: "web-search",
+  asciiCapableNumberPad: "ascii-capable-number-pad",
+  visiblePassword: "visible-password",
+  sliderAndInput: "sliderAndInput",
 };
 
 export const FormControl = ({ compType, options, ...rest }) => {
@@ -59,7 +63,8 @@ export const FormControl = ({ compType, options, ...rest }) => {
       return <OtpInput {...rest} />;
     case component.textArea:
       return <CustomTextArea {...rest} />;
-
+    case component.sliderAndInput:
+      return <SliderAndInputComponent {...rest} />;
     case component.maskInput:
       return <CustomMaskedInput {...rest} />;
     case component.number:
@@ -84,6 +89,8 @@ export const FormControl = ({ compType, options, ...rest }) => {
       return <CustomDatepicker {...rest} />;
     // case component.customDateSelctor:
     //   return <CustomDateSelctor {...rest} />;
+    case component.customdatetime:
+      return <CustomDateTimePicker {...rest} />;
     case component.url:
       return <CustomInput {...rest} type="url" />;
     case component.email:
