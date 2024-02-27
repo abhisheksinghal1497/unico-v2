@@ -20,7 +20,7 @@ export const globalConstants = {
   },
   debounceTime: 10,
   otpTimer: 120,
-  otpRetries:3,
+  otpRetries: 3,
   RoleNames: {
     RM: 'RM',
     DSA: 'DSA',

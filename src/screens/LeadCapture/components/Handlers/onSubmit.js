@@ -21,12 +21,13 @@ export const OnSubmitLead = async (
   empRole,
   isOnline,
   setPostData,
-  teamHeirarchyMasterData,
-  productMappingData,
   setCurrentPosition,
   currentPosition,
+  teamHeirarchyMasterData,
+  productMappingData
 ) => {
   try {
+    console.log('Role', empRole);
     // RM Data Mapping And Lead assignment
     if (empRole === globalConstants.RoleNames.RM) {
       data.Channel_Name__c = await GetChannelId(dsaBrJnData, data.Channel_Name);
@@ -99,6 +100,8 @@ export const OnSubmitLead = async (
       data.OwnerId = data.Branch_Manager__c;
     }
 
+    // console.log('On submit Data', data);
+
     // Saving the Data locally
 
     let res =
@@ -159,13 +162,15 @@ export const OnSubmitLead = async (
           text1: 'Lead created successfully',
           position: 'top',
         });
-      id &&
-        Toast.show({
-          type: 'success',
-          text1: 'Lead updated successfully',
-          position: 'top',
-        });
-        setCurrentPosition((prev) => prev + 1);
+      // id &&
+      //   Toast.show({
+      //     type: 'success',
+      //     text1: 'Lead updated successfully',
+      //     position: 'top',
+      //   });
+      // Write Logic for showing otp verification Screen
+      // OTP Verification screen can be shown if lead is assigned to RM that means OWNERID and Employee Id are same also if network is there then this screen should be visible otherwise send a toast msg that network is not there
+      setCurrentPosition((prev) => prev + 1);
     } else {
       // setAddLoading(false);
       setCurrentPosition(currentPosition);

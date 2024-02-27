@@ -33,7 +33,6 @@ export default function CustomInput({
         field: { onChange, onBlur, value },
         fieldState: { error, invalid },
       }) => {
-        console.log(`Rest Props`, rest);
         return (
           <View style={styles.container}>
             <View style={styles.labelContainer}>

@@ -2,7 +2,6 @@ import React, { useEffect, useCallback, useRef, useContext } from 'react';
 import { FlatList, View, Keyboard, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActivityIndicator, Searchbar } from 'react-native-paper';
-import { debounce } from 'lodash';
 import Toast from 'react-native-toast-message';
 
 import {
@@ -143,23 +142,29 @@ export default function LeadList({ navigation }) {
     }
   };
 
-  const fetchSearchData = useCallback(async (searchString) => {
-    try {
-      const result = await SearchLead(searchString);
-      setLeadListData(result.searchRecords);
-    } catch (error) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error Fetching data',
-        position: 'top',
-      });
-      console.log('Error Fetching data', error);
-    }
-  });
+  const fetchSearchData = useCallback(
+    async (searchString) => {
+      try {
+        const result = await SearchLead(searchString);
+        console.log('Search Result', result);
+        setLeadListData(result.searchRecords);
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error Fetching data',
+          position: 'top',
+        });
+        console.log('Error Fetching data', error);
+      }
+    },
+    [searchQuery]
+  );
 
-  const debounceSearch = debounce((searchString) => {
+  const debounceSearch = async (searchString) => {
+    // console.log('Is Online inside Debounce', isOnline);
     if (isOnline) {
-      fetchSearchData(searchString);
+      // console.log('Debounce Search');
+      await fetchSearchData(searchString);
     } else {
       const formattedQuery = searchString.toLowerCase().trim();
 
@@ -172,11 +177,12 @@ export default function LeadList({ navigation }) {
         setLeadListData(filteredList);
       }
     }
-  }, 500);
+  };
 
   const onChangeSearch = async (searchString) => {
     setSearchQuery(searchString);
     if (searchString && searchString.length > 1) {
+      // console.log('Search String----', searchString);
       await debounceSearch(searchString);
     }
     if (!searchString) {
@@ -264,16 +270,3 @@ export default function LeadList({ navigation }) {
     </View>
   );
 }
-
-// import { View, Text } from 'react-native';
-// import React from 'react';
-
-// const LeadList = () => {
-//   return (
-//     <View>
-//       <Text>LeadList</Text>
-//     </View>
-//   );
-// };
-
-// export default LeadList;

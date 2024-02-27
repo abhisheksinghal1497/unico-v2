@@ -93,7 +93,7 @@ const LeadAdditionalDetails = ({
         control={control}
         required={false}
         isVisible={role === globalConstants.RoleNames.RM ? true : false}
-        // isDisabled={!isFormEditable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.numberPad}

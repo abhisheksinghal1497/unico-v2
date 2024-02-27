@@ -36,13 +36,17 @@ import { QueryObject } from '../../services/QueryObject';
 import { query } from '../../common/constants/Queries';
 import { GetBrManagerBrName } from '../LeadCapture/components/Handlers/GetBranchManagerId';
 import { GetProductSubTypeName } from '../LeadCapture/components/Handlers/GetProductId';
-import { OnSubmitLead } from '../LeadCapture/components/Handlers/onSubmit';
 import LeadSourceDetails from '../LeadCapture/components/SourceDetails';
 import LeadPersonalDetails from '../LeadCapture/components/PersonalDetails';
 import LeadAdditionalDetails from '../LeadCapture/components/AdditionalDetails';
 import { addLeadStyle } from '../LeadCapture/styles/AddLeadStyle';
 import { useRoute } from '@react-navigation/native';
 import { GetRmSmName } from '../LeadCapture/components/Handlers/GetChannelId';
+import MobileOtpConsent from '../LeadCapture/components/OtpVerification/components/MobileOtpConsent';
+import LeadConverted from '../LeadCapture/components/LeadConverted/LeadConverted';
+import { OnSubmitLead } from '../LeadCapture/components/Handlers/onSubmit';
+import { screens } from '../../common/constants/screen';
+import BackgroundTimer from 'react-native-background-timer';
 
 export default function EditLeadScreen({ navigation }) {
   const route = useRoute();
@@ -50,13 +54,19 @@ export default function EditLeadScreen({ navigation }) {
   const isOnline = useInternet();
   const empRole = useRole();
   const { hideBottomTab, setHideBottomTab } = useContext(BottomTabContext);
+  const [conversionResponse, setConversionResponse] = useState({});
   const [hasErrors, setHasErrors] = React.useState(false);
   const [postData, setPostData] = useState({});
   const [id, setId] = useState(leadId);
   const [currentPosition, setCurrentPosition] = useState(0);
   const [isFormEditable, setFormEditable] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
-  const steps = ['Basic details', 'OTP Verification', 'Lead Converted'];
+  const [retryCounts, setRetryCounts] = useState(0);
+  const [expectedOtp, setExpectedOtp] = useState(null);
+  const [otp, setOtp] = useState('');
+  const [timer, setTimer] = useState(globalConstants.otpTimer);
+  const maxRetries = globalConstants.otpRetries;
+  const steps = ['Basic details', 'OTP Verification'];
   const dispatch = useDispatch();
   //Fetch Data from store//
   const { leadMetadata } = useSelector((state) => state.leadMetadata);
@@ -86,7 +96,7 @@ export default function EditLeadScreen({ navigation }) {
         let leadById = await QueryObject(query.getLeadByIdQuery(id));
         leadData =
           leadById?.records?.length > 0 ? { ...leadById?.records[0] } : {};
-        console.log('isOnline', leadData, id);
+        // console.log('isOnline', leadData, id);
       } else {
         let offlineLead = await QuerySoupById(
           soupConfig.lead.soupName,
@@ -114,6 +124,16 @@ export default function EditLeadScreen({ navigation }) {
     getLeadData();
   }, [id]);
 
+  const decrementTimer = () => {
+    if (timer > 0) {
+      setTimer(timer - 1);
+    }
+  };
+  useEffect(() => {
+    const interval = BackgroundTimer.setInterval(decrementTimer, 1000);
+    return () => BackgroundTimer.clearInterval(interval);
+  }, [timer]);
+
   useEffect(() => {
     dispatch(getProductMapping());
     dispatch(getLeadMetadata());
@@ -125,19 +145,23 @@ export default function EditLeadScreen({ navigation }) {
   }, []);
 
   const defaultValues = {};
-  const checkOwner = (teamHeirarchyByUserId) => {
+  const checkOwner = (postData, teamHeirarchyByUserId) => {
     if (id && id.length > 0) {
+      //   console.log('Entered', id);
       if (postData?.OwnerId === teamHeirarchyByUserId?.Employee__c) {
-        setFormEditable(false);
+        // console.log('Entered 2 ');
+        setFormEditable(true);
         return;
       }
+      setFormEditable(false);
     }
-    setFormEditable(true);
+    setFormEditable(false);
+    return;
   };
 
   useEffect(() => {
-    checkOwner();
-  }, [id, teamHeirarchyByUserId]);
+    checkOwner(postData, teamHeirarchyByUserId);
+  }, [id, teamHeirarchyByUserId, postData]);
 
   useEffect(() => {
     if (Object.keys(postData).length > 0) {
@@ -157,11 +181,11 @@ export default function EditLeadScreen({ navigation }) {
         teamHeirarchyMasterData,
         data.RM_SM_Name__c
       );
-      //   console.log('Data', data);
       data.Br_Manager_Br_Name = GetBrManagerBrName(
         teamHeirarchyMasterData,
         data.Branch_Manager__c
       );
+      // console.log('Data Br_Manager_Br_Name', data.Br_Manager_Br_Name);
       data.ProductLookup = GetProductSubTypeName(
         productMappingData,
         data.ProductLookup__c
@@ -169,8 +193,8 @@ export default function EditLeadScreen({ navigation }) {
 
       reset({ ...data });
     }
-  }, [postData]);
-  const validationSchema = createValidationSchema(pincodeMasterData);
+  }, [postData, teamHeirarchyByUserId, teamHeirarchyMasterData, dsaBrJnData]);
+  const validationSchema = createValidationSchema(empRole);
   const {
     control,
     handleSubmit,
@@ -183,32 +207,24 @@ export default function EditLeadScreen({ navigation }) {
     resolver: yupResolver(validationSchema),
     mode: 'all',
   });
-  // Set Form Editable Logic Below According to owner Id and Created By Field
-  // useEffect(() => {
-  //   const status = watch().Status;
-  //   if (
-  //     status === 'Closed' ||
-  //     status === 'Converted' ||
-  //     status === 'Rejected'
-  //   ) {
-  //     setFormEditable(false);
-  //   } else {
-  //     setFormEditable(true);
-  //   }
-  // }, [watch().Status]);
 
   useEffect(() => {
     setHasErrors(Object.keys(errors).length > 0);
   }, [errors]);
 
+  const handleConvertButton = () => {
+    navigation.navigate(screens.leadList);
+  };
+  //------ Handlers------//
+  const handlePrevSubmit = () => {
+    setCurrentPosition((prev) => prev - 1);
+  };
+
   const onSubmit = async (data) => {
     try {
       setAddLoading(true);
-      // Toast.show({
-      //   type: 'success',
-      //   text1: 'Lead created successfully',
-      //   position: 'top',
-      // });
+
+      //   console.log('Onsubmit', data);
       await OnSubmitLead(
         data,
         setId,
@@ -218,24 +234,27 @@ export default function EditLeadScreen({ navigation }) {
         empRole,
         isOnline,
         setPostData,
+        setCurrentPosition,
+        currentPosition,
         teamHeirarchyMasterData,
         productMappingData
       );
-
+      //   setCurrentPosition((prev) => prev + 1);
       setAddLoading(false);
-      // setIsPincodeConfirmed(false);
     } catch (error) {
-      setAddLoading(false);
+      //   setAddLoading(false);
 
-      Toast.show({
-        type: 'error',
-        text1: 'Failed to create lead',
-        position: 'top',
-      });
+      //   Toast.show({
+      //     type: 'error',
+      //     text1: 'Failed to create lead',
+      //     position: 'top',
+      //   });
       console.log('Error in handleSubmit: ', error);
     }
   };
 
+  //   console.log('Watch Values', watch());
+  const convertToLAN = async () => {};
   return (
     <View style={addLeadStyle.container}>
       {addLoading && (
@@ -243,7 +262,13 @@ export default function EditLeadScreen({ navigation }) {
           <ActivityIndicator size="large" color={customTheme.colors.primary} />
         </View>
       )}
-      <Stepper steps={steps} totalSteps={3} currentPosition={currentPosition} />
+      {globalConstants.RoleNames.RM === empRole && (
+        <Stepper
+          steps={steps}
+          totalSteps={2}
+          currentPosition={currentPosition}
+        />
+      )}
 
       {currentPosition === 0 && (
         <KeyboardAvoidingView
@@ -296,17 +321,71 @@ export default function EditLeadScreen({ navigation }) {
           </ScrollView>
         </KeyboardAvoidingView>
       )}
+      {currentPosition === 1 && (
+        <MobileOtpConsent
+          LeadId={id}
+          // leadMetadata={leadMetadata}
+          setRetryCounts={setRetryCounts}
+          retryCounts={retryCounts}
+          maxRetries={maxRetries}
+          expectedOtp={expectedOtp}
+          setExpectedOtp={setExpectedOtp}
+          control={control}
+          handleSubmit={handleSubmit}
+          watch={watch}
+          setValue={setValue}
+          otp={otp}
+          setOtp={setOtp}
+          setAddLoading={setAddLoading}
+          timer={timer}
+          setTimer={setTimer}
+          setPostData={setPostData}
+          postData={postData}
+        />
+      )}
+      {currentPosition === 2 && (
+        <LeadConverted
+          handleConvertButton={handleConvertButton}
+          LeadCaptureData={conversionResponse}
+        />
+      )}
       <View style={addLeadStyle.buttonContainer}>
-        <Button
-          mode={!isFormEditable ? 'contained' : 'outlined'}
-          style={addLeadStyle.cancelButton}
-          disabled={!isFormEditable}
-          onPress={handleSubmit(onSubmit)}
-          icon="play"
-          contentStyle={{ flexDirection: 'row-reverse' }}
-        >
-          Next
-        </Button>
+        {currentPosition === 0 && (
+          <Button
+            mode={!isFormEditable ? 'contained' : 'outlined'}
+            style={addLeadStyle.cancelButton}
+            disabled={!isFormEditable}
+            onPress={handleSubmit(onSubmit)}
+            icon="play"
+            contentStyle={{ flexDirection: 'row-reverse' }}
+          >
+            {globalConstants.RoleNames.RM === empRole ? 'Next' : 'Save'}
+          </Button>
+        )}
+        {currentPosition === 1 && (
+          <>
+            <View>
+              <Button
+                mode="outlined"
+                style={addLeadStyle.cancelButton}
+                onPress={handlePrevSubmit}
+              >
+                Previous
+              </Button>
+            </View>
+            <View>
+              <Button
+                mode={'contained'}
+                style={addLeadStyle.cancelButton}
+                onPress={handleSubmit(convertToLAN)}
+                contentStyle={{ flexDirection: 'row-reverse' }}
+                disabled={addLoading || !watch().OTP_Verified__c}
+              >
+                Submit
+              </Button>
+            </View>
+          </>
+        )}
       </View>
       {/* <Text>AddLead</Text> */}
     </View>

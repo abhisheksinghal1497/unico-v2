@@ -140,14 +140,16 @@ const LeadPersonalDetails = ({
     }
   }, [leadMetadata]);
 
-  useEffect(() => {
-    if (
-      watch().LeadSource === 'Direct-RM' &&
-      role === globalConstants.RoleNames.RM
-    ) {
-      setValue('Br_Manager_Br_Name', teamHeirarchyByUserId?.EmpBrch__r.Name);
-    }
-  }, [watch().LeadSource]);
+  // useEffect(() => {
+  //   if (
+  //     watch().LeadSource === 'Direct-RM' &&
+  //     role === globalConstants.RoleNames.RM
+  //   ) {
+  //     if (!watch().Br_Manager_Br_Name) {
+  //       setValue('Br_Manager_Br_Name', teamHeirarchyByUserId?.EmpBrch__r.Name);
+  //     }
+  //   }
+  // }, [watch().LeadSource]);
 
   return (
     <Accordion

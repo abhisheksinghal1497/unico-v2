@@ -24,6 +24,7 @@ const LeadSourceDetails = ({
   const [branchNamePicklist, setBranchNamePicklist] = useState([]);
   const [empCodePicklist, setEmpCodePicklist] = useState([]);
 
+  // console.log('teamHeirarchyMasterData', teamHeirarchyMasterData);
   useEffect(() => {
     const picklist = GetPicklistValues(leadMetadata, 'LeadSource')?.filter(
       (value) => value.label !== 'Digital'
