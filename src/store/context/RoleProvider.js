@@ -25,7 +25,7 @@ export const RoleProvider = ({ children }) => {
       let role = GetEmployeeRole(teamHeirarchyByUserId);
       // setEmpRole('DSA');
       setEmpRole(role ? role : '');
-      //   console.log('Role', dsaBrJnData);
+      console.log('Role', dsaBrJnData, role);
       return;
     }
 
@@ -38,20 +38,24 @@ export const RoleProvider = ({ children }) => {
     ) {
       let role = dsaBrJnData[0]?.Account__r?.RecordType?.Name;
       setEmpRole(role ? role : '');
-      //  console.log('Role', dsaBrJnData);
+      console.log('Role', dsaBrJnData);
       return;
     }
   };
+
+  console.log('Role---->', dsaBrJnData);
+
   useEffect(() => {
     dispatch(getUserInfoMaster());
     dispatch(getDsaBrJn());
   }, []);
   useEffect(() => {
     // setEmpRole('RM');
-    oauth.getAuthCredentials(async () => {
+    oauth.getAuthCredentials(async (cred) => {
+      // console.log('cred', cred);
       await getRole(userInfoMasterData);
     });
-  }, [userInfoMasterData]);
+  }, [userInfoMasterData, dsaBrJnData]);
 
   return (
     <RoleContext.Provider value={{ empRole }}>{children}</RoleContext.Provider>

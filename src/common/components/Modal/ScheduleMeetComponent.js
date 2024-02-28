@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Modal, View } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Modal, View } from 'react-native';
 import {
   Button,
   Text,
   TextInput,
   Dialog,
   IconButton,
-} from "react-native-paper";
-import { colors } from "../../colors";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { moderateScale, verticalScale } from "../../../utils/matrcis";
-import customTheme from "../../colors/theme";
-import CustomDatepicker from "../FormComponents/Datepicker";
-import { FormControl, component } from "../FormComponents/FormControl";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+} from 'react-native-paper';
+import { colors } from '../../colors';
+// import Ionicons from 'react-native-vector-icons/Ionicons';
+import { moderateScale, verticalScale } from '../../../utils/matrcis';
+import customTheme from '../../colors/theme';
+// import CustomDatepicker from '../FormComponents/Datepicker';
+import { FormControl, component } from '../FormComponents/FormControl';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const ScheduleMeetComponent = ({
   visible,
@@ -23,34 +23,51 @@ const ScheduleMeetComponent = ({
   cancelBtnLabel,
   onDismiss,
   onSave,
-  watch,
-  setValue,
 }) => {
   const validationSchema = yup.object().shape({
-    ScheduleDate: yup.string().required("Select Date and Time").nullable(),
+    StartDateTime: yup
+      .string()
+      .required('Start Date and Time Is Required')
+      .nullable(),
   });
+
+  const defaultValues = {
+    Subject: 'Meeting',
+    StartDateTime: '',
+    EndDateTime: '',
+    Description: '',
+    ReminderDateTime: '',
+    IsReminderSet: true,
+  };
+
   const {
     control,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      ScheduleDate: "",
-      Notes: "",
-    },
+    defaultValues,
     resolver: yupResolver(validationSchema),
-    mode: "all",
+    mode: 'all',
   });
   const onSubmit = (data) => {
     onDismiss();
     reset();
-    console.log("onSubmit Function Changed", data);
-    console.log("Watch Function Changed", watch());
-    setValue("ScheduleDate", "");
+    console.log('onSubmit Function Changed', data);
+    console.log('Watch Function Changed', watch());
+    setValue('ScheduleDate', '');
     let schDate = watch().ScheduleDate;
-    console.log("After Reset schDate", schDate);
+    console.log('After Reset schDate', schDate);
   };
+
+  const remindDateTimePicklist = [
+    { label: '30 Minutes', value: '30 Minutes' },
+    { label: '15 Minutes', value: '15 Minutes' },
+    { label: '1 Hour', value: '1 Hour' },
+    { label: '2 Hour', value: '2 Hour' },
+  ];
 
   return (
     <Dialog visible={visible} onDismiss={onDismiss}>
@@ -63,12 +80,12 @@ const ScheduleMeetComponent = ({
           onDismiss();
         }}
         style={{
-          position: "absolute",
+          position: 'absolute',
           right: -20,
           top: -40,
           borderColor: colors.gray300,
           borderWidth: 2,
-          backgroundColor: "white",
+          backgroundColor: 'white',
         }}
       />
       <Dialog.Title>
@@ -76,24 +93,53 @@ const ScheduleMeetComponent = ({
       </Dialog.Title>
       <Dialog.ScrollArea>
         <FormControl
+          compType={component.readOnly}
+          control={control}
+          watch={watch}
+          required={true}
+          label="Subject"
+          name="Subject"
+          // setValue={setValue}
+        />
+        <FormControl
           control={control}
           watch={watch}
           required={true}
           compType={component.customdatetime}
-          label="Date and Time"
-          name="ScheduleDate"
+          label="Start Date and Time"
+          name="StartDateTime"
+          mode="datetime"
+          // setValue={setValue}
+        />
+        <FormControl
+          control={control}
+          watch={watch}
+          required={true}
+          compType={component.customdatetime}
+          label="End Date and Time"
+          name="EndDateTime"
           mode="datetime"
           // setValue={setValue}
         />
         <FormControl
           compType={component.textArea}
-          label="Notes"
-          name="Notes"
+          label="Description"
+          name="Description"
           control={control}
           watch={watch}
           setValue={setValue}
           required={false}
           // isDisabled={!editable}
+        />
+        <FormControl
+          compType={component.dropdown}
+          control={control}
+          watch={watch}
+          required={true}
+          label="Remind Time Before Event"
+          name="ReminderDateTime"
+          options={remindDateTimePicklist}
+          setValue={setValue}
         />
       </Dialog.ScrollArea>
       <Dialog.Actions>
@@ -108,38 +154,38 @@ const ScheduleMeetComponent = ({
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   blurBackground: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     borderRadius: 10,
     padding: moderateScale(25),
-    width: "80%",
+    width: '80%',
     backgroundColor: colors.bgLight,
   },
   labelContainer: {
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'flex-end',
     marginBottom: 2,
   },
   alertIcon: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: verticalScale(10),
   },
   title: {
-    textAlign: "center",
-    fontFamily: "Inter",
+    textAlign: 'center',
+    fontFamily: 'Inter',
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
     marginTop: verticalScale(20),
   },
   button: {

@@ -12,10 +12,10 @@ import customTheme from '../../../../../common/colors/theme';
 import { otpVerificationStyle } from '../styles/OtpVerificationStyle';
 import { horizontalScale, verticalScale } from '../../../../../utils/matrcis';
 import { OTPVerificationService } from '../../../../../services/PostRequestService/PostObjectData';
-import { updateObjectData } from '../../../../../services/PostRequestService/UpdateRecord';
 import { colors } from '../../../../../common/colors';
 import { onSubmitOtp } from '../../Handlers/OtpSubmitHandler';
 import { convertToDateString } from '../../../../../common/functions/ConvertToDateString';
+import Touchable from '../../../../../common/components/TouchableComponent/Touchable';
 
 const MobileOtpConsent = ({
   control,
@@ -71,7 +71,7 @@ const MobileOtpConsent = ({
     const hoursDifference = timeDifference / (1000 * 60 * 60);
 
     // Check if the difference is more than 2 hours
-    // console.log('Hours Difference', hoursDifference);
+    console.log('Hours Difference', hoursDifference);
     if (hoursDifference > 2) {
       return true;
     } else {
@@ -98,7 +98,7 @@ const MobileOtpConsent = ({
     }
   }, [postData]);
 
-  console.log('retry Counts', postData?.OTP_Attempts__c, retryCounts);
+  // console.log('retry Counts', postData?.OTP_Attempts__c, retryCounts);
 
   useEffect(() => {
     setResendDisabled(timer > 0);
@@ -109,15 +109,6 @@ const MobileOtpConsent = ({
       setAddLoading(true);
 
       let currentRetryCount = retryCounts;
-      // let isCoolingPeriodPassed = checkIfCoolingPeriodPassed(
-      //   postData?.Last_OTP_Attempt_Time__c
-      // );
-
-      // // console.log('Is Cooling Period', isCoolingPeriodPassed);
-      // if (isCoolingPeriodPassed) {
-      //   setRetryCounts(0);
-      //   currentRetryCount = 0;
-      // }
 
       if (currentRetryCount < maxRetries) {
         await sendOTP(watch().MobilePhone, currentRetryCount + 1);
@@ -145,7 +136,21 @@ const MobileOtpConsent = ({
       setOtp('');
       //setStateof setExpectedOtp value to once you get the proper response from otpRes
       //setExpectedOtp(otpRes[0]);
-      setExpectedOtp(otpRes);
+      if (otpRes) {
+        Toast.show({
+          type: 'success',
+          text1: 'OTP Generated Successfully',
+          position: 'top',
+        });
+        setExpectedOtp(otpRes);
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Failed to Generate OTP',
+          position: 'top',
+        });
+        return;
+      }
       setRetryCounts(newRetryCount);
       let currentDateTime = new Date().toUTCString();
       await onSubmitOtp(
@@ -305,7 +310,7 @@ const MobileOtpConsent = ({
                         //paddingBottom:16
                       }}
                     >
-                      OTP Limit Reached. Try After sometime
+                      OTP Limit Reached. Please Try After sometime
                     </HelperText>
                   </View>
                 ) : (
@@ -398,17 +403,29 @@ const MobileOtpConsent = ({
                 >
                   Didn't receive the OTP?
                 </Text>
-
-                <Text
-                  style={{
-                    fontSize: customTheme.fonts.smallText.fontSize,
-                    textDecorationLine: 'underline',
-                    color: resendDisabled ? 'gray' : customTheme.colors.error,
-                  }}
+                <Touchable
                   onPress={handleResendOTP}
+                  disabled={
+                    resendDisabled ||
+                    (retryCounts && retryCounts >= maxRetries) ||
+                    isVerified
+                  }
                 >
-                  Send OTP
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: customTheme.fonts.smallText.fontSize,
+                      textDecorationLine: 'underline',
+                      color:
+                        resendDisabled ||
+                        (retryCounts && retryCounts >= maxRetries) ||
+                        isVerified
+                          ? 'gray'
+                          : customTheme.colors.error,
+                    }}
+                  >
+                    Send OTP
+                  </Text>
+                </Touchable>
               </View>
 
               <Text style={otpVerificationStyle.timerLabel}>

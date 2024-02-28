@@ -27,7 +27,7 @@ const LeadActivities = ({
   // -----Toggle handler---------
   // const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
-  console.log('Mobile Number', mobileNumber);
+  // console.log('Mobile Number', mobileNumber);
 
   const onCallPressed = () => {
     Linking.openURL(`tel:${mobileNumber}`);

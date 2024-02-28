@@ -25,7 +25,7 @@ export const syncDSABrJnData = async (userId) => {
   try {
     const queryData = await query.getDsaBranchJunction(userId);
 
-    // console.log('queryData', queryData);
+    console.log('queryData', queryData);
 
     return await syncData(
       queryData,

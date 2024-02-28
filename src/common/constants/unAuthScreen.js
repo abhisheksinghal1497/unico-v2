@@ -6,11 +6,27 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import y
 import { Logout } from '../../services/Logout';
 import { colors } from '../colors';
 import Touchable from '../components/TouchableComponent/Touchable';
-
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getDsaBrJn,
+  getPincodeMaster,
+} from '../../store/redux/actions/masterData';
 const UnauthorizedScreen = () => {
   const logOutHandler = async () => {
     await Logout();
   };
+  const { dsaBrJnData } = useSelector((state) => state.masterData.dsaBrJn);
+  const { pincodeMasterData } = useSelector(
+    (state) => state.masterData.pincodeMaster
+  );
+  // console.log('pincodeMasterData', pincodeMasterData);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(getDsaBrJn());
+    dispatch(getPincodeMaster());
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       <View

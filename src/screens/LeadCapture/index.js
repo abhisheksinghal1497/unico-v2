@@ -231,7 +231,7 @@ const AddLead = () => {
           enabled
           keyboardVerticalOffset={Platform.select({ ios: 125, android: 500 })}
         >
-          {isFormEditable && (
+          {isFormEditable && globalConstants.RoleNames.RM === empRole && (
             <LeadActivities
               id={id}
               mobileNumber={watch().MobilePhone}

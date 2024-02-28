@@ -1,13 +1,13 @@
 // import { Button } from "@rneui/base";
-import React from "react";
-import { useState } from "react";
-import { Controller } from "react-hook-form";
-import { StyleSheet, View } from "react-native";
-import DatePicker from "react-native-date-picker";
-import { TextInput, Text } from "react-native-paper";
-import { horizontalScale, verticalScale } from "../../../utils/matrcis";
-import { colors } from "../../colors";
-import customTheme from "../../colors/theme";
+import React from 'react';
+import { useState } from 'react';
+import { Controller } from 'react-hook-form';
+import { StyleSheet, View } from 'react-native';
+import DatePicker from 'react-native-date-picker';
+import { TextInput, Text } from 'react-native-paper';
+import { horizontalScale, verticalScale } from '../../../utils/matrcis';
+import { colors } from '../../colors';
+import customTheme from '../../colors/theme';
 
 export default function CustomDateTimePicker({
   control,
@@ -29,7 +29,7 @@ export default function CustomDateTimePicker({
   const jsCoreDateCreator = (dateString) => {
     // dateString *HAS* to be in this format "YYYY-MM-DD HH:MM:SS"
     // console.log('date String', dateString, typeof dateString);
-    if (typeof dateString !== "string") {
+    if (typeof dateString !== 'string') {
       return dateString;
     } else {
       return new Date(dateString);
@@ -44,7 +44,7 @@ export default function CustomDateTimePicker({
     // return new Date(...dateParam);
   };
   const formatDate = (date) => {
-    if (!date) return "";
+    if (!date) return '';
     // console.log('Date-----', date, typeof date);
     let newdate;
     // if (typeof date === 'string') {
@@ -55,10 +55,10 @@ export default function CustomDateTimePicker({
     //   newdate = new Date(date);
     // }
     // console.log('NewDate-----', newdate, typeof newdate);
-    const day = newdate && newdate?.getDate().toString().padStart(2, "0");
+    const day = newdate && newdate?.getDate().toString().padStart(2, '0');
 
     const month =
-      newdate && (newdate?.getMonth() + 1).toString().padStart(2, "0");
+      newdate && (newdate?.getMonth() + 1).toString().padStart(2, '0');
 
     const year = newdate && newdate?.getFullYear();
 
@@ -66,8 +66,8 @@ export default function CustomDateTimePicker({
 
     // console.log("Time is------", time, offset);
     const time = newdate.toLocaleTimeString(navigator.language, {
-      hour: "2-digit",
-      minute: "2-digit",
+      hour: '2-digit',
+      minute: '2-digit',
     });
 
     return `${day}-${month}-${year}  ${time}`;
@@ -96,12 +96,12 @@ export default function CustomDateTimePicker({
                 //     {required && <Text style={styles.asterisk}>*</Text>} {label}
                 //   </Text>
                 // }
-                value={value ? formatDate(value) : ""}
+                value={value ? formatDate(value) : ''}
                 editable={false}
                 disabled={isDisabled}
                 error={error?.message}
                 style={styles.textInput}
-                placeholder="Select new Date"
+                placeholder="Select"
                 right={
                   <TextInput.Icon
                     icon="calendar-month"
@@ -132,7 +132,7 @@ export default function CustomDateTimePicker({
 
                   setOpen(false);
                 }}
-                mode={"datetime"}
+                mode={'datetime'}
                 // locale="enGB"
                 placeholder="select Date"
                 format="DD-MM-YYYY"
@@ -157,14 +157,14 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   label: {
-    fontWeight: "400",
+    fontWeight: '400',
     fontSize: 15,
     marginHorizontal: 10,
     marginBottom: -15,
   },
   labelContainer: {
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'flex-end',
     marginBottom: 2,
   },
   datePickerStyle: {
