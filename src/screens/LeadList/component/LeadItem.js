@@ -10,19 +10,40 @@ import { StyleSheet } from 'react-native';
 
 const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
   const current_date = formatDateToDDMMYYYY(leadData.CreatedDate);
-  const htmlString = leadData ? leadData?.LeadIdFormula__c : '';
+  const htmlString = leadData ? leadData?.Status_Code__c : '';
 
+  function extractStatusName(htmlString) {
+    // Regular expression to match the status name in the src attribute
+    const regex = /\/LeadColorCode\/([^\/]+)\.svg/;
+
+    // Use the regex to find a match in the HTML string
+    const match = htmlString?.match(regex);
+
+    // Check if a match is found
+    if (match && match[1]) {
+      // Extracted status name
+      let sName = match[1];
+      // Add spacing after every capital letter
+      const formattedStatusName = sName?.replace(/([A-Z])/g, ' $1').trim();
+
+      return formattedStatusName;
+    } else {
+      // Return null if no match is found
+      return '';
+    }
+  }
+  const statusName = extractStatusName(htmlString);
   // Define a regular expression to match the content inside anchor tags
-  const regex = /<a [^>]*>(.*?)<\/a>/;
+  // const regex = /<a [^>]*>(.*?)<\/a>/;
   // Use the regular expression to extract the value
-  const match = htmlString ? htmlString.match(regex) : '';
+  // const match = htmlString ? htmlString.match(regex) : '';
   let loanApplicationNum = leadData?.hasOwnProperty('LoanApplication__c')
     ? leadData?.LoanApplication__c
     : null;
   // Extracted value will be in match[1]
   // console.log('-loanApplicationNum------------>', loanApplicationNum);
-  // console.log('Is Online', leadData);
-  const leadId = match ? match[1] : null;
+  // console.log('Lead Data', leadData);
+  // const leadId = match ? match[1] : null;
   return (
     <Touchable
       style={styles.item}
@@ -34,9 +55,7 @@ const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
         </View>
 
         <View>
-          <StatusCard
-            status={loanApplicationNum ? loanApplicationNum : leadData.Status}
-          />
+          <StatusCard status={statusName} />
         </View>
       </View>
 
@@ -51,7 +70,7 @@ const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
 
         <View>
           <Text style={styles.branchChannelName}>
-            {leadData?.Branch_Name__c ? leadData?.Bank_Branch__c : ''}
+            {leadData?.Bank_Branch__r ? leadData?.Bank_Branch__r?.Name : ''}
           </Text>
 
           <Text style={styles.branchChannelName}>

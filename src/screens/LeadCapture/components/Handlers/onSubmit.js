@@ -8,9 +8,15 @@ import {
 } from '../../../../store/soups/LeadSoup';
 import leadSyncUp from '../../../../store/soups/LeadSoup/LeadSyncUp';
 import { GetBrManagerId } from './GetBranchManagerId';
-import { GetChannelId, GetRmBranchName, GetRmIdByRmName } from './GetChannelId';
+import {
+  GetBrIdByBrName,
+  GetChannelId,
+  GetRmBranchName,
+  GetRmIdByRmName,
+} from './GetChannelId';
 import Toast from 'react-native-toast-message';
 import { GetProductId } from './GetProductId';
+import { oauth } from 'react-native-force';
 
 export const OnSubmitLead = async (
   data,
@@ -24,21 +30,36 @@ export const OnSubmitLead = async (
   setCurrentPosition,
   currentPosition,
   teamHeirarchyMasterData,
-  productMappingData
+  productMappingData,
+  pincodeMasterData,
+  setIsMobileNumberChanged
 ) => {
   try {
-    console.log('Role', empRole);
     // RM Data Mapping And Lead assignment
     if (empRole === globalConstants.RoleNames.RM) {
+      if (data.MobilePhoneOtp && data.MobilePhoneOtp !== data.MobilePhone) {
+        setIsMobileNumberChanged(true);
+      }
+      data.MobilePhoneOtp = data.MobilePhone;
+      data.Requested_loan_amount__c =
+        data?.Requested_loan_amount__c && data?.Requested_loan_amount__c != 0
+          ? data?.Requested_loan_amount__c
+          : null;
+      data.Requested_tenure_in_Months__c =
+        data?.Requested_tenure_in_Months__c &&
+        data?.Requested_tenure_in_Months__c != 0
+          ? data?.Requested_tenure_in_Months__c
+          : null;
       data.Channel_Name__c = await GetChannelId(dsaBrJnData, data.Channel_Name);
-
-      data.Bank_Branch__c = teamHeirarchyByUserId
-        ? teamHeirarchyByUserId?.EmpBrch__c
-        : '';
       data.ProductLookup__c = GetProductId(
         productMappingData,
         data.ProductLookup
       );
+      data.Bank_Branch__c = GetBrIdByBrName(
+        pincodeMasterData,
+        data.Br_Manager_Br_Name
+      );
+
       data.Branch_Manager__c = GetBrManagerId(
         teamHeirarchyMasterData,
         data.Br_Manager_Br_Name
@@ -81,6 +102,10 @@ export const OnSubmitLead = async (
         teamHeirarchyMasterData,
         data.RM_SM_Name__c
       );
+      data.Bank_Branch__c = GetBrIdByBrName(
+        pincodeMasterData,
+        data.Br_Manager_Br_Name
+      );
       data.Branch_Manager__c = GetBrManagerId(
         teamHeirarchyMasterData,
         data.Br_Manager_Br_Name
@@ -96,6 +121,10 @@ export const OnSubmitLead = async (
         teamHeirarchyMasterData,
         data.Br_Manager_Br_Name
       );
+      data.Bank_Branch__c = GetBrIdByBrName(
+        pincodeMasterData,
+        data.Br_Manager_Br_Name
+      );
       // assigning lead to branch manager
       data.OwnerId = data.Branch_Manager__c;
     }
@@ -103,6 +132,8 @@ export const OnSubmitLead = async (
     // console.log('On submit Data', data);
 
     // Saving the Data locally
+
+    // console.log('Data', data);
 
     let res =
       id.length > 0
@@ -154,6 +185,7 @@ export const OnSubmitLead = async (
       } else {
         setId(res?.res[0].Id);
         setPostData(res?.res[0]);
+        console.log('updatedResData------------>', res?.res[0]);
       }
 
       !id &&
@@ -170,7 +202,15 @@ export const OnSubmitLead = async (
       //   });
       // Write Logic for showing otp verification Screen
       // OTP Verification screen can be shown if lead is assigned to RM that means OWNERID and Employee Id are same also if network is there then this screen should be visible otherwise send a toast msg that network is not there
-      setCurrentPosition((prev) => prev + 1);
+      oauth.getAuthCredentials((cred) => {
+        //   console.log('Entered', id);
+        if (data?.OwnerId === cred?.userId) {
+          // console.log('Entered 2 ');
+          setCurrentPosition((prev) => prev + 1);
+          return;
+        }
+        return;
+      });
     } else {
       // setAddLoading(false);
       setCurrentPosition(currentPosition);

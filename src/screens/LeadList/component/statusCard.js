@@ -8,7 +8,8 @@ const StatusCard = ({ status }) => {
       ? colors.bgLight
       : status === 'Lead Pending'
       ? colors.leadPending
-      : status === 'Lead Submitted - Unverified'
+      : status === 'Lead Submitted Unverified' ||
+        status === 'Lead Submitted - Unverified'
       ? colors.leadSubmittedUnverified
       : status === 'Dedupe Lead'
       ? colors.dedupeLead
@@ -16,6 +17,8 @@ const StatusCard = ({ status }) => {
       ? colors.droppedLead
       : status === 'Closed Lead'
       ? colors.closedLead
+      : status === 'Lead Verified'
+      ? colors.leadVerified
       : colors.gray200;
   return (
     <View style={[styles.card, { backgroundColor: bgColor }]}>

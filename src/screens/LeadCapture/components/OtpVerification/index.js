@@ -22,6 +22,10 @@ const OTPVerification = ({
   setAddLoading,
   postData,
   setPostData,
+  isMobileNumberChanged,
+  setIsMobileNumberChanged,
+  coolingPeriodTimer,
+  setCoolingPeriodTimer,
 }) => {
   return (
     <>
@@ -43,6 +47,10 @@ const OTPVerification = ({
           postData={postData}
           setPostData={setPostData}
           addLoading={addLoading}
+          isMobileNumberChanged={isMobileNumberChanged}
+          setIsMobileNumberChanged={setIsMobileNumberChanged}
+          coolingPeriodTimer={coolingPeriodTimer}
+          setCoolingPeriodTimer={setCoolingPeriodTimer}
         />
       </ScrollView>
     </>

@@ -15,7 +15,7 @@ const fieldList = soupConfig.lead.fieldList;
 
 const leadSyncUp = async () => {
   try {
-    console.log('Entered------1');
+    // console.log('Entered------1');
     return await syncDataUp(
       syncName,
       syncInFlight,

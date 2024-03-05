@@ -1,7 +1,10 @@
+import { parseISO } from 'date-fns';
+
 export const convertToDateString = (date) => {
   let newDate;
+  // console.log('type of date', typeof date, date);
   if (date && typeof date === 'object') {
-    newDate = date.toUTCString();
+    newDate = date?.toISOString();
     if (newDate) {
       return newDate;
     } else {
@@ -11,7 +14,8 @@ export const convertToDateString = (date) => {
   }
 
   if (date && typeof date === 'string') {
-    newDate = new Date(date)?.toUTCString();
+    newDate = parseISO(date);
+    // console.log('Converted Date', newDate, );
     if (newDate) {
       return newDate;
     } else {

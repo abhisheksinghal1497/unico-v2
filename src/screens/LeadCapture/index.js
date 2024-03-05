@@ -10,6 +10,7 @@ import React, { useContext, useState } from 'react';
 import { useInternet } from '../../store/context/Internet';
 import { BottomTabContext } from '../../navigation/mainNavigation';
 import { useDispatch, useSelector } from 'react-redux';
+import BackgroundTimer from 'react-native-background-timer';
 import { useEffect } from 'react';
 import {
   getBankBranchMaster,
@@ -35,14 +36,16 @@ import { OnSubmitLead } from './components/Handlers/onSubmit';
 import { useRole } from '../../store/context/RoleProvider';
 import { globalConstants } from '../../common/constants/globalConstants';
 import { createValidationSchema } from './components/Handlers/validationSchema';
-import { validatePincode } from './components/Handlers/validatePincode';
 import Toast from 'react-native-toast-message';
-import CustomAlert from '../../common/components/BottomPopover/CustomAlert';
 import { GetDefaultValues } from './components/Handlers/GetDefaultValues';
 import MobileOtpConsent from './components/OtpVerification/components/MobileOtpConsent';
 import LeadConverted from './components/LeadConverted/LeadConverted';
 import ScheduleMeetComponent from '../../common/components/Modal/ScheduleMeetComponent';
 import EMICalculatorComponent from '../../common/components/Modal/EMICalculatorComponent';
+import { oauth } from 'react-native-force';
+import { ConvertLead } from './components/Handlers/ConvertLead';
+import StatusCard from '../LeadList/component/statusCard';
+import { verticalScale } from '../../utils/matrcis';
 const AddLead = () => {
   // --------Define Variables Here----------//
 
@@ -56,12 +59,14 @@ const AddLead = () => {
   const [isFormEditable, setFormEditable] = useState(true);
   const [conversionResponse, setConversionResponse] = useState({});
   const [addLoading, setAddLoading] = useState(false);
+  const [isMobileNumberChanged, setIsMobileNumberChanged] = useState(false);
   const [retryCounts, setRetryCounts] = useState(0);
   const [expectedOtp, setExpectedOtp] = useState(null);
   const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
   const [emiModalVisible, setEmiModalVisible] = useState(false);
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(globalConstants.otpTimer);
+  const [coolingPeriodTimer, setCoolingPeriodTimer] = useState(null);
   const maxRetries = globalConstants.otpRetries;
   const steps = ['Basic details', 'OTP Verification'];
   const dispatch = useDispatch();
@@ -87,21 +92,30 @@ const AddLead = () => {
   const { pincodeMasterData } = useSelector(
     (state) => state.masterData.pincodeMaster
   );
+  // console.log('Pin Code Master Data', pincodeMasterData);
+  const checkOwner = (postData) => {
+    oauth.getAuthCredentials((cred) => {
+      if (id && id.length > 0) {
+        if (postData?.Status === 'Closed Lead') {
+          setFormEditable(false);
+          return;
+        }
+        if (postData?.OwnerId === cred?.userId) {
+          setFormEditable(true);
+          return;
+        }
 
-  const checkOwner = (teamHeirarchyByUserId, postData) => {
-    if (id && id.length > 0) {
-      if (postData?.OwnerId === teamHeirarchyByUserId?.Employee__c) {
-        setFormEditable(true);
+        setFormEditable(false);
         return;
       }
-      setFormEditable(false);
-    }
-    setFormEditable(true);
+      setFormEditable(true);
+      return;
+    });
   };
 
   useEffect(() => {
-    checkOwner(teamHeirarchyByUserId, postData);
-  }, [id, teamHeirarchyByUserId, postData]);
+    checkOwner(postData);
+  }, [id, postData]);
 
   useEffect(() => {
     dispatch(getProductMapping());
@@ -133,10 +147,7 @@ const AddLead = () => {
     mode: 'all',
   });
 
-  const schDate = watch('ScheduleDate');
-
   useEffect(() => {
-    console.log('scheduled date is ', schDate);
     reset(initialLeadData);
   }, [postData, watch]);
   // ---------------------------------------------
@@ -146,6 +157,19 @@ const AddLead = () => {
   useEffect(() => {
     setHasErrors(Object.keys(errors).length > 0);
   }, [errors]);
+
+  const decrementTimer = () => {
+    if (timer > 0) {
+      setTimer(timer - 1);
+    }
+    if (coolingPeriodTimer && coolingPeriodTimer > 0) {
+      setCoolingPeriodTimer(coolingPeriodTimer - 1);
+    }
+  };
+  useEffect(() => {
+    const interval = BackgroundTimer.setInterval(decrementTimer, 1000);
+    return () => BackgroundTimer.clearInterval(interval);
+  }, [timer, coolingPeriodTimer]);
 
   // --------------Handlers-------------//
 
@@ -171,7 +195,9 @@ const AddLead = () => {
         setCurrentPosition,
         currentPosition,
         teamHeirarchyMasterData,
-        productMappingData
+        productMappingData,
+        pincodeMasterData,
+        setIsMobileNumberChanged
       );
       // setCurrentPosition((prev) => prev + 1);
       setAddLoading(false);
@@ -195,7 +221,19 @@ const AddLead = () => {
     setCurrentPosition((prev) => prev - 1);
   };
 
-  const convertToLAN = async () => {};
+  const convertToLAN = async (data) => {
+    try {
+      setAddLoading(true);
+      const res = await ConvertLead(data);
+      //   console.log('Res Lead Convert', res);
+      setConversionResponse(res);
+      setCurrentPosition((prev) => prev + 1);
+      setAddLoading(false);
+    } catch (error) {
+      setAddLoading(false);
+      console.log('Convert to LAN', error);
+    }
+  };
 
   // console.log('Lead MetaData', leadMetadata);
 
@@ -223,6 +261,15 @@ const AddLead = () => {
           currentPosition={currentPosition}
         />
       )}
+      {isFormEditable && currentPosition !== 2 && (
+        <LeadActivities
+          id={id}
+          mobileNumber={watch().MobilePhone}
+          onScheduleClicked={toggleSchedule}
+          leadStatus={watch().Status}
+          onEmiCalculatorClicked={toggleEmiCalculator}
+        />
+      )}
 
       {currentPosition === 0 && (
         <KeyboardAvoidingView
@@ -231,14 +278,6 @@ const AddLead = () => {
           enabled
           keyboardVerticalOffset={Platform.select({ ios: 125, android: 500 })}
         >
-          {isFormEditable && globalConstants.RoleNames.RM === empRole && (
-            <LeadActivities
-              id={id}
-              mobileNumber={watch().MobilePhone}
-              onScheduleClicked={toggleSchedule}
-              onEmiCalculatorClicked={toggleEmiCalculator}
-            />
-          )}
           <ScrollView>
             {globalConstants.RoleNames.RM === empRole && (
               <LeadSourceDetails
@@ -299,6 +338,10 @@ const AddLead = () => {
           setTimer={setTimer}
           setPostData={setPostData}
           postData={postData}
+          isMobileNumberChanged={isMobileNumberChanged}
+          setIsMobileNumberChanged={setIsMobileNumberChanged}
+          coolingPeriodTimer={coolingPeriodTimer}
+          setCoolingPeriodTimer={setCoolingPeriodTimer}
         />
       )}
       {currentPosition === 2 && (

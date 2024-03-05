@@ -41,7 +41,10 @@ import LeadPersonalDetails from '../LeadCapture/components/PersonalDetails';
 import LeadAdditionalDetails from '../LeadCapture/components/AdditionalDetails';
 import { addLeadStyle } from '../LeadCapture/styles/AddLeadStyle';
 import { useRoute } from '@react-navigation/native';
-import { GetRmSmName } from '../LeadCapture/components/Handlers/GetChannelId';
+import {
+  GetBrNameByBrId,
+  GetRmSmName,
+} from '../LeadCapture/components/Handlers/GetChannelId';
 import MobileOtpConsent from '../LeadCapture/components/OtpVerification/components/MobileOtpConsent';
 import LeadConverted from '../LeadCapture/components/LeadConverted/LeadConverted';
 import { OnSubmitLead } from '../LeadCapture/components/Handlers/onSubmit';
@@ -49,7 +52,10 @@ import { screens } from '../../common/constants/screen';
 import BackgroundTimer from 'react-native-background-timer';
 import EMICalculatorComponent from '../../common/components/Modal/EMICalculatorComponent';
 import ScheduleMeetComponent from '../../common/components/Modal/ScheduleMeetComponent';
-
+import { oauth } from 'react-native-force';
+import { ConvertLead } from '../LeadCapture/components/Handlers/ConvertLead';
+import StatusCard from '../LeadList/component/statusCard';
+import { verticalScale } from '../../utils/matrcis';
 export default function EditLeadScreen({ navigation }) {
   const route = useRoute();
   let leadId = route.params.Id;
@@ -63,10 +69,12 @@ export default function EditLeadScreen({ navigation }) {
   const [currentPosition, setCurrentPosition] = useState(0);
   const [isFormEditable, setFormEditable] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
+  const [isMobileNumberChanged, setIsMobileNumberChanged] = useState(false);
   const [retryCounts, setRetryCounts] = useState(0);
   const [expectedOtp, setExpectedOtp] = useState(null);
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(globalConstants.otpTimer);
+  const [coolingPeriodTimer, setCoolingPeriodTimer] = useState(null);
   const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
   const [emiModalVisible, setEmiModalVisible] = useState(false);
   const maxRetries = globalConstants.otpRetries;
@@ -127,16 +135,19 @@ export default function EditLeadScreen({ navigation }) {
   useEffect(() => {
     getLeadData();
   }, [id]);
-
+  //   console.log('Post Data', postData);
   const decrementTimer = () => {
     if (timer > 0) {
       setTimer(timer - 1);
+    }
+    if (coolingPeriodTimer && coolingPeriodTimer > 0) {
+      setCoolingPeriodTimer(coolingPeriodTimer - 1);
     }
   };
   useEffect(() => {
     const interval = BackgroundTimer.setInterval(decrementTimer, 1000);
     return () => BackgroundTimer.clearInterval(interval);
-  }, [timer]);
+  }, [timer, coolingPeriodTimer]);
 
   useEffect(() => {
     dispatch(getProductMapping());
@@ -149,23 +160,31 @@ export default function EditLeadScreen({ navigation }) {
   }, []);
 
   const defaultValues = {};
-  const checkOwner = (postData, teamHeirarchyByUserId) => {
-    if (id && id.length > 0) {
-      //   console.log('Entered', id);
-      if (postData?.OwnerId === teamHeirarchyByUserId?.Employee__c) {
-        // console.log('Entered 2 ');
-        setFormEditable(true);
+  const checkOwner = (postData) => {
+    oauth.getAuthCredentials((cred) => {
+      if (id && id.length > 0) {
+        if (postData?.Status === 'Closed Lead') {
+          setFormEditable(false);
+          return;
+        }
+        // console.log('Entered', id, postData?.OwnerId, cred?.userId);
+        if (postData?.OwnerId === cred?.userId) {
+          //   console.log('Entered 2 ', cred);
+          setFormEditable(true);
+          return;
+        }
+
+        setFormEditable(false);
         return;
       }
       setFormEditable(false);
-    }
-    setFormEditable(false);
-    return;
+      return;
+    });
   };
 
   useEffect(() => {
-    checkOwner(postData, teamHeirarchyByUserId);
-  }, [id, teamHeirarchyByUserId, postData]);
+    checkOwner(postData);
+  }, [id, postData]);
 
   useEffect(() => {
     if (Object.keys(postData).length > 0) {
@@ -181,13 +200,14 @@ export default function EditLeadScreen({ navigation }) {
           : '';
       };
       data.Channel_Name = getChannelNameByIdOrName();
+      data.MobilePhoneOtp = data.MobilePhone;
       data.RM_SM_Name = GetRmSmName(
         teamHeirarchyMasterData,
         data.RM_SM_Name__c
       );
-      data.Br_Manager_Br_Name = GetBrManagerBrName(
-        teamHeirarchyMasterData,
-        data.Branch_Manager__c
+      data.Br_Manager_Br_Name = GetBrNameByBrId(
+        pincodeMasterData,
+        data.Bank_Branch__c
       );
       // console.log('Data Br_Manager_Br_Name', data.Br_Manager_Br_Name);
       data.ProductLookup = GetProductSubTypeName(
@@ -224,6 +244,8 @@ export default function EditLeadScreen({ navigation }) {
     setCurrentPosition((prev) => prev - 1);
   };
 
+  //   console.log('Watch', watch());
+
   const onSubmit = async (data) => {
     try {
       setAddLoading(true);
@@ -241,7 +263,9 @@ export default function EditLeadScreen({ navigation }) {
         setCurrentPosition,
         currentPosition,
         teamHeirarchyMasterData,
-        productMappingData
+        productMappingData,
+        pincodeMasterData,
+        setIsMobileNumberChanged
       );
       //   setCurrentPosition((prev) => prev + 1);
       setAddLoading(false);
@@ -263,7 +287,21 @@ export default function EditLeadScreen({ navigation }) {
     setEmiModalVisible(!emiModalVisible);
   };
   //   console.log('Watch Values', watch());
-  const convertToLAN = async () => {};
+  const convertToLAN = async (data) => {
+    try {
+      setAddLoading(true);
+
+      const res = await ConvertLead(data);
+      //   console.log('Res Lead Convert', res);
+      setConversionResponse(res);
+      setCurrentPosition((prev) => prev + 1);
+      setAddLoading(false);
+    } catch (error) {
+      setAddLoading(false);
+
+      console.log('Convert to LAN', error);
+    }
+  };
   return (
     <View style={addLeadStyle.container}>
       {addLoading && (
@@ -278,7 +316,28 @@ export default function EditLeadScreen({ navigation }) {
           currentPosition={currentPosition}
         />
       )}
-
+      {isFormEditable && currentPosition !== 2 && (
+        <LeadActivities
+          id={id}
+          mobileNumber={watch().MobilePhone}
+          leadStatus={watch().Status}
+          onScheduleClicked={toggleSchedule}
+          onEmiCalculatorClicked={toggleEmiCalculator}
+        />
+      )}
+      {currentPosition !== 2 && (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            marginRight: verticalScale(20),
+            marginTop: verticalScale(20),
+          }}
+        >
+          <StatusCard status={watch()?.Status} />
+        </View>
+      )}
       {currentPosition === 0 && (
         <KeyboardAvoidingView
           style={{ flex: 1 }}
@@ -289,14 +348,6 @@ export default function EditLeadScreen({ navigation }) {
             android: 500,
           })}
         >
-          {isFormEditable && (
-            <LeadActivities
-              id={id}
-              mobileNumber={watch().MobilePhone}
-              onScheduleClicked={toggleSchedule}
-              onEmiCalculatorClicked={toggleEmiCalculator}
-            />
-          )}
           <ScrollView>
             {globalConstants.RoleNames.RM === empRole && (
               <LeadSourceDetails
@@ -357,6 +408,10 @@ export default function EditLeadScreen({ navigation }) {
           setTimer={setTimer}
           setPostData={setPostData}
           postData={postData}
+          isMobileNumberChanged={isMobileNumberChanged}
+          setIsMobileNumberChanged={setIsMobileNumberChanged}
+          coolingPeriodTimer={coolingPeriodTimer}
+          setCoolingPeriodTimer={setCoolingPeriodTimer}
         />
       )}
       {currentPosition === 2 && (
@@ -411,6 +466,7 @@ export default function EditLeadScreen({ navigation }) {
         setValue={setValue}
         cancelBtnLabel={'Close'}
         visible={scheduleModalVisible}
+        setAddLoading={setAddLoading}
       />
       <EMICalculatorComponent
         control={control}

@@ -50,6 +50,7 @@ export default function LeadList({ navigation }) {
         soupConfig.lead.queryPath,
         soupConfig.lead.pageSize
       );
+      // console.log('Offline Leads',offlineLeadData);
       const filteredOffilneData = offlineLeadData?.filter(
         (lead) => lead.__local__ === true
       );

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Modal, View } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Modal, View } from 'react-native';
 import {
   Button,
   Text,
@@ -7,19 +7,19 @@ import {
   Dialog,
   Divider,
   IconButton,
-} from "react-native-paper";
-import { colors } from "../../colors";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { moderateScale, verticalScale } from "../../../utils/matrcis";
-import customTheme from "../../colors/theme";
-import CustomDatepicker from "../FormComponents/Datepicker";
-import { FormControl, component } from "../FormComponents/FormControl";
-import { useForm } from "react-hook-form";
-import Slider from "@react-native-community/slider";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { createValidationSchema } from "../../../screens/LeadCapture/components/Handlers/validationSchema";
-import * as yup from "yup";
-import { ScrollView } from "react-native-gesture-handler";
+} from 'react-native-paper';
+import { colors } from '../../colors';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { moderateScale, verticalScale } from '../../../utils/matrcis';
+import customTheme from '../../colors/theme';
+import CustomDatepicker from '../FormComponents/Datepicker';
+import { FormControl, component } from '../FormComponents/FormControl';
+import { useForm } from 'react-hook-form';
+import Slider from '@react-native-community/slider';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { createValidationSchema } from '../../../screens/LeadCapture/components/Handlers/validationSchema';
+import * as yup from 'yup';
+import { ScrollView } from 'react-native-gesture-handler';
 const EMICalculatorComponent = ({
   visible,
   title,
@@ -27,63 +27,62 @@ const EMICalculatorComponent = ({
   onDismiss,
 }) => {
   const defaultValues = {
-    Loan_Amount: "",
-    Interest_Rate: "",
-    Tenure: "",
-    EMI: "",
+    Loan_Amount: '',
+    Interest_Rate: '',
+    Tenure: '',
+    EMI: '',
   };
   const validationSchema = yup.object().shape({
     Loan_Amount: yup
       .string()
-      .required("Loan Amount is required")
-      .matches(/^([0-9]+)?$/, "Invalid Value")
-      .test("min", "Amount should be in between 1 Lakh to 5 CR.", (value) => {
+      .required('Loan Amount is required')
+      .matches(/^([0-9]+)?$/, 'Invalid Value')
+      .test('min', 'Amount should be in between 1 Lakh to 5 CR.', (value) => {
         if (!value) {
           return true;
         }
-        return parseFloat(value.replace(",", "")) >= 100000;
+        return parseFloat(value.replace(',', '')) >= 100000;
       })
-      .test("max", "Amount should be in between 1 Lakh to 5 CR.", (value) => {
+      .test('max', 'Amount should be in between 1 Lakh to 5 CR.', (value) => {
         if (!value) {
           return true;
         }
-        return parseFloat(value.replace(",", "")) <= 50000000;
+        return parseFloat(value.replace(',', '')) <= 50000000;
       })
       .nullable(),
 
     Interest_Rate: yup
       .string()
-      .required("Interest Rate is required")
-      .matches(/^([0-9]+)?$/, "Invalid Value")
-      .test("min", "Interest Rate should be in between 1% to 25%.", (value) => {
+      .required('Interest Rate is required')
+      .test('min', 'Interest Rate should be in between 1% to 25%.', (value) => {
         if (!value) {
           return true;
         }
-        return parseFloat(value.replace(",", "")) >= 1;
+        return parseFloat(value.replace(',', '')) >= 1;
       })
-      .test("max", "Interest Rate should be in between 1% to 25%.", (value) => {
+      .test('max', 'Interest Rate should be in between 1% to 25%.', (value) => {
         if (!value) {
           return true;
         }
-        return parseFloat(value.replace(",", "")) <= 25;
+        return parseFloat(value.replace(',', '')) <= 25;
       })
       .nullable(),
 
     Tenure: yup
       .string()
-      .required("Tenure is required")
-      .matches(/^([0-9]+)?$/, "Invalid Value")
-      .test("min", "Tenure should be in between 12 to 360 Months.", (value) => {
+      .required('Tenure is required')
+      .matches(/^([0-9]+)?$/, 'Invalid Value')
+      .test('min', 'Tenure should be in between 12 to 360 Months.', (value) => {
         if (!value) {
           return true;
         }
-        return parseFloat(value.replace(",", "")) >= 12;
+        return parseFloat(value.replace(',', '')) >= 12;
       })
-      .test("max", "Tenure should be in between 12 to 360 Months.", (value) => {
+      .test('max', 'Tenure should be in between 12 to 360 Months.', (value) => {
         if (!value) {
           return true;
         }
-        return parseFloat(value.replace(",", "")) <= 360;
+        return parseFloat(value.replace(',', '')) <= 360;
       })
       .nullable(),
   });
@@ -97,7 +96,7 @@ const EMICalculatorComponent = ({
   } = useForm({
     defaultValues,
     resolver: yupResolver(validationSchema),
-    mode: "all",
+    mode: 'all',
   });
 
   //   const [sliderValue, setSeliderValue] = useState("ab".repeat(LOWER_LIMIT / 2));
@@ -106,10 +105,11 @@ const EMICalculatorComponent = ({
   const [interestRate, setInterestRate] = useState(0);
   const [loanTenure, setLoanTenure] = useState(0);
   const [emi, setEmi] = useState(0);
+  const [isEMIVisible, setIsEMIVisible] = useState(false);
 
   const calculateEMI = (data) => {
-    console.log("Calculate EMI function Called");
-    console.log("Calculate EMI function Called", data);
+    console.log('Calculate EMI function Called');
+    console.log('Calculate EMI function Called', data);
     const principle = parseFloat(watch().Loan_Amount);
     const rate = parseFloat(watch().Interest_Rate) / 100 / 12;
     const months = parseFloat(watch().Tenure);
@@ -118,13 +118,15 @@ const EMICalculatorComponent = ({
       const emiValue =
         (principle * rate * Math.pow(1 + rate, months)) /
         (Math.pow(1 + rate, months) - 1);
-      console.log("EMI Calculated is", emiValue);
+      console.log('EMI Calculated is', emiValue);
       setEmi(emiValue.toFixed(2));
-      setValue("EMI", emiValue.toFixed(2));
+      setValue('EMI', emiValue.toFixed(2));
       console.log(data);
+      setIsEMIVisible(true);
     } else {
       setEmi(0);
-      setValue("EMI", 0);
+      setValue('EMI', 0);
+      setIsEMIVisible(false);
     }
   };
   return (
@@ -136,22 +138,23 @@ const EMICalculatorComponent = ({
         onPress={() => {
           reset();
           setEmi(0);
+          setIsEMIVisible(false);
           onDismiss();
         }}
         style={{
-          position: "absolute",
+          position: 'absolute',
           right: -20,
           top: -40,
           borderColor: colors.gray300,
           borderWidth: 2,
-          backgroundColor: "white",
+          backgroundColor: 'white',
         }}
       />
       <Dialog.Title>
         <Text>EMI Calculator</Text>
       </Dialog.Title>
       <Divider />
-      <ScrollView style={{ height: "50%" }}>
+      <ScrollView style={{ height: '50%' }}>
         <Dialog.Content>
           <FormControl
             compType={component.sliderAndInput}
@@ -166,6 +169,7 @@ const EMICalculatorComponent = ({
             steps={5000}
             minimumSliderValue={100000}
             maximumSliderValue={50000000}
+            type="decimal-pad"
           />
           <FormControl
             compType={component.sliderAndInput}
@@ -180,6 +184,7 @@ const EMICalculatorComponent = ({
             steps={10}
             minimumSliderValue={12}
             maximumSliderValue={360}
+            type="decimal-pad"
           />
           <FormControl
             compType={component.sliderAndInput}
@@ -194,30 +199,17 @@ const EMICalculatorComponent = ({
             steps={1}
             minimumSliderValue={1}
             maximumSliderValue={25}
+            type="decimal-pad"
           />
-          {/* <FormControl
-          compType={component.numberPad}
-          label="Interest Rate"
-          name="Interest_Rate"
-          control={control}
-          setValue={setValue}
-          required={true}
-        />
-        <FormControl
-          compType={component.numberPad}
-          label="Tenure (Months)"
-          name="Tenure"
-          control={control}
-          setValue={setValue}
-          required={true}
-        /> */}
         </Dialog.Content>
       </ScrollView>
       <Divider />
 
-      <View style={styles.emiValueWrapper}>
-        <Text style={styles.emiValue}> EMI ₹ {emi}</Text>
-      </View>
+      {isEMIVisible ? (
+        <View style={styles.emiValueWrapper}>
+          <Text style={styles.emiValue}> EMI ₹ {emi}</Text>
+        </View>
+      ) : null}
 
       <View style={styles.buttonContainer}>
         <Button mode="contained" onPress={handleSubmit(calculateEMI)}>
@@ -231,39 +223,39 @@ const EMICalculatorComponent = ({
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   blurBackground: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     borderRadius: 10,
     padding: moderateScale(25),
-    width: "80%",
+    width: '80%',
     backgroundColor: colors.bgLight,
   },
   labelContainer: {
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'flex-end',
     marginBottom: 2,
   },
   alertIcon: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: verticalScale(10),
   },
   title: {
-    textAlign: "center",
-    fontFamily: "Inter",
+    textAlign: 'center',
+    fontFamily: 'Inter',
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    marginBottom: verticalScale(20),
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    margin: verticalScale(20),
   },
   button: {
     borderRadius: 6,
@@ -273,12 +265,12 @@ const styles = StyleSheet.create({
     backgroundColor: customTheme.colors.textInputBackground,
   },
   emiValueWrapper: {
-    marginVertical: verticalScale(10),
+    marginTop: verticalScale(10),
   },
   emiValue: {
     fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

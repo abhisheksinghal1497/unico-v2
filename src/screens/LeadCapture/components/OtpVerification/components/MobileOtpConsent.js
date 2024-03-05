@@ -36,6 +36,10 @@ const MobileOtpConsent = ({
   postData,
   setPostData,
   addLoading,
+  isMobileNumberChanged,
+  setIsMobileNumberChanged,
+  coolingPeriodTimer,
+  setCoolingPeriodTimer,
 }) => {
   let isVerified = postData?.OTP_Verified__c;
   const enteredOTP = otp;
@@ -46,15 +50,19 @@ const MobileOtpConsent = ({
   const isOnline = useInternet();
   // --------------Timer------------------
   const [resendDisabled, setResendDisabled] = useState(false);
+  // console.log();
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${parseInt(
+      remainingSeconds
+    )}`;
   };
 
   const checkIfCoolingPeriodPassed = (date) => {
     let dateString = convertToDateString(date);
+
     // console.log('Date String', dateString);
     if (!dateString) {
       return true;
@@ -69,9 +77,12 @@ const MobileOtpConsent = ({
 
     // Convert milliseconds to hours
     const hoursDifference = timeDifference / (1000 * 60 * 60);
+    const secondsDifference = timeDifference / 1000;
+
+    setCoolingPeriodTimer(7200 - secondsDifference);
 
     // Check if the difference is more than 2 hours
-    console.log('Hours Difference', hoursDifference);
+    // console.log('Hours Difference', hoursDifference);
     if (hoursDifference > 2) {
       return true;
     } else {
@@ -83,9 +94,20 @@ const MobileOtpConsent = ({
     setTimer(120);
   };
 
+  // console.log('isMobileNumberChanged', isMobileNumberChanged);
+
   useEffect(() => {
     if (postData?.OTP_Attempts__c && postData?.OTP_Attempts__c > 0) {
       setRetryCounts(postData?.OTP_Attempts__c);
+
+      if (isMobileNumberChanged) {
+        setRetryCounts(0);
+        setExpectedOtp(null);
+        setOtp('');
+        // setIsMobileNumberChanged(false);
+        setCoolingPeriodTimer(null);
+      }
+
       let isCoolingPeriodPassed = checkIfCoolingPeriodPassed(
         postData?.Last_OTP_Attempt_Time__c
       );
@@ -93,10 +115,10 @@ const MobileOtpConsent = ({
       // console.log('Is Cooling Period', isCoolingPeriodPassed);
       if (isCoolingPeriodPassed) {
         setRetryCounts(0);
-        currentRetryCount = 0;
+        setCoolingPeriodTimer(null);
       }
     }
-  }, [postData]);
+  }, [postData, isMobileNumberChanged]);
 
   // console.log('retry Counts', postData?.OTP_Attempts__c, retryCounts);
 
@@ -111,11 +133,12 @@ const MobileOtpConsent = ({
       let currentRetryCount = retryCounts;
 
       if (currentRetryCount < maxRetries) {
-        await sendOTP(watch().MobilePhone, currentRetryCount + 1);
+        await sendOTP(watch().MobilePhoneOtp, currentRetryCount + 1);
       } else {
         Toast.show({
           type: 'error',
-          text1: 'Maximum Retries reached',
+          text1: 'Error',
+          text2: 'Maximum Retries reached',
           position: 'top',
         });
       }
@@ -126,11 +149,11 @@ const MobileOtpConsent = ({
       console.log('error', error);
     }
   };
-  // console.log('Lead Data', postData);
+  // console.log('expected Otp', expectedOtp, postData, isMobileNumberChanged);
   const sendOTP = async (mobilePhone, newRetryCount) => {
     try {
       const otpRes = await OTPVerificationService(LeadId, mobilePhone);
-
+      setIsMobileNumberChanged(false);
       // Handle OTP Response if it generated succesfully or not when integration is done
 
       setOtp('');
@@ -139,20 +162,23 @@ const MobileOtpConsent = ({
       if (otpRes) {
         Toast.show({
           type: 'success',
-          text1: 'OTP Generated Successfully',
+          text1: 'Success',
+          text2: 'OTP Generated Successfully',
           position: 'top',
         });
         setExpectedOtp(otpRes);
       } else {
         Toast.show({
           type: 'success',
-          text1: 'Failed to Generate OTP',
+          text1: 'Error',
+          text2: 'Failed to Generate OTP',
           position: 'top',
         });
         return;
       }
       setRetryCounts(newRetryCount);
-      let currentDateTime = new Date().toUTCString();
+      let currentDateTime = new Date().toISOString();
+      setValue('MobilePhone', mobilePhone);
       await onSubmitOtp(
         {
           ...postData,
@@ -202,7 +228,8 @@ const MobileOtpConsent = ({
         if (res) {
           Toast.show({
             type: 'success',
-            text1: 'OTP Verified Successfully',
+            text1: 'Success',
+            text2: 'OTP Verified Successfully',
             position: 'top',
           });
           setExpectedOtp(null);
@@ -217,7 +244,8 @@ const MobileOtpConsent = ({
         setAddLoading(false);
         Toast.show({
           type: 'error',
-          text1: 'Please enter a valid OTP',
+          text1: 'Error',
+          text2: 'Please enter a valid OTP',
           position: 'top',
         });
         return;
@@ -225,7 +253,8 @@ const MobileOtpConsent = ({
         setAddLoading(false);
         Toast.show({
           type: 'error',
-          text1: 'Please enter a valid OTP',
+          text1: 'Error',
+          text2: 'Please enter a valid OTP',
           position: 'top',
         });
         return;
@@ -276,12 +305,12 @@ const MobileOtpConsent = ({
                 <FormControl
                   compType={component.input}
                   label="Mobile No."
-                  name="MobilePhone"
+                  name="MobilePhoneOtp"
                   control={control}
                   required={true}
                   type="phone-pad"
                   right="phone"
-                  isDisabled={isVerified}
+                  isDisabled={isVerified || retryCounts >= maxRetries}
                 />
                 {isVerified && (
                   <View style={{ flexDirection: 'row', padding: 12 }}>
@@ -294,13 +323,16 @@ const MobileOtpConsent = ({
                         fontSize: 12,
                       }}
                     >
-                      OTP Verified Successfully
+                      Mobile Number is Verified Successfully
                     </HelperText>
                   </View>
                 )}
-                {retryCounts && retryCounts >= maxRetries ? (
+                {retryCounts &&
+                retryCounts >= maxRetries &&
+                !postData?.OTP_Verified__c ? (
                   <View style={{ flexDirection: 'row', padding: 12 }}>
                     <Icon name="closecircle" size={20} color={'#8B0000'} />
+
                     <HelperText
                       type="info"
                       style={{
@@ -310,8 +342,11 @@ const MobileOtpConsent = ({
                         //paddingBottom:16
                       }}
                     >
-                      OTP Limit Reached. Please Try After sometime
+                      {`OTP Limit Reached. Please Try After ${formatTime(
+                        coolingPeriodTimer
+                      )} Minutes`}
                     </HelperText>
+                    <Text style={otpVerificationStyle.timerLabel}></Text>
                   </View>
                 ) : (
                   <></>

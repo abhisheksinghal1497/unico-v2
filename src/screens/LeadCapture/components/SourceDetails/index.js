@@ -31,7 +31,7 @@ const LeadSourceDetails = ({
     );
     setLeadSourcePicklist(picklist);
   }, [leadMetadata]);
-
+  // console.log('Dsa Br Jn Data', dsaBrJn);
   const GetChannelName = (dsaBrJn, leadSource, customerMasterData) => {
     let channelNames = [];
     if (leadSource === `Customer Referral`) {
@@ -46,8 +46,8 @@ const LeadSourceDetails = ({
     dsaBrJn?.map((value) => {
       if (value.Account__r?.RecordType.Name === leadSource) {
         channelNames.push({
-          label: value?.Account__r.Name,
-          value: value?.Account__r.Name,
+          label: value?.Account__r?.Name,
+          value: value?.Account__r?.Name,
         });
       }
     });
@@ -100,7 +100,7 @@ const LeadSourceDetails = ({
     );
     // console.log('empCode Picklist', empCodes, teamHeirarchyMasterData);
     setEmpCodePicklist(empCodes);
-  }, [teamHeirarchyMasterData, pincodeMasterData, watch().Branch_Name__c]);
+  }, [teamHeirarchyMasterData, pincodeMasterData, watch()?.Branch_Name__c]);
 
   useEffect(() => {
     const branchPicklist = GetBranchPicklist(pincodeMasterData);
@@ -116,7 +116,7 @@ const LeadSourceDetails = ({
     );
     // console.log('Channel Picklist', channelPicklist.length);
     setChannelNamePicklist(channelPicklist);
-  }, [dsaBrJn, watch().LeadSource, customerMasterData]);
+  }, [dsaBrJn, watch()?.LeadSource, customerMasterData]);
 
   useEffect(() => {
     if (watch().LeadSource === 'Customer Referral') {

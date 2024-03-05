@@ -43,3 +43,34 @@ export const GetRmIdByRmName = (thData, rmName) => {
 
   return '';
 };
+
+export const GetBrIdByBrName = (pincodeMasterData, brname) => {
+  try {
+    let br = pincodeMasterData.find(
+      (pin) => pin?.Bank_Branch__r?.Name === brname
+    );
+
+    if (br) {
+      return br?.Bank_Branch__c;
+    } else {
+      return '';
+    }
+  } catch (error) {
+    console.log('Error GetBrIdByBrName', error);
+    return '';
+  }
+};
+export const GetBrNameByBrId = (pincodeMasterData, brId) => {
+  try {
+    let br = pincodeMasterData.find((pin) => pin?.Bank_Branch__c === brId);
+
+    if (br) {
+      return br?.Bank_Branch__r.Name;
+    } else {
+      return '';
+    }
+  } catch (error) {
+    console.log('Error GetBrIdByBrName', error);
+    return '';
+  }
+};

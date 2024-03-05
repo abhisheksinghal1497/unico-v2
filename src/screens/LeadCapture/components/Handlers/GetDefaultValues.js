@@ -48,6 +48,7 @@ export const GetDefaultValues = (
         Last_OTP_Attempt_Time__c: '',
         OTP_Attempts__c: null,
         OTP_Verified__c: false,
+        MobilePhoneOtp: '',
       };
       return defaultValues;
     }
@@ -58,9 +59,9 @@ export const GetDefaultValues = (
         LeadSource: 'DSA',
         Status: 'New Lead',
         RM_SM_Name__c: '',
-        Channel_Name__c: dsaBrJn ? dsaBrJn.Account__c : '',
-        Channel_Name: dsaBrJn ? dsaBrJn.Account__r.Name : '',
-        DSA_UGA_User__c: dsaBrJn ? dsaBrJn.DSAUGA__c : '',
+        Channel_Name__c: dsaBrJn ? dsaBrJn?.Account__c : '',
+        Channel_Name: dsaBrJn ? dsaBrJn?.Account__r.Name : '',
+        DSA_UGA_User__c: dsaBrJn ? dsaBrJn?.DSAUGA__c : '',
         // BranchCode__c: '', No need to update as it is a formula field
         DSA_Code__c: dsaBrJn ? dsaBrJn?.DSA_UGA_Code__c : '',
         Bank_Branch__c: dsaBrJn ? dsaBrJn?.BanchBrch__c : '', // Branch Name of User Logged in
@@ -91,9 +92,9 @@ export const GetDefaultValues = (
         Status: 'New Lead',
         RM_SM_Name__c: '',
         RM_Name: '',
-        Channel_Name__c: dsaBrJn ? dsaBrJn.Account__c : '',
-        Channel_Name: dsaBrJn ? dsaBrJn.Account__r.Name : '',
-        DSA_UGA_User__c: dsaBrJn ? dsaBrJn.DSAUGA__c : '',
+        Channel_Name__c: dsaBrJn ? dsaBrJn?.Account__c : '',
+        Channel_Name: dsaBrJn ? dsaBrJn?.Account__r.Name : '',
+        DSA_UGA_User__c: dsaBrJn ? dsaBrJn?.DSAUGA__c : '',
         // BranchCode__c: '', No need to update as it is a formula field
         DSA_Code__c: dsaBrJn ? dsaBrJn?.DSA_UGA_Code__c : '',
         Bank_Branch__c: dsaBrJn ? dsaBrJn?.BanchBrch__c : '', // Branch Name of User Logged in
