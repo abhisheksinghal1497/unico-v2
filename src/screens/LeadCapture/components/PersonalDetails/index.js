@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   component,
-} from '../../../../common/components/FormComponents/FormControl';
-import { GetPicklistValues } from '../../../../common/functions/getPicklistValues';
-import Accordion from '../../../../common/components/AccordionComponent/Accordion';
-import { useRole } from '../../../../store/context/RoleProvider';
-import { globalConstants } from '../../../../common/constants/globalConstants';
+} from "../../../../common/components/FormComponents/FormControl";
+import { GetPicklistValues } from "../../../../common/functions/getPicklistValues";
+import Accordion from "../../../../common/components/AccordionComponent/Accordion";
+import { useRole } from "../../../../store/context/RoleProvider";
+import { globalConstants } from "../../../../common/constants/globalConstants";
 
 const LeadPersonalDetails = ({
   control,
@@ -18,11 +18,12 @@ const LeadPersonalDetails = ({
   dsaBrJn,
   teamHeirarchyByUserId,
   watch,
+  resetField,
 }) => {
   const [customerProfilePicklist, setCustomerProfilePicklist] = useState([]);
   const [pincodePicklist, setPincodePicklist] = useState([]);
   const [brNamePicklist, setBrNamePicklist] = useState([]);
-  console.log('Pincode Master', pincodeMasterData);
+  // console.log("Pincode Master", pincodeMasterData);
   const role = useRole();
 
   const GetPincodePicklist = (leadSource, branchName, channelName) => {
@@ -30,8 +31,8 @@ const LeadPersonalDetails = ({
       let pincodePicklist = [];
       // if (role === globalConstants.RoleNames.RM) {
       if (
-        leadSource === 'UNICO Employee' ||
-        leadSource === 'Customer Referral'
+        leadSource === "UNICO Employee" ||
+        leadSource === "Customer Referral"
         // ||
         // leadSource === 'DSA' ||
         // leadSource === 'UGA'
@@ -43,7 +44,7 @@ const LeadPersonalDetails = ({
           });
         });
       }
-      if (leadSource === 'Direct-RM' && branchName) {
+      if (leadSource === "Direct-RM" && branchName) {
         pincodeMasterData.map((pin) => {
           if (pin?.Bank_Branch__r?.Name === branchName) {
             pincodePicklist.push({
@@ -53,9 +54,9 @@ const LeadPersonalDetails = ({
           }
         });
       }
-      if ((leadSource === 'DSA' || leadSource === 'UGA') && channelName) {
+      if ((leadSource === "DSA" || leadSource === "UGA") && channelName) {
         let branch = dsaBrJn.find((dbr) => dbr.Account__r.Name === channelName);
-        console.log('Entered', channelName, branch, pincodeMasterData);
+        console.log("Entered", channelName, branch, pincodeMasterData);
         pincodeMasterData.map((pin) => {
           if (branch?.BanchBrch__r.Name === pin?.Bank_Branch__r?.Name) {
             pincodePicklist.push({
@@ -68,17 +69,17 @@ const LeadPersonalDetails = ({
       // }
       return pincodePicklist;
     } catch (error) {
-      console.log('Error GetPincodePicklist', error);
+      console.log("Error GetPincodePicklist", error);
     }
   };
 
   const GetBrNamePicklist = (pincode, pincodeMasterData, leadSource) => {
     let brNPicklist = [];
     if (
-      leadSource === 'UNICO Employee' ||
-      leadSource === 'Customer Referral' ||
-      leadSource === 'DSA' ||
-      leadSource === 'UGA'
+      leadSource === "UNICO Employee" ||
+      leadSource === "Customer Referral" ||
+      leadSource === "DSA" ||
+      leadSource === "UGA"
     ) {
       pincodeMasterData.map((pin) => {
         if (pincode === pin.PinCode__r?.PIN__c)
@@ -91,6 +92,10 @@ const LeadPersonalDetails = ({
 
     return brNPicklist;
   };
+
+  useEffect(() => {
+    resetField("MiddleName");
+  }, [watch().Customer_Profile__c]);
 
   useEffect(() => {
     const pinPicklist = GetPincodePicklist(
@@ -114,23 +119,23 @@ const LeadPersonalDetails = ({
   }, [watch().Pincode__c, pincodeMasterData, watch().LeadSource]);
 
   useEffect(() => {
-    const picklist = GetPicklistValues(leadMetadata, 'Customer_Profile__c');
+    const picklist = GetPicklistValues(leadMetadata, "Customer_Profile__c");
     setCustomerProfilePicklist(picklist);
   }, [leadMetadata]);
 
   useEffect(() => {
     if (
-      watch().LeadSource === 'Direct-RM' &&
+      watch().LeadSource === "Direct-RM" &&
       role === globalConstants.RoleNames.RM
     ) {
-      setValue('Br_Manager_Br_Name', teamHeirarchyByUserId?.EmpBrch__r.Name);
+      setValue("Br_Manager_Br_Name", teamHeirarchyByUserId?.EmpBrch__r.Name);
     }
   }, [watch().LeadSource]);
 
   return (
     <Accordion
-      title={'Personal Details'}
-      Id={'PersonalDetails'}
+      title={"Personal Details"}
+      Id={"PersonalDetails"}
       collapsedError={collapsedError}
       initialState={false}
     >
@@ -160,6 +165,7 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={false}
+        isVisible={watch().Customer_Profile__c == "Salaried" ? true : false}
         // isDisabled={!editable}
       />
       <FormControl
@@ -227,7 +233,7 @@ const LeadPersonalDetails = ({
         required={true}
         options={brNamePicklist}
         isVisible={
-          watch().LeadSource !== 'Direct-RM' &&
+          watch().LeadSource !== "Direct-RM" &&
           role === globalConstants.RoleNames.RM
             ? true
             : false
@@ -243,7 +249,7 @@ const LeadPersonalDetails = ({
         setValue={setValue}
         required={false}
         isVisible={
-          watch().LeadSource === 'Direct-RM' &&
+          watch().LeadSource === "Direct-RM" &&
           role === globalConstants.RoleNames.RM
             ? true
             : false

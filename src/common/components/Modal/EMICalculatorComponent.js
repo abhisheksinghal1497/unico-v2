@@ -54,7 +54,6 @@ const EMICalculatorComponent = ({
     Interest_Rate: yup
       .string()
       .required("Interest Rate is required")
-      .matches(/^([0-9]+)?$/, "Invalid Value")
       .test("min", "Interest Rate should be in between 1% to 25%.", (value) => {
         if (!value) {
           return true;
@@ -106,6 +105,7 @@ const EMICalculatorComponent = ({
   const [interestRate, setInterestRate] = useState(0);
   const [loanTenure, setLoanTenure] = useState(0);
   const [emi, setEmi] = useState(0);
+  const [isEMIVisible, setIsEMIVisible] = useState(false);
 
   const calculateEMI = (data) => {
     console.log("Calculate EMI function Called");
@@ -122,9 +122,11 @@ const EMICalculatorComponent = ({
       setEmi(emiValue.toFixed(2));
       setValue("EMI", emiValue.toFixed(2));
       console.log(data);
+      setIsEMIVisible(true);
     } else {
       setEmi(0);
       setValue("EMI", 0);
+      setIsEMIVisible(false);
     }
   };
   return (
@@ -136,6 +138,7 @@ const EMICalculatorComponent = ({
         onPress={() => {
           reset();
           setEmi(0);
+          setIsEMIVisible(false);
           onDismiss();
         }}
         style={{
@@ -169,7 +172,7 @@ const EMICalculatorComponent = ({
           />
           <FormControl
             compType={component.sliderAndInput}
-            label="Requested Monthly Tenure"
+            label="Requested Tenure in Months"
             name="Tenure"
             control={control}
             setValue={setValue}
@@ -194,30 +197,17 @@ const EMICalculatorComponent = ({
             steps={1}
             minimumSliderValue={1}
             maximumSliderValue={25}
+            type="decimal-pad"
           />
-          {/* <FormControl
-          compType={component.numberPad}
-          label="Interest Rate"
-          name="Interest_Rate"
-          control={control}
-          setValue={setValue}
-          required={true}
-        />
-        <FormControl
-          compType={component.numberPad}
-          label="Tenure (Months)"
-          name="Tenure"
-          control={control}
-          setValue={setValue}
-          required={true}
-        /> */}
         </Dialog.Content>
       </ScrollView>
       <Divider />
 
-      <View style={styles.emiValueWrapper}>
-        <Text style={styles.emiValue}> EMI ₹ {emi}</Text>
-      </View>
+      {isEMIVisible ? (
+        <View style={styles.emiValueWrapper}>
+          <Text style={styles.emiValue}> EMI ₹ {emi}</Text>
+        </View>
+      ) : null}
 
       <View style={styles.buttonContainer}>
         <Button mode="contained" onPress={handleSubmit(calculateEMI)}>
@@ -263,7 +253,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginBottom: verticalScale(20),
+    margin: verticalScale(20),
   },
   button: {
     borderRadius: 6,
@@ -273,7 +263,7 @@ const styles = StyleSheet.create({
     backgroundColor: customTheme.colors.textInputBackground,
   },
   emiValueWrapper: {
-    marginVertical: verticalScale(10),
+    marginTop: verticalScale(10),
   },
   emiValue: {
     fontSize: 20,

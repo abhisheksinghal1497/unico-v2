@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Modal, View } from "react-native";
+import { StyleSheet, Modal, View, ScrollView } from "react-native";
 import {
   Button,
   Text,
   TextInput,
   Dialog,
   IconButton,
+  Divider,
 } from "react-native-paper";
 import { colors } from "../../colors";
-import Ionicons from "react-native-vector-icons/Ionicons";
+// import Ionicons from 'react-native-vector-icons/Ionicons';
 import { moderateScale, verticalScale } from "../../../utils/matrcis";
 import customTheme from "../../colors/theme";
-import CustomDatepicker from "../FormComponents/Datepicker";
+// import CustomDatepicker from '../FormComponents/Datepicker';
 import { FormControl, component } from "../FormComponents/FormControl";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { convertToDateString } from "../../functions/ConvertToDateString";
+import { postObjectData } from "../../../services/PostRequestService/PostObjectData";
+import Toast from "react-native-toast-message";
 
 const ScheduleMeetComponent = ({
   visible,
@@ -23,33 +27,174 @@ const ScheduleMeetComponent = ({
   cancelBtnLabel,
   onDismiss,
   onSave,
-  watch,
-  setValue,
+  setAddLoading,
+  addLoading,
 }) => {
   const validationSchema = yup.object().shape({
-    ScheduleDate: yup.string().required("Select Date and Time").nullable(),
+    StartDateTime: yup
+      .string()
+      .required("Start Date and Time Is Required")
+      .nullable(),
+    EndDateTime: yup
+      .string()
+      .required("End Date and Time Is Required")
+      .test({
+        name: "conditional",
+        message: "End Date and Time should be greater than Start Date and Time",
+        test: function (value) {
+          let dateComparison = CompareDate(this.parent.StartDateTime, value);
+
+          if (!dateComparison) {
+            console.log("False", dateComparison);
+            return false; // Channel Name is required for Connector/DSA Lead Source
+          }
+          console.log("True", dateComparison);
+
+          return true; // Validation passes if not a Connector/DSA Lead Source
+        },
+      })
+      .nullable(),
+    ReminderDateTime: yup
+      .string()
+      .required("Reminder Time Is Required")
+      .nullable(),
   });
+
+  const defaultValues = {
+    Subject: "Meeting",
+    StartDateTime: "",
+    EndDateTime: "",
+    Description: "",
+    ReminderDateTime: "",
+    IsReminderSet: true,
+  };
+
   const {
     control,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      ScheduleDate: "",
-      Notes: "",
-    },
+    defaultValues,
     resolver: yupResolver(validationSchema),
     mode: "all",
   });
-  const onSubmit = (data) => {
-    onDismiss();
-    reset();
-    console.log("onSubmit Function Changed", data);
-    console.log("Watch Function Changed", watch());
-    setValue("ScheduleDate", "");
-    let schDate = watch().ScheduleDate;
-    console.log("After Reset schDate", schDate);
+
+  const onSubmit = async (data) => {
+    try {
+      setAddLoading(true);
+      let ReminderValue = setReminderTime(
+        data.StartDateTime,
+        data.ReminderDateTime
+      );
+      let passedStartDate = new Date(data.StartDateTime);
+      let passedEndDate = new Date(data.EndDateTime);
+      console.log("Before Convert", passedStartDate, passedEndDate);
+      console.log(
+        "Before Convert",
+        typeof passedStartDate,
+        typeof passedEndDate
+      );
+
+      data.ReminderDateTime = convertToDateString(ReminderValue);
+      data.StartDateTime = convertToDateString(passedStartDate);
+      data.EndDateTime = convertToDateString(passedEndDate);
+
+      let res = await postObjectData("Event", data);
+      if (res.success) {
+        console.log("Success");
+
+        Toast.show({
+          type: "success",
+          text1: "Meeting Scheduled Successfully",
+          position: "top",
+        });
+        setAddLoading(false);
+      } else {
+        console.log("Error");
+
+        Toast.show({
+          type: "error",
+          text1: "Something Went Wrong",
+          position: "top",
+        });
+        setAddLoading(false);
+      }
+      console.log(res);
+
+      onDismiss();
+      reset();
+    } catch (error) {
+      console.log("Error");
+      setAddLoading(false);
+    }
+  };
+
+  const setReminderTime = (sdate, rdate) => {
+    let d = new Date(sdate);
+
+    let timeAdded;
+    switch (rdate) {
+      case "15 Minutes":
+        timeAdded = 15;
+        break;
+      case "30 Minutes":
+        timeAdded = 30;
+        break;
+      case "1 Hour":
+        timeAdded = 60;
+        break;
+      case "2 Hour":
+        timeAdded = 120;
+        break;
+      default:
+        break;
+    }
+
+    d.setHours(d.getHours(), d.getMinutes() + timeAdded, 0, 0);
+
+    let passingDate = d;
+    // let passingDate = d
+    // let passingDate = passedDate
+
+    return passingDate;
+  };
+
+  const remindDateTimePicklist = [
+    { label: "30 Minutes", value: "30 Minutes" },
+    { label: "15 Minutes", value: "15 Minutes" },
+    { label: "1 Hour", value: "1 Hour" },
+    { label: "2 Hour", value: "2 Hour" },
+  ];
+
+  const CompareDate = (sDate, eDate) => {
+    console.log("sDate", sDate);
+    console.log("eDate", eDate);
+    let dateString = convertToDateString(sDate);
+    // console.log('Date String', dateString);
+    if (!dateString) {
+      return true;
+    }
+
+    const startDate = new Date(sDate);
+    const endDate = new Date(eDate);
+
+    // Calculate the time difference in milliseconds
+    const timeDifference = endDate - startDate;
+    console.log("timeDifference", timeDifference);
+
+    // Convert milliseconds to minutes
+    const minutesDifference = timeDifference / (1000 * 60);
+    console.log("minutesDifference", minutesDifference);
+
+    // Check if the difference is more than 2 minutes
+    if (minutesDifference > 2) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -74,33 +219,67 @@ const ScheduleMeetComponent = ({
       <Dialog.Title>
         <Text>Schedule Meeting</Text>
       </Dialog.Title>
-      <Dialog.ScrollArea>
-        <FormControl
-          control={control}
-          watch={watch}
-          required={true}
-          compType={component.customdatetime}
-          label="Date and Time"
-          name="ScheduleDate"
-          mode="datetime"
-          // setValue={setValue}
-        />
-        <FormControl
-          compType={component.textArea}
-          label="Notes"
-          name="Notes"
-          control={control}
-          watch={watch}
-          setValue={setValue}
-          required={false}
-          // isDisabled={!editable}
-        />
-      </Dialog.ScrollArea>
-      <Dialog.Actions>
+      <Divider />
+
+      <ScrollView style={{ height: "50%" }}>
+        <Dialog.Content>
+          <FormControl
+            compType={component.readOnly}
+            control={control}
+            watch={watch}
+            required={true}
+            label="Subject"
+            name="Subject"
+            // setValue={setValue}
+          />
+          <FormControl
+            control={control}
+            watch={watch}
+            required={true}
+            compType={component.customdatetime}
+            label="Start Date and Time"
+            name="StartDateTime"
+            mode="datetime"
+            // setValue={setValue}
+          />
+          <FormControl
+            control={control}
+            watch={watch}
+            required={true}
+            compType={component.customdatetime}
+            label="End Date and Time"
+            name="EndDateTime"
+            mode="datetime"
+            // setValue={setValue}
+          />
+          <FormControl
+            compType={component.textArea}
+            label="Description"
+            name="Description"
+            control={control}
+            watch={watch}
+            setValue={setValue}
+            required={false}
+            // isDisabled={!editable}
+          />
+          <FormControl
+            compType={component.dropdown}
+            control={control}
+            watch={watch}
+            required={true}
+            label="Remind Time Before Event"
+            name="ReminderDateTime"
+            options={remindDateTimePicklist}
+            setValue={setValue}
+          />
+        </Dialog.Content>
+      </ScrollView>
+      <Divider />
+      <View style={styles.buttonContainer}>
         <Button mode="contained" onPress={handleSubmit(onSubmit)}>
           Confirm
         </Button>
-      </Dialog.Actions>
+      </View>
     </Dialog>
   );
 };
@@ -140,7 +319,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginTop: verticalScale(20),
+    margin: verticalScale(20),
   },
   button: {
     borderRadius: 6,

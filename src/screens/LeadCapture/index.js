@@ -40,6 +40,8 @@ import Toast from "react-native-toast-message";
 import CustomAlert from "../../common/components/BottomPopover/CustomAlert";
 import ScheduleMeetComponent from "../../common/components/Modal/ScheduleMeetComponent";
 import EMICalculatorComponent from "../../common/components/Modal/EMICalculatorComponent";
+import StatusCard from "../LeadList/component/statusCard";
+import { moderateScale, verticalScale } from "../../utils/matrcis";
 
 const AddLead = () => {
   // --------Define Variables Here----------//
@@ -65,7 +67,7 @@ const AddLead = () => {
   const [currentPosition, setCurrentPosition] = useState(0);
   const [isFormEditable, setFormEditable] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
-  const steps = ["Basic details", "OTP Verification", "Lead Converted"];
+  const steps = ["Basic details", "OTP Verification"];
   const dispatch = useDispatch();
   //Fetch Data from store//
   const { leadMetadata } = useSelector((state) => state.leadMetadata);
@@ -90,7 +92,6 @@ const AddLead = () => {
     (state) => state.masterData.pincodeMaster
   );
 
-  console.log("Lead Meta Data", productMappingData);
   useEffect(() => {
     dispatch(getProductMapping());
     dispatch(getLeadMetadata());
@@ -153,18 +154,16 @@ const AddLead = () => {
     setValue,
     reset,
     formState: { errors },
+    resetField,
   } = useForm({
     defaultValues,
     resolver: yupResolver(validationSchema),
     mode: "all",
   });
 
-  const schDate = watch("ScheduleDate");
-
   useEffect(() => {
-    console.log("scheduled date is ", schDate);
     reset(initialLeadData);
-  }, [postData, watch]);
+  }, [postData]);
   // ---------------------------------------------
   const initialLeadData =
     Object.keys(postData).length > 0 ? postData : defaultValues;
@@ -210,7 +209,7 @@ const AddLead = () => {
       //   setAlertVisible,
       //   setAddLoading
       // );
-
+      console.log("On Submit Clicked");
       OnSubmitLead(
         data,
         setId,
@@ -260,7 +259,7 @@ const AddLead = () => {
           <ActivityIndicator size="large" color={customTheme.colors.primary} />
         </View>
       )}
-      <Stepper steps={steps} totalSteps={3} currentPosition={currentPosition} />
+      <Stepper steps={steps} totalSteps={2} currentPosition={currentPosition} />
       <CustomAlert
         visible={alertVisible.visible}
         title={alertVisible.title}
@@ -283,6 +282,19 @@ const AddLead = () => {
             onScheduleClicked={toggleSchedule}
             onEmiCalculatorClicked={toggleEmiCalculator}
           />
+
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              marginRight: verticalScale(20),
+              marginTop: verticalScale(20),
+            }}
+          >
+            <StatusCard status={"Closed Lead"} />
+          </View>
+
           <ScrollView>
             {globalConstants.RoleNames.RM === empRole && (
               <LeadSourceDetails
@@ -307,6 +319,7 @@ const AddLead = () => {
               teamHeirarchyByUserId={teamHeirarchyByUserId}
               dsaBrJn={dsaBrJnData}
               watch={watch}
+              resetField={resetField}
             />
             <LeadAdditionalDetails
               leadMetadata={leadMetadata}
@@ -341,6 +354,8 @@ const AddLead = () => {
         setValue={setValue}
         cancelBtnLabel={"Close"}
         visible={scheduleModalVisible}
+        setAddLoading={setAddLoading}
+        addLoading={addLoading}
       />
       <EMICalculatorComponent
         control={control}
