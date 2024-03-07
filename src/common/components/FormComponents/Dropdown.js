@@ -14,6 +14,7 @@ import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { colors } from '../../colors';
 import customTheme from '../../colors/theme';
 import Touchable from '../TouchableComponent/Touchable';
+import { useSelector } from 'react-redux';
 
 const CustomDropdown = ({
   control,
@@ -35,6 +36,10 @@ const CustomDropdown = ({
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
+  const { teamHeirarchyByUserId } = useSelector(
+    (state) => state.teamHeirarchy.teamHeirarchyById
+  );
+
   const showDialog = () => {
     !isDisabled && setVisible(true);
   };
@@ -47,11 +52,17 @@ const CustomDropdown = ({
     setValue(name, item.value);
     // console.log('name and value', name, item.value);
     if (name === 'LeadSource') {
+      if (item.value === 'Direct-RM') {
+        setValue('Br_Manager_Br_Name', teamHeirarchyByUserId?.EmpBrch__r.Name);
+      } else {
+        setValue('Br_Manager_Br_Name', '');
+      }
       setValue('Channel_Name__c', '');
       setValue('Channel_Name', '');
       setValue('Customer_Name__c', '');
       setValue('DSA_Code__c', '');
-      setValue('Br_Manager_Br_Name', '');
+      setValue('Employee_Code__c', '');
+      setValue('Branch_Name__c', '');
       setValue('Pincode__c', '');
     } else if (name === 'Product__c') {
       setValue('ProductLookup', '');

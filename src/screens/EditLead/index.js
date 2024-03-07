@@ -4,14 +4,13 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-} from "react-native";
-import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useContext, useState } from "react";
-import { useInternet } from "../../store/context/Internet";
-import { BottomTabContext } from "../../navigation/mainNavigation";
-import { useDispatch, useSelector } from "react-redux";
-import BackgroundTimer from "react-native-background-timer";
-import { useEffect } from "react";
+} from 'react-native';
+import { yupResolver } from '@hookform/resolvers/yup';
+import React, { useContext, useState } from 'react';
+import { useInternet } from '../../store/context/Internet';
+import { BottomTabContext } from '../../navigation/mainNavigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import {
   getBankBranchMaster,
   getCustomerMaster,
@@ -19,71 +18,79 @@ import {
   getLocationBrJnMaster,
   getPincodeMaster,
   getProductMapping,
-} from "../../store/redux/actions/masterData";
-import { getLeadMetadata } from "../../store/redux/actions/leadMetadata";
-import { useForm } from "react-hook-form";
-import customTheme from "../../common/colors/theme";
-import { addLeadStyle } from "./styles/AddLeadStyle";
-import Stepper from "../../common/components/StepperComponent/Stepper";
-import LeadActivities from "../../common/components/MandatoyToggle";
-import LeadSourceDetails from "./components/SourceDetails";
-import LeadPersonalDetails from "./components/PersonalDetails";
-import { ScrollView } from "react-native-gesture-handler";
-import LeadAdditionalDetails from "./components/AdditionalDetails";
-import { Button } from "react-native-paper";
-import { getThMaster } from "../../store/redux/actions/teamHeirarchy";
-import { OnSubmitLead } from "./components/Handlers/onSubmit";
-import { useRole } from "../../store/context/RoleProvider";
-import { globalConstants } from "../../common/constants/globalConstants";
-import { createValidationSchema } from "./components/Handlers/validationSchema";
-import Toast from "react-native-toast-message";
-import { GetDefaultValues } from "./components/Handlers/GetDefaultValues";
-import MobileOtpConsent from "./components/OtpVerification/components/MobileOtpConsent";
-import LeadConverted from "./components/LeadConverted/LeadConverted";
-import ScheduleMeetComponent from "../../common/components/Modal/ScheduleMeetComponent";
-import EMICalculatorComponent from "../../common/components/Modal/EMICalculatorComponent";
-import { oauth } from "react-native-force";
-import { ConvertLead } from "./components/Handlers/ConvertLead";
-import { screens } from "../../common/constants/screen";
-
-const AddLead = ({ navigation }) => {
-  // --------Define Variables Here----------//
-
+} from '../../store/redux/actions/masterData';
+import { getLeadMetadata } from '../../store/redux/actions/leadMetadata';
+import { useForm } from 'react-hook-form';
+import customTheme from '../../common/colors/theme';
+import Stepper from '../../common/components/StepperComponent/Stepper';
+import LeadActivities from '../../common/components/MandatoyToggle';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Button } from 'react-native-paper';
+import { getThMaster } from '../../store/redux/actions/teamHeirarchy';
+import { useRole } from '../../store/context/RoleProvider';
+import { globalConstants } from '../../common/constants/globalConstants';
+import Toast from 'react-native-toast-message';
+import CustomAlert from '../../common/components/BottomPopover/CustomAlert';
+import { createValidationSchema } from '../LeadCapture/components/Handlers/validationSchema';
+import { QueryObject } from '../../services/QueryObject';
+import { query } from '../../common/constants/Queries';
+import { GetBrManagerBrName } from '../LeadCapture/components/Handlers/GetBranchManagerId';
+import { GetProductSubTypeName } from '../LeadCapture/components/Handlers/GetProductId';
+import LeadSourceDetails from '../LeadCapture/components/SourceDetails';
+import LeadPersonalDetails from '../LeadCapture/components/PersonalDetails';
+import LeadAdditionalDetails from '../LeadCapture/components/AdditionalDetails';
+import { addLeadStyle } from '../LeadCapture/styles/AddLeadStyle';
+import { useRoute } from '@react-navigation/native';
+import {
+  GetBrNameByBrId,
+  GetRmSmName,
+} from '../LeadCapture/components/Handlers/GetChannelId';
+import MobileOtpConsent from '../LeadCapture/components/OtpVerification/components/MobileOtpConsent';
+import LeadConverted from '../LeadCapture/components/LeadConverted/LeadConverted';
+import { OnSubmitLead } from '../LeadCapture/components/Handlers/onSubmit';
+import { screens } from '../../common/constants/screen';
+import BackgroundTimer from 'react-native-background-timer';
+import EMICalculatorComponent from '../../common/components/Modal/EMICalculatorComponent';
+import ScheduleMeetComponent from '../../common/components/Modal/ScheduleMeetComponent';
+import { oauth } from 'react-native-force';
+import { ConvertLead } from '../LeadCapture/components/Handlers/ConvertLead';
+import StatusCard from '../LeadList/component/statusCard';
+import { verticalScale } from '../../utils/matrcis';
+export default function EditLeadScreen({ navigation }) {
+  const route = useRoute();
+  let leadId = route.params.Id;
   const isOnline = useInternet();
   const empRole = useRole();
   const { hideBottomTab, setHideBottomTab } = useContext(BottomTabContext);
+  const [conversionResponse, setConversionResponse] = useState({});
   const [hasErrors, setHasErrors] = React.useState(false);
   const [postData, setPostData] = useState({});
-  const [id, setId] = useState("");
+  const [id, setId] = useState(leadId);
   const [currentPosition, setCurrentPosition] = useState(0);
   const [isFormEditable, setFormEditable] = useState(true);
-  const [conversionResponse, setConversionResponse] = useState({});
   const [addLoading, setAddLoading] = useState(false);
   const [isMobileNumberChanged, setIsMobileNumberChanged] = useState(false);
   const [retryCounts, setRetryCounts] = useState(0);
   const [expectedOtp, setExpectedOtp] = useState(null);
-  const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
-  const [emiModalVisible, setEmiModalVisible] = useState(false);
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(globalConstants.otpTimer);
   const [coolingPeriodTimer, setCoolingPeriodTimer] = useState(null);
+  const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
+  const [emiModalVisible, setEmiModalVisible] = useState(false);
   const maxRetries = globalConstants.otpRetries;
-  const steps = ["Basic details", "OTP Verification"];
+  const steps = ['Basic details', 'OTP Verification'];
   const dispatch = useDispatch();
   //Fetch Data from store//
   const { leadMetadata } = useSelector((state) => state.leadMetadata);
   const { teamHeirarchyByUserId } = useSelector(
     (state) => state.teamHeirarchy.teamHeirarchyById
   );
-
   const { teamHeirarchyMasterData } = useSelector(
     (state) => state.teamHeirarchy.teamHeirarchyMaster
   );
-
   const { productMappingData } = useSelector(
     (state) => state.masterData.productMapping
   );
-
   const { dsaBrJnData } = useSelector((state) => state.masterData.dsaBrJn);
   const { customerMasterData } = useSelector(
     (state) => state.masterData.customerMaster
@@ -92,73 +99,43 @@ const AddLead = ({ navigation }) => {
   const { pincodeMasterData } = useSelector(
     (state) => state.masterData.pincodeMaster
   );
-  // console.log('Pin Code Master Data', pincodeMasterData);
-  const checkOwner = (postData) => {
-    oauth.getAuthCredentials((cred) => {
-      if (id && id.length > 0) {
-        if (postData?.Status === "Closed Lead") {
-          setFormEditable(false);
-          return;
-        }
-        if (postData?.OwnerId === cred?.userId) {
-          setFormEditable(true);
-          return;
-        }
 
-        setFormEditable(false);
-        return;
+  const getLeadData = async () => {
+    try {
+      setAddLoading(true);
+      let leadData = {};
+      if (isOnline) {
+        let leadById = await QueryObject(query.getLeadByIdQuery(id));
+        leadData =
+          leadById?.records?.length > 0 ? { ...leadById?.records[0] } : {};
+        // console.log('isOnline', leadData, id);
+      } else {
+        let offlineLead = await QuerySoupById(
+          soupConfig.lead.soupName,
+          soupConfig.lead.queryPath,
+          id,
+          soupConfig.lead.pageSize
+        );
+        leadData = offlineLead?.length > 0 ? { ...offlineLead[0] } : {};
       }
-      setFormEditable(true);
-      return;
-    });
+
+      setPostData(leadData);
+      setAddLoading(false);
+    } catch (error) {
+      setAddLoading(false);
+      Toast.show({
+        type: 'error',
+        text1: JSON.stringify(error),
+        position: 'top',
+      });
+      // navigation.goback();
+      console.log('Error getLeadData', error);
+    }
   };
-
   useEffect(() => {
-    checkOwner(postData);
-  }, [id, postData]);
-
-  useEffect(() => {
-    dispatch(getProductMapping());
-    dispatch(getLeadMetadata());
-    dispatch(getDsaBrJn());
-    dispatch(getCustomerMaster());
-    dispatch(getThMaster());
-    dispatch(getPincodeMaster());
-    setHideBottomTab(true);
-  }, []);
-
-  //------------Default Values ---------------
-  const defaultValues = GetDefaultValues(
-    teamHeirarchyByUserId,
-    dsaBrJnData,
-    empRole
-  );
-  const validationSchema = createValidationSchema(empRole);
-  const {
-    control,
-    handleSubmit,
-    watch,
-    setValue,
-    reset,
-    formState: { errors },
-    resetField,
-  } = useForm({
-    defaultValues,
-    resolver: yupResolver(validationSchema),
-    mode: "all",
-  });
-
-  useEffect(() => {
-    reset(initialLeadData);
-  }, [postData]);
-  // ---------------------------------------------
-  const initialLeadData =
-    Object.keys(postData).length > 0 ? postData : defaultValues;
-
-  useEffect(() => {
-    setHasErrors(Object.keys(errors).length > 0);
-  }, [errors]);
-
+    getLeadData();
+  }, [id]);
+  //   console.log('Post Data', postData);
   const decrementTimer = () => {
     if (timer > 0) {
       setTimer(timer - 1);
@@ -172,18 +149,108 @@ const AddLead = ({ navigation }) => {
     return () => BackgroundTimer.clearInterval(interval);
   }, [timer, coolingPeriodTimer]);
 
-  // --------------Handlers-------------//
+  useEffect(() => {
+    dispatch(getProductMapping());
+    dispatch(getLeadMetadata());
+    dispatch(getDsaBrJn());
+    dispatch(getCustomerMaster());
+    dispatch(getThMaster());
+    dispatch(getPincodeMaster());
+    setHideBottomTab(true);
+  }, []);
 
-  //------ Submit Handler ------//
+  const defaultValues = {};
+  const checkOwner = (postData) => {
+    oauth.getAuthCredentials((cred) => {
+      if (id && id.length > 0) {
+        if (postData?.Status === 'Closed Lead') {
+          setFormEditable(false);
+          return;
+        }
+        // console.log('Entered', id, postData?.OwnerId, cred?.userId);
+        if (postData?.OwnerId === cred?.userId) {
+          //   console.log('Entered 2 ', cred);
+          setFormEditable(true);
+          return;
+        }
+
+        setFormEditable(false);
+        return;
+      }
+      setFormEditable(false);
+      return;
+    });
+  };
+
+  useEffect(() => {
+    checkOwner(postData);
+  }, [id, postData]);
+
+  useEffect(() => {
+    if (Object.keys(postData).length > 0) {
+      let data = { ...postData };
+
+      let getChannelNameByIdOrName = () => {
+        return data?.Channel_Name__c && data?.Channel_Name__c.length > 0
+          ? dsaBrJnData?.find(
+              (value) =>
+                value.Account__r.Name === data.Channel_Name__c ||
+                value.Account__c === data.Channel_Name__c
+            )?.Account__r.Name
+          : '';
+      };
+      data.Channel_Name = getChannelNameByIdOrName();
+      data.MobilePhoneOtp = data.MobilePhone;
+      data.RM_SM_Name = GetRmSmName(
+        teamHeirarchyMasterData,
+        data.RM_SM_Name__c
+      );
+      data.Br_Manager_Br_Name = GetBrNameByBrId(
+        pincodeMasterData,
+        data.Bank_Branch__c
+      );
+      // console.log('Data Br_Manager_Br_Name', data.Br_Manager_Br_Name);
+      data.ProductLookup = GetProductSubTypeName(
+        productMappingData,
+        data.ProductLookup__c
+      );
+
+      reset({ ...data });
+    }
+  }, [postData, teamHeirarchyByUserId, teamHeirarchyMasterData, dsaBrJnData]);
+  const validationSchema = createValidationSchema(empRole);
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues,
+    resolver: yupResolver(validationSchema),
+    mode: 'all',
+  });
+
+  useEffect(() => {
+    setHasErrors(Object.keys(errors).length > 0);
+  }, [errors]);
+
+  const handleConvertButton = () => {
+    navigation.navigate(screens.leadList);
+  };
+  //------ Handlers------//
+  const handlePrevSubmit = () => {
+    setCurrentPosition((prev) => prev - 1);
+  };
+
+  //   console.log('Watch', watch());
+
   const onSubmit = async (data) => {
     try {
       setAddLoading(true);
-      // Toast.show({
-      //   type: 'success',
-      //   text1: 'Lead created successfully',
-      //   position: 'top',
-      // });
 
+      //   console.log('Onsubmit', data);
       await OnSubmitLead(
         data,
         setId,
@@ -200,31 +267,30 @@ const AddLead = ({ navigation }) => {
         pincodeMasterData,
         setIsMobileNumberChanged
       );
-      // setCurrentPosition((prev) => prev + 1);
+      //   setCurrentPosition((prev) => prev + 1);
       setAddLoading(false);
-      // setIsPincodeConfirmed(false);
     } catch (error) {
-      setAddLoading(false);
-      Toast.show({
-        type: "error",
-        text1: "Failed to create lead",
-        position: "top",
-      });
-      console.log("Error in handleSubmit: ", error);
+      //   setAddLoading(false);
+
+      //   Toast.show({
+      //     type: 'error',
+      //     text1: 'Failed to create lead',
+      //     position: 'top',
+      //   });
+      console.log('Error in handleSubmit: ', error);
     }
   };
-  const handleConvertButton = () => {
-    navigation.navigate(screens.leadList);
+  const toggleSchedule = () => {
+    setScheduleModalVisible(!scheduleModalVisible);
   };
-
-  //------Step Handlers------//
-  const handlePrevSubmit = () => {
-    setCurrentPosition((prev) => prev - 1);
+  const toggleEmiCalculator = () => {
+    setEmiModalVisible(!emiModalVisible);
   };
-
+  //   console.log('Watch Values', watch());
   const convertToLAN = async (data) => {
     try {
       setAddLoading(true);
+
       const res = await ConvertLead(data);
       //   console.log('Res Lead Convert', res);
       setConversionResponse(res);
@@ -232,21 +298,10 @@ const AddLead = ({ navigation }) => {
       setAddLoading(false);
     } catch (error) {
       setAddLoading(false);
-      console.log("Convert to LAN", error);
+
+      console.log('Convert to LAN', error);
     }
   };
-
-  // console.log('Lead MetaData', leadMetadata);
-
-  //-----Schedule Meeting Button------//
-
-  const toggleSchedule = () => {
-    setScheduleModalVisible(!scheduleModalVisible);
-  };
-  const toggleEmiCalculator = () => {
-    setEmiModalVisible(!emiModalVisible);
-  };
-
   return (
     <View style={addLeadStyle.container}>
       {addLoading && (
@@ -254,7 +309,6 @@ const AddLead = ({ navigation }) => {
           <ActivityIndicator size="large" color={customTheme.colors.primary} />
         </View>
       )}
-
       {globalConstants.RoleNames.RM === empRole && (
         <Stepper
           steps={steps}
@@ -266,18 +320,33 @@ const AddLead = ({ navigation }) => {
         <LeadActivities
           id={id}
           mobileNumber={watch().MobilePhone}
-          onScheduleClicked={toggleSchedule}
           leadStatus={watch().Status}
+          onScheduleClicked={toggleSchedule}
           onEmiCalculatorClicked={toggleEmiCalculator}
         />
       )}
-
+      {currentPosition !== 2 && (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            marginRight: verticalScale(20),
+            marginTop: verticalScale(20),
+          }}
+        >
+          <StatusCard status={watch()?.Status} />
+        </View>
+      )}
       {currentPosition === 0 && (
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : null}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
           enabled
-          keyboardVerticalOffset={Platform.select({ ios: 125, android: 500 })}
+          keyboardVerticalOffset={Platform.select({
+            ios: 125,
+            android: 500,
+          })}
         >
           <ScrollView>
             {globalConstants.RoleNames.RM === empRole && (
@@ -354,14 +423,14 @@ const AddLead = ({ navigation }) => {
       <View style={addLeadStyle.buttonContainer}>
         {currentPosition === 0 && (
           <Button
-            mode={!isFormEditable ? "contained" : "outlined"}
+            mode={!isFormEditable ? 'contained' : 'outlined'}
             style={addLeadStyle.cancelButton}
             disabled={!isFormEditable}
             onPress={handleSubmit(onSubmit)}
             icon="play"
-            contentStyle={{ flexDirection: "row-reverse" }}
+            contentStyle={{ flexDirection: 'row-reverse' }}
           >
-            {globalConstants.RoleNames.RM === empRole ? "Next" : "Save"}
+            {globalConstants.RoleNames.RM === empRole ? 'Next' : 'Save'}
           </Button>
         )}
         {currentPosition === 1 && (
@@ -377,10 +446,10 @@ const AddLead = ({ navigation }) => {
             </View>
             <View>
               <Button
-                mode={"contained"}
+                mode={'contained'}
                 style={addLeadStyle.cancelButton}
                 onPress={handleSubmit(convertToLAN)}
-                contentStyle={{ flexDirection: "row-reverse" }}
+                contentStyle={{ flexDirection: 'row-reverse' }}
                 disabled={addLoading || !watch().OTP_Verified__c}
               >
                 Submit
@@ -395,14 +464,13 @@ const AddLead = ({ navigation }) => {
           setScheduleModalVisible(!scheduleModalVisible);
         }}
         setValue={setValue}
-        cancelBtnLabel={"Close"}
+        cancelBtnLabel={'Close'}
         visible={scheduleModalVisible}
         setAddLoading={setAddLoading}
-        addLoading={addLoading}
       />
       <EMICalculatorComponent
         control={control}
-        cancelBtnLabel={"Close"}
+        cancelBtnLabel={'Close'}
         visible={emiModalVisible}
         onDismiss={() => {
           setEmiModalVisible(!emiModalVisible);
@@ -410,6 +478,4 @@ const AddLead = ({ navigation }) => {
       />
     </View>
   );
-};
-
-export default AddLead;
+}

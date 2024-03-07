@@ -1,21 +1,20 @@
-export const getProductType = (teamHeirarchyByUserId) => {
+export const getProductType = (productMappingData) => {
   try {
-    if (
-      teamHeirarchyByUserId &&
-      Object.keys(teamHeirarchyByUserId)?.length > 0
-    ) {
-      return {
-        productType: String(teamHeirarchyByUserId?.Product_Type__c).split(';'),
-        hasError: true,
-      };
+    if (productMappingData && productMappingData?.length > 0) {
+      const productTypes = [
+        ...new Set(productMappingData.map((product) => product.Family)),
+      ];
+
+      return productTypes;
+      // return {
+      //   productType: productTypes,
+      //   hasError: true,
+      // };
     } else {
-      return { productType: [], hasError: false };
+      return [];
     }
   } catch (error) {
     console.log('Error in get Product Type Function', error);
-    return {
-      productType: [],
-      hasError: true,
-    };
+    return [];
   }
 };

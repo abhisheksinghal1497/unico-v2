@@ -14,3 +14,17 @@ export const GetBrManagerId = (thData, branchName) => {
     return '';
   }
 };
+export const GetBrManagerBrName = (thData, brManagerId) => {
+  try {
+    let BankBranchManagers = thData.find(
+      (th) =>
+        th.EmpRole__c === globalConstants.RoleNames.BrManager &&
+        th.Employee__c === brManagerId
+    );
+
+    return BankBranchManagers ? BankBranchManagers.EmpBrch__r.Name : '';
+  } catch (error) {
+    console.log('Error GetBrManagerId', error);
+    return '';
+  }
+};

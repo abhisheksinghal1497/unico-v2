@@ -113,6 +113,11 @@ export const soupConfig = {
       'Property_Identified__c',
       'Requested_loan_amount__c',
       'Requested_tenure_in_Months__c',
+      'OwnerId',
+      'Is_OTP_Limit_Reached__c',
+      'Last_OTP_Attempt_Time__c',
+      'OTP_Attempts__c',
+      'OTP_Verified__c',
     ],
   },
   contentVersion: {

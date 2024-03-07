@@ -20,15 +20,17 @@ import ModalComponent from "./Modal/ScheduleMeetComponent";
 const LeadActivities = ({
   id,
   onScheduleClicked,
-  MobileNumber,
+  mobileNumber,
   onEmiCalculatorClicked,
 }) => {
   const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
   // -----Toggle handler---------
   // const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
+  // console.log('Mobile Number', mobileNumber);
+
   const onCallPressed = () => {
-    Linking.openURL(`tel:${MobileNumber}`);
+    Linking.openURL(`tel:${mobileNumber}`);
   };
   return (
     <View style={styles.toggleViewContainer}>
@@ -67,7 +69,7 @@ const LeadActivities = ({
           name={"calculator-outline"}
           color={customTheme.colors.primary}
         />
-        <Text style={styles.toggleLabelStyle}>Emi Calculator</Text>
+        <Text style={styles.toggleLabelStyle}>EMI Calculator</Text>
       </TouchableOpacity>
     </View>
   );

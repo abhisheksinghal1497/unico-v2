@@ -20,7 +20,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { convertToDateString } from "../../functions/ConvertToDateString";
 import { postObjectData } from "../../../services/PostRequestService/PostObjectData";
 import Toast from "react-native-toast-message";
-
 const ScheduleMeetComponent = ({
   visible,
   title,
@@ -28,7 +27,6 @@ const ScheduleMeetComponent = ({
   onDismiss,
   onSave,
   setAddLoading,
-  addLoading,
 }) => {
   const validationSchema = yup.object().shape({
     StartDateTime: yup
@@ -91,12 +89,12 @@ const ScheduleMeetComponent = ({
       );
       let passedStartDate = new Date(data.StartDateTime);
       let passedEndDate = new Date(data.EndDateTime);
-      console.log("Before Convert", passedStartDate, passedEndDate);
-      console.log(
-        "Before Convert",
-        typeof passedStartDate,
-        typeof passedEndDate
-      );
+      //  console.log('Before Convert', passedStartDate, passedEndDate);
+      //  console.log(
+      //    'Before Convert',
+      //    typeof passedStartDate,
+      //    typeof passedEndDate
+      //  );
 
       data.ReminderDateTime = convertToDateString(ReminderValue);
       data.StartDateTime = convertToDateString(passedStartDate);
@@ -104,7 +102,7 @@ const ScheduleMeetComponent = ({
 
       let res = await postObjectData("Event", data);
       if (res.success) {
-        console.log("Success");
+        //  console.log('Success');
 
         Toast.show({
           type: "success",
@@ -112,6 +110,7 @@ const ScheduleMeetComponent = ({
           position: "top",
         });
         setAddLoading(false);
+        reset();
       } else {
         console.log("Error");
 
@@ -122,12 +121,11 @@ const ScheduleMeetComponent = ({
         });
         setAddLoading(false);
       }
-      console.log(res);
+      // console.log(res);
 
       onDismiss();
-      reset();
     } catch (error) {
-      console.log("Error");
+      console.log("Error", error);
       setAddLoading(false);
     }
   };

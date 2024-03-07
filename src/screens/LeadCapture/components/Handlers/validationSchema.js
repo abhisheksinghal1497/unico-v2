@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { globalConstants } from '../../../../common/constants/globalConstants';
 
 // --------------------------Required Regex for validations Schema-------------------
 const onlyAlphanumericRegex = /^[a-zA-Z0-9 ]+$/;
@@ -12,172 +13,219 @@ const onlyNumbers = /^[0-9]*$/;
 
 // }
 
-export const createValidationSchema = (pincodeMasterData) => {
-  return yup.object().shape({
-    //   //-----------------Lead Source Details Validations----------//
-    LeadSource: yup.string().required('Lead Source is required').nullable(),
+export const createValidationSchema = (empRole) => {
+  if (globalConstants.RoleNames.RM === empRole)
+    return yup.object().shape({
+      //   //-----------------Lead Source Details Validations----------//
+      LeadSource: yup.string().required('Lead Source is required').nullable(),
 
-    Channel_Name: yup
-      .string()
-      .test({
-        name: 'conditional',
-        message: 'Channel Name is required for Connector/DSA Lead Source',
-        test: function (value) {
-          const isSource =
-            this.parent.LeadSource === 'Connector' ||
-            this.parent.LeadSource === 'DSA' ||
-            this.parent.LeadSource === ' Customer Referral';
-          if (isSource) {
-            return !!value; // Channel Name is required for Connector/DSA Lead Source
+      Channel_Name: yup
+        .string()
+        .test({
+          name: 'conditional',
+          message: 'Channel Name is required for Connector/DSA Lead Source',
+          test: function (value) {
+            const isSource =
+              this.parent.LeadSource === 'Connector' ||
+              this.parent.LeadSource === 'DSA' ||
+              this.parent.LeadSource === ' Customer Referral';
+            if (isSource) {
+              return !!value; // Channel Name is required for Connector/DSA Lead Source
+            }
+            return true; // Validation passes if not a Connector/DSA Lead Source
+          },
+        })
+        .nullable(),
+      Branch_Name__c: yup
+        .string()
+        .test({
+          name: 'conditional',
+          message: 'Branch Name is required for UNICO Employee Lead Source',
+          test: function (value) {
+            const isSource = this.parent.LeadSource === 'UNICO Employee';
+            if (isSource) {
+              return !!value; // Branch Name is required for UNICO Employee Lead Source
+            }
+            return true; // Validation passes if not a Connector/DSA Lead Source
+          },
+        })
+        .nullable(),
+      Employee_Code__c: yup
+        .string()
+        .test({
+          name: 'conditional',
+          message: 'Employee Code is required for UNICO Employee Lead Source',
+          test: function (value) {
+            const isSource = this.parent.LeadSource === 'UNICO Employee';
+            if (isSource) {
+              return !!value; // Branch Name is required for UNICO Employee Lead Source
+            }
+            return true; // Validation passes if not a Connector/DSA Lead Source
+          },
+        })
+        .nullable(),
+
+      //   //--------------- Personal Details Validations-----------//
+
+      MobilePhone: yup
+        .string()
+        .required('Phone number is required')
+        .matches(/^[6-9]\d{9}$/, 'Please enter a valid Mobile Number')
+        .nullable(),
+      Alternative_Mobile_Number__c: yup
+        .string()
+        .nullable()
+        .matches(/^([6-9]\d{9})?$/, 'Please enter a valid Mobile Number'),
+      // Email: yup.string().nullable().email("Invalid email address"),
+
+      Email: yup
+        .string()
+        .matches(emailRegex, 'Please enter a valid Email')
+        .nullable(),
+      FirstName: yup
+        .string()
+        .required('First Name is required')
+        .matches(onlyAlphabeticRegex, 'Please enter a valid First Name')
+        .nullable(),
+      MiddleName: yup
+        .string()
+        .matches(onlyAlphabeticRegex, 'Please enter a valid Middle Name')
+        .nullable(),
+      LastName: yup
+        .string()
+        .required('Last Name is required')
+        .matches(onlyAlphabeticRegex, 'Please enter a valid Last Name')
+        .nullable(),
+
+      Pincode__c: yup.string().required('Pincode is required').nullable(),
+      Br_Manager_Br_Name: yup
+        .string()
+        .required('Branch Name is required')
+        .nullable(),
+
+      //   //-------------------------Loan Validation scheme ------------------------//
+      Product__c: yup.string().required('Product is required').nullable(),
+
+      Requested_loan_amount__c: yup
+        .string()
+        .matches(/^([0-9]+)?$/, 'Invalid Value')
+        .test('min', 'Amount should be in between 1 Lakh to 2 CR.', (value) => {
+          if (!value) {
+            return true;
           }
-          return true; // Validation passes if not a Connector/DSA Lead Source
-        },
-      })
-      .nullable(),
-    Branch_Name__c: yup
-      .string()
-      .test({
-        name: 'conditional',
-        message: 'Branch Name is required for UNICO Employee Lead Source',
-        test: function (value) {
-          const isSource = this.parent.LeadSource === 'UNICO Employee';
-          if (isSource) {
-            return !!value; // Branch Name is required for UNICO Employee Lead Source
+          return parseFloat(value.replace(',', '')) >= 100000;
+        })
+        .test('max', 'Amount should be in between 1 Lakh to 2 CR.', (value) => {
+          if (!value) {
+            return true;
           }
-          return true; // Validation passes if not a Connector/DSA Lead Source
-        },
-      })
-      .nullable(),
-    Employee_Code__c: yup
-      .string()
-      .test({
-        name: 'conditional',
-        message: 'Employee Code is required for UNICO Employee Lead Source',
-        test: function (value) {
-          const isSource = this.parent.LeadSource === 'UNICO Employee';
-          if (isSource) {
-            return !!value; // Branch Name is required for UNICO Employee Lead Source
+          return parseFloat(value.replace(',', '')) <= 20000000;
+        })
+        .nullable(),
+      Requested_tenure_in_Months__c: yup
+        .string()
+        .matches(/^([0-9]+)?$/, 'Invalid Value')
+        .test('min', 'Tenure should be in between 12 to 360', (value) => {
+          if (!value) {
+            return true;
           }
-          return true; // Validation passes if not a Connector/DSA Lead Source
-        },
-      })
-      .nullable(),
+          return parseFloat(value.replace(',', '')) >= 12;
+        })
+        .test('max', 'Tenure should be in between 12 to 360', (value) => {
+          if (!value) {
+            return true;
+          }
+          return parseFloat(value.replace(',', '')) <= 360;
+        })
+        .nullable(),
 
-    //   //--------------- Personal Details Validations-----------//
+      //Mobile Otp Consent Validations
 
-    MobilePhone: yup
-      .string()
-      .required('Phone number is required')
-      .matches(/^[6-9]\d{9}$/, 'Please enter a valid Mobile Number')
-      .nullable(),
-    Alternative_Mobile_Number__c: yup
-      .string()
-      .nullable()
-      .matches(/^([6-9]\d{9})?$/, 'Please enter a valid Mobile Number'),
-    // Email: yup.string().nullable().email("Invalid email address"),
+      // Otp__c: yup
+      //   .string()
+      //   .test({
+      //     name: 'conditional',
+      //     message: 'OTP is required',
+      //     test: function (value) {
+      //       const isRequired =
+      //         this.parent.ConsentType__c === 'OTP Consent' && expectedOtp;
+      //       if (isRequired) {
+      //         if (!value) {
+      //           return false;
+      //         }
+      //         return true;
+      //       }
+      //       return true; // Validation passes
+      //     },
+      //   })
+      //   .nullable(),
+    });
 
-    Email: yup
-      .string()
-      .matches(emailRegex, 'Please enter a valid Email ID')
-      .nullable(),
-    FirstName: yup
-      .string()
-      .required('First Name is required')
-      .matches(onlyAlphabeticRegex, 'Please enter a valid First Name')
-      .nullable(),
-    MiddleName: yup
-      .string()
-      .matches(onlyAlphabeticRegex, 'Please enter a valid Middle Name')
-      .nullable(),
-    LastName: yup
-      .string()
-      .required('Last Name is required')
-      .matches(onlyAlphabeticRegex, 'Please enter a valid Last Name')
-      .nullable(),
-    // Pincode__c: yup
-    //   .string()
-    //   .required('Pincode is required')
-    //   .matches(pincodeRegex, 'Please enter a valid Pincode')
-    //   .nullable(),
-    Pincode__c: yup.string().required('Pincode is required').nullable(),
-    Br_Manager_Br_Name: yup
-      .string()
-      .required('Branch Name is required')
-      .nullable(),
-    // .test({
-    //   name: 'conditional',
-    //   message: 'Invalid Pincode',
-    //   test: function (value) {
-    //     const { createError } = this;
-    //     // if (!value) {
-    //     //   return true;
-    //     // }
-    //     if (!pincodeRegex.test(value)) {
-    //       return createError({ message: 'Please enter a valid Pincode' });
-    //     }
-    //     // let isServiceable = isPincodeServiceable(pincodeMasterData,value);
-    //     if (!pincodeRegex.test(value)) {
-    //       return createError({ message: 'This Pincode is not Serviceable' });
-    //     }
-    //     return true;
-    //   },
-    // }),
+  if (globalConstants.RoleNames.DSA === empRole)
+    return yup.object().shape({
+      //   //--------------- Personal Details Validations-----------//
 
-    //   //-------------------------Loan Validation scheme ------------------------//
-    Product__c: yup.string().required('Product is required').nullable(),
+      MobilePhone: yup
+        .string()
+        .required('Phone number is required')
+        .matches(/^[6-9]\d{9}$/, 'Please enter a valid Mobile Number')
+        .nullable(),
 
-    Requested_loan_amount__c: yup
-      .string()
-      .matches(/^([0-9]+)?$/, 'Invalid Value')
-      .test('min', 'Amount should be in between 1 Lakh to 2 CR.', (value) => {
-        if (!value) {
-          return true;
-        }
-        return parseFloat(value.replace(',', '')) >= 100000;
-      })
-      .test('max', 'Amount should be in between 1 Lakh to 2 CR.', (value) => {
-        if (!value) {
-          return true;
-        }
-        return parseFloat(value.replace(',', '')) <= 20000000;
-      })
-      .nullable(),
-    Requested_tenure_in_Months__c: yup
-      .string()
-      .matches(/^([0-9]+)?$/, 'Invalid Value')
-      .test('min', 'Tenure should be in between 12 to 360', (value) => {
-        if (!value) {
-          return true;
-        }
-        return parseFloat(value.replace(',', '')) >= 12;
-      })
-      .test('max', 'Tenure should be in between 12 to 360', (value) => {
-        if (!value) {
-          return true;
-        }
-        return parseFloat(value.replace(',', '')) <= 360;
-      })
-      .nullable(),
+      FirstName: yup
+        .string()
+        .required('First Name is required')
+        .matches(onlyAlphabeticRegex, 'Please enter a valid First Name')
+        .nullable(),
+      MiddleName: yup
+        .string()
+        .matches(onlyAlphabeticRegex, 'Please enter a valid Middle Name')
+        .nullable(),
+      LastName: yup
+        .string()
+        .required('Last Name is required')
+        .matches(onlyAlphabeticRegex, 'Please enter a valid Last Name')
+        .nullable(),
+      Pincode__c: yup.string().required('Pincode is required').nullable(),
+      Br_Manager_Br_Name: yup
+        .string()
+        .required('Branch Name is required')
+        .nullable(),
 
-    //Mobile Otp Consent Validations
+      //   //-------------------------Loan Validation scheme ------------------------//
+      Product__c: yup.string().required('Product is required').nullable(),
+    });
 
-    // Otp__c: yup
-    //   .string()
-    //   .test({
-    //     name: 'conditional',
-    //     message: 'OTP is required',
-    //     test: function (value) {
-    //       const isRequired =
-    //         this.parent.ConsentType__c === 'OTP Consent' && expectedOtp;
-    //       if (isRequired) {
-    //         if (!value) {
-    //           return false;
-    //         }
-    //         return true;
-    //       }
-    //       return true; // Validation passes
-    //     },
-    //   })
-    //   .nullable(),
-  });
+  if (globalConstants.RoleNames.UGA === empRole)
+    return yup.object().shape({
+      //   //--------------- Personal Details Validations-----------//
+
+      MobilePhone: yup
+        .string()
+        .required('Phone number is required')
+        .matches(/^[6-9]\d{9}$/, 'Please enter a valid Mobile Number')
+        .nullable(),
+
+      FirstName: yup
+        .string()
+        .required('First Name is required')
+        .matches(onlyAlphabeticRegex, 'Please enter a valid First Name')
+        .nullable(),
+      MiddleName: yup
+        .string()
+        .matches(onlyAlphabeticRegex, 'Please enter a valid Middle Name')
+        .nullable(),
+      LastName: yup
+        .string()
+        .required('Last Name is required')
+        .matches(onlyAlphabeticRegex, 'Please enter a valid Last Name')
+        .nullable(),
+      Pincode__c: yup.string().required('Pincode is required').nullable(),
+      Br_Manager_Br_Name: yup
+        .string()
+        .required('Branch Name is required')
+        .nullable(),
+
+      //   //-------------------------Loan Validation scheme ------------------------//
+      Product__c: yup.string().required('Product is required').nullable(),
+    });
 };

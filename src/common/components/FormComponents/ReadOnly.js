@@ -61,6 +61,9 @@ export default function ReadOnly({
               right={right && <TextInput.Icon icon={right} />}
               {...rest}
             />
+            {error?.message && (
+              <Text style={styles.errorMessage}>{error?.message}</Text>
+            )}
           </View>
         );
       }}
@@ -82,6 +85,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     marginBottom: 2,
+  },
+  errorMessage: {
+    color: customTheme.colors.error,
+    marginTop: verticalScale(2),
   },
   textInput: {
     backgroundColor: customTheme.colors.textInputBackground,

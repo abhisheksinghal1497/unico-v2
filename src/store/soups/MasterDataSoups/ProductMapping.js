@@ -15,11 +15,11 @@ const objectName = soupConfig.productMapping.objectName;
 
 export const syncProductMappingData = async (teamHeirarchyByUserId) => {
   try {
-    const { productType } = await getProductType(teamHeirarchyByUserId);
+    // const { productType } = await getProductType(teamHeirarchyByUserId);
 
     // console.log('product Type', productType);
-    const queryData = query.getProductMapping(productType);
-    // console.log('Query', teamHeirarchyByUserId);
+    const queryData = query.getProductMapping;
+    console.log('Query', queryData);
     return await syncData(
       queryData,
       syncDownName,

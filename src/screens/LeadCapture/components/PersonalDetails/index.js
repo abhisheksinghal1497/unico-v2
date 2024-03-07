@@ -18,12 +18,13 @@ const LeadPersonalDetails = ({
   dsaBrJn,
   teamHeirarchyByUserId,
   watch,
-  resetField,
+  isFormEditable,
 }) => {
   const [customerProfilePicklist, setCustomerProfilePicklist] = useState([]);
   const [pincodePicklist, setPincodePicklist] = useState([]);
   const [brNamePicklist, setBrNamePicklist] = useState([]);
-  // console.log("Pincode Master", pincodeMasterData);
+  const [rmNamePicklist, setRmNamePicklist] = useState([]);
+  // console.log('Pincode Master', pincodeMasterData);
   const role = useRole();
 
   const GetPincodePicklist = (leadSource, branchName, channelName) => {
@@ -33,9 +34,6 @@ const LeadPersonalDetails = ({
       if (
         leadSource === "UNICO Employee" ||
         leadSource === "Customer Referral"
-        // ||
-        // leadSource === 'DSA' ||
-        // leadSource === 'UGA'
       ) {
         pincodeMasterData.map((pin) => {
           pincodePicklist.push({
@@ -56,7 +54,7 @@ const LeadPersonalDetails = ({
       }
       if ((leadSource === "DSA" || leadSource === "UGA") && channelName) {
         let branch = dsaBrJn.find((dbr) => dbr.Account__r.Name === channelName);
-        console.log("Entered", channelName, branch, pincodeMasterData);
+        // console.log('Entered', channelName, branch, pincodeMasterData);
         pincodeMasterData.map((pin) => {
           if (branch?.BanchBrch__r.Name === pin?.Bank_Branch__r?.Name) {
             pincodePicklist.push({
@@ -71,6 +69,19 @@ const LeadPersonalDetails = ({
     } catch (error) {
       console.log("Error GetPincodePicklist", error);
     }
+  };
+  // console.log('Pincode Master Data', pincodeMasterData);
+
+  const GetRmNamePicklist = (dsaBrJn) => {
+    let rmPicklist = [];
+
+    dsaBrJn.map((dbj) => {
+      rmPicklist.push({
+        label: dbj?.RMUsr__r.Name,
+        value: dbj?.RMUsr__r.Name,
+      });
+    });
+    return rmPicklist;
   };
 
   const GetBrNamePicklist = (pincode, pincodeMasterData, leadSource) => {
@@ -109,6 +120,14 @@ const LeadPersonalDetails = ({
     teamHeirarchyByUserId?.EmpBrch__r.Name,
     watch().Channel_Name,
   ]);
+
+  useEffect(() => {
+    if (globalConstants.RoleNames.UGA === role) {
+      let rmPicklist = GetRmNamePicklist(dsaBrJn);
+      setRmNamePicklist(rmPicklist);
+    }
+  }, [dsaBrJn, role]);
+
   useEffect(() => {
     const brPicklist = GetBrNamePicklist(
       watch().Pincode__c,
@@ -119,18 +138,22 @@ const LeadPersonalDetails = ({
   }, [watch().Pincode__c, pincodeMasterData, watch().LeadSource]);
 
   useEffect(() => {
-    const picklist = GetPicklistValues(leadMetadata, "Customer_Profile__c");
-    setCustomerProfilePicklist(picklist);
+    if (globalConstants.RoleNames.RM === role) {
+      const picklist = GetPicklistValues(leadMetadata, "Customer_Profile__c");
+      setCustomerProfilePicklist(picklist);
+    }
   }, [leadMetadata]);
 
-  useEffect(() => {
-    if (
-      watch().LeadSource === "Direct-RM" &&
-      role === globalConstants.RoleNames.RM
-    ) {
-      setValue("Br_Manager_Br_Name", teamHeirarchyByUserId?.EmpBrch__r.Name);
-    }
-  }, [watch().LeadSource]);
+  // useEffect(() => {
+  //   if (
+  //     watch().LeadSource === 'Direct-RM' &&
+  //     role === globalConstants.RoleNames.RM
+  //   ) {
+  //     if (!watch().Br_Manager_Br_Name) {
+  //       setValue('Br_Manager_Br_Name', teamHeirarchyByUserId?.EmpBrch__r.Name);
+  //     }
+  //   }
+  // }, [watch().LeadSource]);
 
   return (
     <Accordion
@@ -147,7 +170,8 @@ const LeadPersonalDetails = ({
         setValue={setValue}
         required={false}
         options={customerProfilePicklist}
-        // isDisabled={!editable}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.input}
@@ -156,7 +180,8 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={true}
-        // isDisabled={!editable}
+        autoCapitalize="characters"
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.input}
@@ -165,8 +190,8 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={false}
-        isVisible={watch().Customer_Profile__c == "Salaried" ? true : false}
-        // isDisabled={!editable}
+        autoCapitalize="characters"
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.input}
@@ -175,7 +200,8 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={true}
-        // isDisabled={!editable}
+        autoCapitalize="characters"
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.numberPad}
@@ -184,7 +210,7 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={true}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.numberPad}
@@ -193,7 +219,8 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={false}
-        // isDisabled={!editable}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.email}
@@ -202,7 +229,8 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={false}
-        // isDisabled={!editable}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.textArea}
@@ -211,7 +239,9 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={false}
-        // isDisabled={!editable}
+        autoCapitalize="sentences"
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.smartSearch}
@@ -222,7 +252,7 @@ const LeadPersonalDetails = ({
         required={true}
         watch={watch}
         options={pincodePicklist}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.searchDropdown}
@@ -233,12 +263,25 @@ const LeadPersonalDetails = ({
         required={true}
         options={brNamePicklist}
         isVisible={
-          watch().LeadSource !== "Direct-RM" &&
-          role === globalConstants.RoleNames.RM
+          role === globalConstants.RoleNames.RM &&
+          watch().LeadSource !== "Direct-RM"
+            ? true
+            : role === globalConstants.RoleNames.DSA
             ? true
             : false
         }
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
+      />
+      <FormControl
+        compType={component.searchDropdown}
+        label="RM Name"
+        name="RM_Name"
+        control={control}
+        setValue={setValue}
+        required={true}
+        options={rmNamePicklist}
+        isVisible={role === globalConstants.RoleNames.UGA ? true : false}
+        isDisabled={!isFormEditable}
       />
 
       <FormControl
@@ -247,14 +290,14 @@ const LeadPersonalDetails = ({
         name="Br_Manager_Br_Name"
         control={control}
         setValue={setValue}
-        required={false}
+        required={true}
         isVisible={
           watch().LeadSource === "Direct-RM" &&
           role === globalConstants.RoleNames.RM
             ? true
             : false
         }
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
     </Accordion>
   );

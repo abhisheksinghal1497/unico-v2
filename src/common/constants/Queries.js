@@ -3,7 +3,8 @@ export const query = {
     'Select Id, Status, Name, LeadSource, Lead_Id__c,CreatedDate,Branch_Name__c,Channel_Name__c from Lead ORDER BY LASTMODIFIEDDATE DESC',
 
   getLeadByIdQuery: (id) =>
-    `Select Lead_Id__c,Status,LeadSource,IsthisAssessedIncomePrg__c,Channel_Name__c,Company,ConsentType__c,Constitution__c,CurrentResidenceCity__City__s,Customer_Profile__c,DOB__c,Email,FirstName,KeymanName__c,LastName,MobilePhone,OfficeAddressCity__City__s,RationaleUsingPhyConsent__c,DOI__c,Referral_Employee_Code__c,RM_SM_Name__c,Product__c,ProductLookup__c,Property_Identified__c,Property_Category__c,Requested_loan_amount__c,Requested_tenure_in_Months__c,Promotion_Code__c,Disposition_Status__c,Disposition_Remarks__c,Lead_Closure_Reason__c,Is_OTP_Limit_Reached__c,Is_Physical_Consent_Validated__c,Additional_Comments__c,OTP_Verified__c,Comments__c,CreatedDate,PromCodId__c from Lead WHERE Id='${id}' `,
+    `Select Lead_Id__c,Id,LeadSource,Status,RM_SM_Name__c,Channel_Name__c,Branch_Name__c,Employee_Code__c,Customer_Name__c,DSA_Code__c,Bank_Branch__c,
+Branch_Manager__c,Customer_Profile__c,MobilePhone,Alternative_Mobile_Number__c,FirstName,MiddleName,LastName,Email,Residential_Address__c,Pincode__c,Product__c,ProductLookup__c,Property_Identified__c,Requested_loan_amount__c,Requested_tenure_in_Months__c,CreatedDate,OwnerId,	Is_OTP_Limit_Reached__c,Last_OTP_Attempt_Time__c,OTP_Attempts__c,	OTP_Verified__c from Lead WHERE Id='${id}' `,
   filterLeadQuery: (status) =>
     `Select Id, Status, Name, LeadSource, Lead_Id__c,CreatedDate from Lead WHERE Status = '${status}' ORDER BY LASTMODIFIEDDATE DESC`,
   getLocationMasterQuery:
@@ -11,18 +12,15 @@ export const query = {
   // "SELECT Id,City__c,IsServiceable__c,State__c FROM LocMstr__c",
   getTeamHierarchyQuery: `SELECT EmpBrch__c,EmpBrch__r.Name,Employee__c,EmpRole__c,FullName__c,Id,IsActive__c,Name,Product_Type__c,Supervisor__c,Employee__r.Name,BranchCode__c,Employee_Code__c FROM TeamHierarchy__c WHERE  IsActive__c = true`,
   // Employee__c = '${userId}' AND
-  // getProductMapping: (productType) =>
-  //   `SELECT Id,Name,ProdSubType__c,ProdType__c FROM ProdMap__c WHERE ProdType__c IN (${
-  //     "'" + productType.join("','") + "'"
-  //   }) `,
-  getProductMapping: (productType) =>
-    `SELECT Id,Name,Family FROM Product2 WHERE Family IN (${
-      "'" + productType.join("','") + "'"
-    })  AND  IsActive=true`,
+
+  getProductMapping: `SELECT Id,Name,Family FROM Product2 WHERE  IsActive=true`,
 
   getDsaBranchJunction: (userId) =>
     `SELECT Account__c,Account__r.Name,Account__r.RecordType.name,Account__r.DSAConnId__c
-,BanchBrch__c,BanchBrch__r.Name,BanchBrch__r.BrchCode__c,Id,IsActive__c,Name,RMUsr__c,DSA_UGA_Code__c FROM DSABrchJn__c WHERE RMUsr__c = '${userId}' AND IsActive__c = true`,
+,BanchBrch__c,BanchBrch__r.Name,BanchBrch__r.BrchCode__c,Id,IsActive__c,Name,RMUsr__c,RMUsr__r.Name,DSA_UGA_Code__c,DSAUGA__c FROM DSABrchJn__c WHERE (RMUsr__c = '${userId}' OR DSAUGA__c = '${userId}') AND IsActive__c = true`,
+  getDsaBranchJunctionForDsaUga: (userId) =>
+    `SELECT Account__c,Account__r.Name,Account__r.RecordType.name,Account__r.DSAConnId__c
+,BanchBrch__c,BanchBrch__r.Name,BanchBrch__r.BrchCode__c,Id,IsActive__c,Name,RMUsr__c,RMUsr__r.Name,DSA_UGA_Code__c,DSAUGA__c FROM DSABrchJn__c WHERE DSAUGA__c = '${userId}' AND IsActive__c = true`,
   getUserInfo: (userId) =>
     `SELECT Id,IsIntrnlUsr__c FROM User WHERE Id = '${userId}'`,
 

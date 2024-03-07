@@ -17,19 +17,21 @@ const LeadSourceDetails = ({
   teamHeirarchyMasterData,
   collapsedError,
   pincodeMasterData,
+  isFormEditable,
 }) => {
   const [leadSourcePicklist, setLeadSourcePicklist] = useState([]);
   const [channelNamePicklist, setChannelNamePicklist] = useState([]);
   const [branchNamePicklist, setBranchNamePicklist] = useState([]);
   const [empCodePicklist, setEmpCodePicklist] = useState([]);
 
+  // console.log('teamHeirarchyMasterData', teamHeirarchyMasterData);
   useEffect(() => {
     const picklist = GetPicklistValues(leadMetadata, 'LeadSource')?.filter(
       (value) => value.label !== 'Digital'
     );
     setLeadSourcePicklist(picklist);
   }, [leadMetadata]);
-
+  // console.log('Dsa Br Jn Data', dsaBrJn);
   const GetChannelName = (dsaBrJn, leadSource, customerMasterData) => {
     let channelNames = [];
     if (leadSource === `Customer Referral`) {
@@ -44,8 +46,8 @@ const LeadSourceDetails = ({
     dsaBrJn?.map((value) => {
       if (value.Account__r?.RecordType.Name === leadSource) {
         channelNames.push({
-          label: value?.Account__r.Name,
-          value: value?.Account__r.Name,
+          label: value?.Account__r?.Name,
+          value: value?.Account__r?.Name,
         });
       }
     });
@@ -54,16 +56,22 @@ const LeadSourceDetails = ({
   };
 
   const GetBranchPicklist = (pincodeMasterData) => {
-    let branchPicklist = [];
-    pincodeMasterData?.map((branch) => {
-      branchPicklist.push({
-        label: branch?.Bank_Branch__r?.Name,
-        value: branch?.Bank_Branch__r?.Name,
-      });
-    });
-    return branchPicklist;
-  };
+    const branchSet = new Set();
 
+    pincodeMasterData?.forEach((branch) => {
+      const branchName = branch?.Bank_Branch__r?.Name;
+      if (branchName) {
+        branchSet.add(branchName);
+      }
+    });
+
+    const uniqueBranchNames = Array.from(branchSet).map((branchName) => ({
+      label: branchName,
+      value: branchName,
+    }));
+
+    return uniqueBranchNames;
+  };
   const GetEmployeeCodePicklist = (
     teamHeirarchyMasterData,
     pincodeMasterData,
@@ -98,7 +106,7 @@ const LeadSourceDetails = ({
     );
     // console.log('empCode Picklist', empCodes, teamHeirarchyMasterData);
     setEmpCodePicklist(empCodes);
-  }, [teamHeirarchyMasterData, pincodeMasterData, watch().Branch_Name__c]);
+  }, [teamHeirarchyMasterData, pincodeMasterData, watch()?.Branch_Name__c]);
 
   useEffect(() => {
     const branchPicklist = GetBranchPicklist(pincodeMasterData);
@@ -114,7 +122,7 @@ const LeadSourceDetails = ({
     );
     // console.log('Channel Picklist', channelPicklist.length);
     setChannelNamePicklist(channelPicklist);
-  }, [dsaBrJn, watch().LeadSource, customerMasterData]);
+  }, [dsaBrJn, watch()?.LeadSource, customerMasterData]);
 
   useEffect(() => {
     if (watch().LeadSource === 'Customer Referral') {
@@ -153,7 +161,7 @@ const LeadSourceDetails = ({
         setValue={setValue}
         required={true}
         options={leadSourcePicklist}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
 
       <FormControl
@@ -171,7 +179,7 @@ const LeadSourceDetails = ({
             ? true
             : false
         }
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.readOnly}
@@ -185,7 +193,7 @@ const LeadSourceDetails = ({
             ? true
             : false
         }
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.searchDropdown}
@@ -196,7 +204,7 @@ const LeadSourceDetails = ({
         required={true}
         options={branchNamePicklist}
         isVisible={watch().LeadSource === 'UNICO Employee' ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.searchDropdown}
@@ -207,7 +215,7 @@ const LeadSourceDetails = ({
         required={true}
         options={empCodePicklist}
         isVisible={watch().LeadSource === 'UNICO Employee' ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.readOnly}
@@ -217,7 +225,7 @@ const LeadSourceDetails = ({
         setValue={setValue}
         required={false}
         isVisible={watch().LeadSource === 'Direct-RM' ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.readOnly}
@@ -227,7 +235,7 @@ const LeadSourceDetails = ({
         setValue={setValue}
         required={false}
         isVisible={watch().LeadSource === 'Customer Referral' ? true : false}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
     </Accordion>
   );

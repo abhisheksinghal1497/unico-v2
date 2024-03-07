@@ -123,9 +123,11 @@ const EMICalculatorComponent = ({
       setValue("EMI", emiValue.toFixed(2));
       console.log(data);
       setIsEMIVisible(true);
+      setIsEMIVisible(true);
     } else {
       setEmi(0);
       setValue("EMI", 0);
+      setIsEMIVisible(false);
       setIsEMIVisible(false);
     }
   };
@@ -138,6 +140,7 @@ const EMICalculatorComponent = ({
         onPress={() => {
           reset();
           setEmi(0);
+          setIsEMIVisible(false);
           setIsEMIVisible(false);
           onDismiss();
         }}
@@ -169,6 +172,7 @@ const EMICalculatorComponent = ({
             steps={5000}
             minimumSliderValue={100000}
             maximumSliderValue={50000000}
+            type="decimal-pad"
           />
           <FormControl
             compType={component.sliderAndInput}
@@ -183,6 +187,7 @@ const EMICalculatorComponent = ({
             steps={10}
             minimumSliderValue={12}
             maximumSliderValue={360}
+            type="decimal-pad"
           />
           <FormControl
             compType={component.sliderAndInput}
@@ -203,6 +208,11 @@ const EMICalculatorComponent = ({
       </ScrollView>
       <Divider />
 
+      {isEMIVisible ? (
+        <View style={styles.emiValueWrapper}>
+          <Text style={styles.emiValue}> EMI ₹ {emi}</Text>
+        </View>
+      ) : null}
       {isEMIVisible ? (
         <View style={styles.emiValueWrapper}>
           <Text style={styles.emiValue}> EMI ₹ {emi}</Text>
@@ -253,7 +263,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    margin: verticalScale(20),
+    marginBottom: verticalScale(20),
   },
   button: {
     borderRadius: 6,
@@ -263,6 +273,7 @@ const styles = StyleSheet.create({
     backgroundColor: customTheme.colors.textInputBackground,
   },
   emiValueWrapper: {
+    marginTop: verticalScale(10),
     marginTop: verticalScale(10),
   },
   emiValue: {

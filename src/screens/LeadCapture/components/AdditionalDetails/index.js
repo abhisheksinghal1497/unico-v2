@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { GetPicklistValues } from '../../../../common/functions/getPicklistValues';
 import { getProductType } from '../../../../common/functions/getProductType';
+import { useRole } from '../../../../store/context/RoleProvider';
+import { globalConstants } from '../../../../common/constants/globalConstants';
 
 const LeadAdditionalDetails = ({
   control,
@@ -17,10 +19,13 @@ const LeadAdditionalDetails = ({
   productMapping,
   watch,
   collapsedError,
+  isFormEditable,
 }) => {
   const [product, setProduct] = useState([]);
   const [productSubType, setProductSubType] = useState([]);
   const [propertyIdentified, setPropertyIdentified] = useState([]);
+  const role = useRole();
+
   const getProductSubType = (productMapping, selectedPT) => {
     // console.log('Product Sub Type', productMapping, selectedPT, watch());
     let subType = [];
@@ -41,8 +46,8 @@ const LeadAdditionalDetails = ({
       'Property_Identified__c'
     );
     setPropertyIdentified(propertyIdentifiedList);
-    const productPickList = getProductType(teamHeirarchyByUserId);
-    setProduct(productPickList?.productType);
+    const productPickList = getProductType(productMapping);
+    setProduct(productPickList);
     const productSubTypePicklist = getProductSubType(
       productMapping,
       watch().Product__c
@@ -68,7 +73,7 @@ const LeadAdditionalDetails = ({
         required={true}
         options={productTypeList}
         setValue={setValue}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.dropdown}
@@ -78,7 +83,8 @@ const LeadAdditionalDetails = ({
         required={false}
         options={productSubType}
         setValue={setValue}
-        // isDisabled={!editable}
+        isDisabled={!isFormEditable}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
       />
       <FormControl
         compType={component.numberPad}
@@ -86,7 +92,8 @@ const LeadAdditionalDetails = ({
         name="Requested_loan_amount__c"
         control={control}
         required={false}
-        // isDisabled={!editable}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.numberPad}
@@ -94,7 +101,8 @@ const LeadAdditionalDetails = ({
         name="Requested_tenure_in_Months__c"
         control={control}
         required={false}
-        // isDisabled={!editable}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isDisabled={!isFormEditable}
       />
       <FormControl
         compType={component.dropdown}
@@ -104,7 +112,8 @@ const LeadAdditionalDetails = ({
         required={false}
         options={propertyIdentified}
         setValue={setValue}
-        // isDisabled={!editable}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isDisabled={!isFormEditable}
       />
     </Accordion>
   );
