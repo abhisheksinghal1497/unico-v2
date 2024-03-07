@@ -44,9 +44,9 @@ import ScheduleMeetComponent from '../../common/components/Modal/ScheduleMeetCom
 import EMICalculatorComponent from '../../common/components/Modal/EMICalculatorComponent';
 import { oauth } from 'react-native-force';
 import { ConvertLead } from './components/Handlers/ConvertLead';
-import StatusCard from '../LeadList/component/statusCard';
-import { verticalScale } from '../../utils/matrcis';
-const AddLead = () => {
+import { screens } from '../../common/constants/screen';
+
+const AddLead = ({ navigation }) => {
   // --------Define Variables Here----------//
 
   const isOnline = useInternet();

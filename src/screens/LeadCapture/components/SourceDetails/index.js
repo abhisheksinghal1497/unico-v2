@@ -56,16 +56,22 @@ const LeadSourceDetails = ({
   };
 
   const GetBranchPicklist = (pincodeMasterData) => {
-    let branchPicklist = [];
-    pincodeMasterData?.map((branch) => {
-      branchPicklist.push({
-        label: branch?.Bank_Branch__r?.Name,
-        value: branch?.Bank_Branch__r?.Name,
-      });
-    });
-    return branchPicklist;
-  };
+    const branchSet = new Set();
 
+    pincodeMasterData?.forEach((branch) => {
+      const branchName = branch?.Bank_Branch__r?.Name;
+      if (branchName) {
+        branchSet.add(branchName);
+      }
+    });
+
+    const uniqueBranchNames = Array.from(branchSet).map((branchName) => ({
+      label: branchName,
+      value: branchName,
+    }));
+
+    return uniqueBranchNames;
+  };
   const GetEmployeeCodePicklist = (
     teamHeirarchyMasterData,
     pincodeMasterData,

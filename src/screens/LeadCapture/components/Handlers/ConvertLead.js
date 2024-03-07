@@ -65,6 +65,16 @@ export const ConvertLead = async (lead) => {
       referenceId: 'reference_id_loan_appl_get_1',
     });
 
+    // Get Lead Id Number
+
+    compositeRequest.push({
+      url: `/services/data/${net.getApiVersion()}/sobjects/Lead/${
+        leadData?.Id
+      }?fields=Id,Lead_Id__c`,
+      method: 'GET',
+      referenceId: 'reference_id_lead_get_1',
+    });
+
     let graphRes = await compositeGraphApi([
       {
         graphId: '1',
@@ -86,6 +96,9 @@ export const ConvertLead = async (lead) => {
         leadData,
         loanAppNo: graphRes?.graphs[0].graphResponse.compositeResponse.find(
           (value) => value.referenceId === 'reference_id_loan_appl_get_1'
+        )?.body,
+        leadId: graphRes?.graphs[0].graphResponse.compositeResponse.find(
+          (value) => value.referenceId === 'reference_id_lead_get_1'
         )?.body,
       };
     } else {

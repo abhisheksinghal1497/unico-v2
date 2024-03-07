@@ -8,7 +8,7 @@ import { convertedLeadStyle } from './styles/LeadConvertedStyle';
 import { colors } from '../../../../common/colors';
 
 const LeadConverted = ({ handleConvertButton, LeadCaptureData }) => {
-  const { leadData, loanAppNo } = LeadCaptureData;
+  const { leadData, loanAppNo, leadId } = LeadCaptureData;
   console.log('loanAppNo------>', loanAppNo);
   const navigation = useNavigation();
 
@@ -45,7 +45,7 @@ const LeadConverted = ({ handleConvertButton, LeadCaptureData }) => {
           <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
             <Text style={convertedLeadStyle.convertedLabel}>{'Lead Id:'}</Text>
             <Text style={convertedLeadStyle.convertedValues}>
-              {Lead_Id__c || ''}
+              {leadId?.Lead_Id__c || ''}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
