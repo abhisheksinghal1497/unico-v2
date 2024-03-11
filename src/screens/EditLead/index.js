@@ -4,13 +4,13 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native';
-import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useContext, useState } from 'react';
-import { useInternet } from '../../store/context/Internet';
-import { BottomTabContext } from '../../navigation/mainNavigation';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+} from "react-native";
+import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useContext, useState } from "react";
+import { useInternet } from "../../store/context/Internet";
+import { BottomTabContext } from "../../navigation/mainNavigation";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import {
   getBankBranchMaster,
   getCustomerMaster,
@@ -18,44 +18,44 @@ import {
   getLocationBrJnMaster,
   getPincodeMaster,
   getProductMapping,
-} from '../../store/redux/actions/masterData';
-import { getLeadMetadata } from '../../store/redux/actions/leadMetadata';
-import { useForm } from 'react-hook-form';
-import customTheme from '../../common/colors/theme';
-import Stepper from '../../common/components/StepperComponent/Stepper';
-import LeadActivities from '../../common/components/MandatoyToggle';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Button } from 'react-native-paper';
-import { getThMaster } from '../../store/redux/actions/teamHeirarchy';
-import { useRole } from '../../store/context/RoleProvider';
-import { globalConstants } from '../../common/constants/globalConstants';
-import Toast from 'react-native-toast-message';
-import CustomAlert from '../../common/components/BottomPopover/CustomAlert';
-import { createValidationSchema } from '../LeadCapture/components/Handlers/validationSchema';
-import { QueryObject } from '../../services/QueryObject';
-import { query } from '../../common/constants/Queries';
-import { GetBrManagerBrName } from '../LeadCapture/components/Handlers/GetBranchManagerId';
-import { GetProductSubTypeName } from '../LeadCapture/components/Handlers/GetProductId';
-import LeadSourceDetails from '../LeadCapture/components/SourceDetails';
-import LeadPersonalDetails from '../LeadCapture/components/PersonalDetails';
-import LeadAdditionalDetails from '../LeadCapture/components/AdditionalDetails';
-import { addLeadStyle } from '../LeadCapture/styles/AddLeadStyle';
-import { useRoute } from '@react-navigation/native';
+} from "../../store/redux/actions/masterData";
+import { getLeadMetadata } from "../../store/redux/actions/leadMetadata";
+import { useForm } from "react-hook-form";
+import customTheme from "../../common/colors/theme";
+import Stepper from "../../common/components/StepperComponent/Stepper";
+import LeadActivities from "../../common/components/MandatoyToggle";
+import { ScrollView } from "react-native-gesture-handler";
+import { Button } from "react-native-paper";
+import { getThMaster } from "../../store/redux/actions/teamHeirarchy";
+import { useRole } from "../../store/context/RoleProvider";
+import { globalConstants } from "../../common/constants/globalConstants";
+import Toast from "react-native-toast-message";
+import CustomAlert from "../../common/components/BottomPopover/CustomAlert";
+import { createValidationSchema } from "../LeadCapture/components/Handlers/validationSchema";
+import { QueryObject } from "../../services/QueryObject";
+import { query } from "../../common/constants/Queries";
+import { GetBrManagerBrName } from "../LeadCapture/components/Handlers/GetBranchManagerId";
+import { GetProductSubTypeName } from "../LeadCapture/components/Handlers/GetProductId";
+import LeadSourceDetails from "../LeadCapture/components/SourceDetails";
+import LeadPersonalDetails from "../LeadCapture/components/PersonalDetails";
+import LeadAdditionalDetails from "../LeadCapture/components/AdditionalDetails";
+import { addLeadStyle } from "../LeadCapture/styles/AddLeadStyle";
+import { useRoute } from "@react-navigation/native";
 import {
   GetBrNameByBrId,
   GetRmSmName,
-} from '../LeadCapture/components/Handlers/GetChannelId';
-import MobileOtpConsent from '../LeadCapture/components/OtpVerification/components/MobileOtpConsent';
-import LeadConverted from '../LeadCapture/components/LeadConverted/LeadConverted';
-import { OnSubmitLead } from '../LeadCapture/components/Handlers/onSubmit';
-import { screens } from '../../common/constants/screen';
-import BackgroundTimer from 'react-native-background-timer';
-import EMICalculatorComponent from '../../common/components/Modal/EMICalculatorComponent';
-import ScheduleMeetComponent from '../../common/components/Modal/ScheduleMeetComponent';
-import { oauth } from 'react-native-force';
-import { ConvertLead } from '../LeadCapture/components/Handlers/ConvertLead';
-import StatusCard from '../LeadList/component/statusCard';
-import { verticalScale } from '../../utils/matrcis';
+} from "../LeadCapture/components/Handlers/GetChannelId";
+import MobileOtpConsent from "../LeadCapture/components/OtpVerification/components/MobileOtpConsent";
+import LeadConverted from "../LeadCapture/components/LeadConverted/LeadConverted";
+import { OnSubmitLead } from "../LeadCapture/components/Handlers/onSubmit";
+import { screens } from "../../common/constants/screen";
+import BackgroundTimer from "react-native-background-timer";
+import EMICalculatorComponent from "../../common/components/Modal/EMICalculatorComponent";
+import ScheduleMeetComponent from "../../common/components/Modal/ScheduleMeetComponent";
+import { oauth } from "react-native-force";
+import { ConvertLead } from "../LeadCapture/components/Handlers/ConvertLead";
+import StatusCard from "../LeadList/component/statusCard";
+import { verticalScale } from "../../utils/matrcis";
 export default function EditLeadScreen({ navigation }) {
   const route = useRoute();
   let leadId = route.params.Id;
@@ -72,13 +72,13 @@ export default function EditLeadScreen({ navigation }) {
   const [isMobileNumberChanged, setIsMobileNumberChanged] = useState(false);
   const [retryCounts, setRetryCounts] = useState(0);
   const [expectedOtp, setExpectedOtp] = useState(null);
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(globalConstants.otpTimer);
   const [coolingPeriodTimer, setCoolingPeriodTimer] = useState(null);
   const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
   const [emiModalVisible, setEmiModalVisible] = useState(false);
   const maxRetries = globalConstants.otpRetries;
-  const steps = ['Basic details', 'OTP Verification'];
+  const steps = ["Basic details", "OTP Verification"];
   const dispatch = useDispatch();
   //Fetch Data from store//
   const { leadMetadata } = useSelector((state) => state.leadMetadata);
@@ -124,12 +124,12 @@ export default function EditLeadScreen({ navigation }) {
     } catch (error) {
       setAddLoading(false);
       Toast.show({
-        type: 'error',
+        type: "error",
         text1: JSON.stringify(error),
-        position: 'top',
+        position: "top",
       });
       // navigation.goback();
-      console.log('Error getLeadData', error);
+      console.log("Error getLeadData", error);
     }
   };
   useEffect(() => {
@@ -163,7 +163,7 @@ export default function EditLeadScreen({ navigation }) {
   const checkOwner = (postData) => {
     oauth.getAuthCredentials((cred) => {
       if (id && id.length > 0) {
-        if (postData?.Status === 'Closed Lead') {
+        if (postData?.Status === "Closed Lead") {
           setFormEditable(false);
           return;
         }
@@ -197,7 +197,7 @@ export default function EditLeadScreen({ navigation }) {
                 value.Account__r.Name === data.Channel_Name__c ||
                 value.Account__c === data.Channel_Name__c
             )?.Account__r.Name
-          : '';
+          : "";
       };
       data.Channel_Name = getChannelNameByIdOrName();
       data.MobilePhoneOtp = data.MobilePhone;
@@ -218,7 +218,7 @@ export default function EditLeadScreen({ navigation }) {
       reset({ ...data });
     }
   }, [postData, teamHeirarchyByUserId, teamHeirarchyMasterData, dsaBrJnData]);
-  const validationSchema = createValidationSchema(empRole);
+  const validationSchema = createValidationSchema(empRole, currentPosition);
   const {
     control,
     handleSubmit,
@@ -229,7 +229,7 @@ export default function EditLeadScreen({ navigation }) {
   } = useForm({
     defaultValues,
     resolver: yupResolver(validationSchema),
-    mode: 'all',
+    mode: "all",
   });
 
   useEffect(() => {
@@ -241,6 +241,7 @@ export default function EditLeadScreen({ navigation }) {
   };
   //------ Handlers------//
   const handlePrevSubmit = () => {
+    setValue("MobilePhoneOtp", watch().MobilePhone);
     setCurrentPosition((prev) => prev - 1);
   };
 
@@ -277,7 +278,7 @@ export default function EditLeadScreen({ navigation }) {
       //     text1: 'Failed to create lead',
       //     position: 'top',
       //   });
-      console.log('Error in handleSubmit: ', error);
+      console.log("Error in handleSubmit: ", error);
     }
   };
   const toggleSchedule = () => {
@@ -299,7 +300,7 @@ export default function EditLeadScreen({ navigation }) {
     } catch (error) {
       setAddLoading(false);
 
-      console.log('Convert to LAN', error);
+      console.log("Convert to LAN", error);
     }
   };
   return (
@@ -325,12 +326,12 @@ export default function EditLeadScreen({ navigation }) {
           onEmiCalculatorClicked={toggleEmiCalculator}
         />
       )}
-      {currentPosition !== 2 && (
+      {currentPosition !== 1 && currentPosition !== 2 && (
         <View
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end",
             marginRight: verticalScale(20),
             marginTop: verticalScale(20),
           }}
@@ -341,7 +342,7 @@ export default function EditLeadScreen({ navigation }) {
       {currentPosition === 0 && (
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : null}
+          behavior={Platform.OS === "ios" ? "padding" : null}
           enabled
           keyboardVerticalOffset={Platform.select({
             ios: 125,
@@ -423,37 +424,43 @@ export default function EditLeadScreen({ navigation }) {
       <View style={addLeadStyle.buttonContainer}>
         {currentPosition === 0 && (
           <Button
-            mode={!isFormEditable ? 'contained' : 'outlined'}
+            mode={!isFormEditable ? "contained" : "outlined"}
             style={addLeadStyle.cancelButton}
             disabled={!isFormEditable}
             onPress={handleSubmit(onSubmit)}
             icon="play"
-            contentStyle={{ flexDirection: 'row-reverse' }}
+            contentStyle={{ flexDirection: "row-reverse" }}
           >
-            {globalConstants.RoleNames.RM === empRole ? 'Next' : 'Save'}
+            {globalConstants.RoleNames.RM === empRole ? "Next" : "Save"}
           </Button>
         )}
         {currentPosition === 1 && (
           <>
-            <View>
-              <Button
-                mode="outlined"
-                style={addLeadStyle.cancelButton}
-                onPress={handlePrevSubmit}
-              >
-                Previous
-              </Button>
-            </View>
-            <View>
-              <Button
-                mode={'contained'}
-                style={addLeadStyle.cancelButton}
-                onPress={handleSubmit(convertToLAN)}
-                contentStyle={{ flexDirection: 'row-reverse' }}
-                disabled={addLoading || !watch().OTP_Verified__c}
-              >
-                Submit
-              </Button>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+              }}
+            >
+              <View>
+                <Button
+                  mode="outlined"
+                  style={{ borderColor: customTheme.colors.primary }}
+                  onPress={handlePrevSubmit}
+                >
+                  Previous
+                </Button>
+              </View>
+              <View>
+                <Button
+                  mode={"contained"}
+                  onPress={handleSubmit(convertToLAN)}
+                  disabled={addLoading || !watch().OTP_Verified__c}
+                >
+                  Submit
+                </Button>
+              </View>
             </View>
           </>
         )}
@@ -464,13 +471,13 @@ export default function EditLeadScreen({ navigation }) {
           setScheduleModalVisible(!scheduleModalVisible);
         }}
         setValue={setValue}
-        cancelBtnLabel={'Close'}
+        cancelBtnLabel={"Close"}
         visible={scheduleModalVisible}
         setAddLoading={setAddLoading}
       />
       <EMICalculatorComponent
         control={control}
-        cancelBtnLabel={'Close'}
+        cancelBtnLabel={"Close"}
         visible={emiModalVisible}
         onDismiss={() => {
           setEmiModalVisible(!emiModalVisible);

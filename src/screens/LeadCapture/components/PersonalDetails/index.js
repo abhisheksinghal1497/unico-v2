@@ -105,10 +105,6 @@ const LeadPersonalDetails = ({
   };
 
   useEffect(() => {
-    resetField("MiddleName");
-  }, [watch().Customer_Profile__c]);
-
-  useEffect(() => {
     const pinPicklist = GetPincodePicklist(
       watch().LeadSource,
       teamHeirarchyByUserId?.EmpBrch__r.Name,

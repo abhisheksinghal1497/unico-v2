@@ -1,21 +1,21 @@
-import { View, ActivityIndicator } from 'react-native';
-import { Text, Button, HelperText } from 'react-native-paper';
-import React, { useState, useEffect } from 'react';
-import Toast from 'react-native-toast-message';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { View, ActivityIndicator } from "react-native";
+import { Text, Button, HelperText } from "react-native-paper";
+import React, { useState, useEffect } from "react";
+import Toast from "react-native-toast-message";
+import Icon from "react-native-vector-icons/AntDesign";
 import {
   FormControl,
   component,
-} from '../../../../../common/components/FormComponents/FormControl';
-import { useInternet } from '../../../../../store/context/Internet';
-import customTheme from '../../../../../common/colors/theme';
-import { otpVerificationStyle } from '../styles/OtpVerificationStyle';
-import { horizontalScale, verticalScale } from '../../../../../utils/matrcis';
-import { OTPVerificationService } from '../../../../../services/PostRequestService/PostObjectData';
-import { colors } from '../../../../../common/colors';
-import { onSubmitOtp } from '../../Handlers/OtpSubmitHandler';
-import { convertToDateString } from '../../../../../common/functions/ConvertToDateString';
-import Touchable from '../../../../../common/components/TouchableComponent/Touchable';
+} from "../../../../../common/components/FormComponents/FormControl";
+import { useInternet } from "../../../../../store/context/Internet";
+import customTheme from "../../../../../common/colors/theme";
+import { otpVerificationStyle } from "../styles/OtpVerificationStyle";
+import { horizontalScale, verticalScale } from "../../../../../utils/matrcis";
+import { OTPVerificationService } from "../../../../../services/PostRequestService/PostObjectData";
+import { colors } from "../../../../../common/colors";
+import { onSubmitOtp } from "../../Handlers/OtpSubmitHandler";
+import { convertToDateString } from "../../../../../common/functions/ConvertToDateString";
+import Touchable from "../../../../../common/components/TouchableComponent/Touchable";
 
 const MobileOtpConsent = ({
   control,
@@ -45,7 +45,7 @@ const MobileOtpConsent = ({
   const enteredOTP = otp;
   useEffect(() => {
     // setExpectedOtp(null);
-    setOtp('');
+    setOtp("");
   }, []);
   const isOnline = useInternet();
   // --------------Timer------------------
@@ -55,9 +55,14 @@ const MobileOtpConsent = ({
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${parseInt(
-      remainingSeconds
-    )}`;
+    // console.log("remainingSeconds", remainingSeconds);
+    if (remainingSeconds > 0) {
+      return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${parseInt(
+        remainingSeconds
+      )}`;
+    } else {
+      return null;
+    }
   };
 
   const checkIfCoolingPeriodPassed = (date) => {
@@ -103,7 +108,7 @@ const MobileOtpConsent = ({
       if (isMobileNumberChanged) {
         setRetryCounts(0);
         setExpectedOtp(null);
-        setOtp('');
+        setOtp("");
         // setIsMobileNumberChanged(false);
         setCoolingPeriodTimer(null);
       }
@@ -136,17 +141,17 @@ const MobileOtpConsent = ({
         await sendOTP(watch().MobilePhoneOtp, currentRetryCount + 1);
       } else {
         Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Maximum Retries reached',
-          position: 'top',
+          type: "error",
+          text1: "Error",
+          text2: "Maximum Retries reached",
+          position: "top",
         });
       }
 
       setAddLoading(false);
     } catch (error) {
       setAddLoading(false);
-      console.log('error', error);
+      console.log("error", error);
     }
   };
   // console.log('expected Otp', expectedOtp, postData, isMobileNumberChanged);
@@ -156,29 +161,29 @@ const MobileOtpConsent = ({
       setIsMobileNumberChanged(false);
       // Handle OTP Response if it generated succesfully or not when integration is done
 
-      setOtp('');
+      setOtp("");
       //setStateof setExpectedOtp value to once you get the proper response from otpRes
       //setExpectedOtp(otpRes[0]);
       if (otpRes) {
         Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: 'OTP Generated Successfully',
-          position: 'top',
+          type: "success",
+          text1: "Success",
+          text2: "OTP Generated Successfully",
+          position: "top",
         });
         setExpectedOtp(otpRes);
       } else {
         Toast.show({
-          type: 'success',
-          text1: 'Error',
-          text2: 'Failed to Generate OTP',
-          position: 'top',
+          type: "success",
+          text1: "Error",
+          text2: "Failed to Generate OTP",
+          position: "top",
         });
         return;
       }
       setRetryCounts(newRetryCount);
       let currentDateTime = new Date().toISOString();
-      setValue('MobilePhone', mobilePhone);
+      setValue("MobilePhone", mobilePhone);
       await onSubmitOtp(
         {
           ...postData,
@@ -187,24 +192,35 @@ const MobileOtpConsent = ({
           Last_OTP_Attempt_Time__c: currentDateTime,
           Is_OTP_Limit_Reached__c: newRetryCount === maxRetries ? true : false,
           MobilePhone: mobilePhone,
-          Status: 'Lead Submitted - Unverified',
+          Status: "Lead Submitted - Unverified",
         },
         setPostData
       );
       // setValue('Is_OTP_Limit_Reached__c', false);
       resetTimer();
     } catch (error) {
-      console.log('error', error);
+      console.log("error", error);
     }
   };
 
   const handleResendOTP = async () => {
+    console.log("Resend Clicked", retryCounts);
+
     if (!resendDisabled) {
       try {
-        await handleSendOTP();
+        if (retryCounts > 2) {
+          Toast.show({
+            type: "error",
+            text1: "OTP Limit Exceeded",
+            text2: "Please try again after sometime!",
+            position: "top",
+          });
+        } else {
+          await handleSendOTP();
+        }
       } catch (error) {
         setAddLoading(false);
-        console.log('error', error);
+        console.log("error", error);
       }
     }
   };
@@ -219,7 +235,7 @@ const MobileOtpConsent = ({
           OTP_Verified__c: true,
           Is_OTP_Limit_Reached__c: watch().Is_OTP_Limit_Reached__c,
           MobilePhone: watch().MobilePhone,
-          Status: 'Lead Verified',
+          Status: "Lead Verified",
         };
         // res = await updateObjectData('Lead', data, LeadId);
         let res = await onSubmitOtp(data, setPostData);
@@ -227,52 +243,52 @@ const MobileOtpConsent = ({
 
         if (res) {
           Toast.show({
-            type: 'success',
-            text1: 'Success',
-            text2: 'OTP Verified Successfully',
-            position: 'top',
+            type: "success",
+            text1: "Success",
+            text2: "OTP Verified Successfully",
+            position: "top",
           });
           setExpectedOtp(null);
-          setOtp('');
+          setOtp("");
         }
 
         setAddLoading(false);
         // setValue('OTP_Verified__c', true);
         // isVerified = true;
       }
-      if (otp === '') {
+      if (otp === "") {
         setAddLoading(false);
         Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Please enter a valid OTP',
-          position: 'top',
+          type: "error",
+          text1: "Error",
+          text2: "Please enter a valid OTP",
+          position: "top",
         });
         return;
       } else if (enteredOTP !== expectedOtp) {
         setAddLoading(false);
         Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Please enter a valid OTP',
-          position: 'top',
+          type: "error",
+          text1: "Error",
+          text2: "Please enter a valid OTP",
+          position: "top",
         });
         return;
       }
     } catch (error) {
       setAddLoading(false);
-      console.log('Error handleValidateOTP', error);
+      console.log("Error handleValidateOTP", error);
     }
   };
 
   const editHandler = () => {
     // if (!resendDisabled) {
     setExpectedOtp(null);
-    setOtp('');
+    setOtp("");
     // }
   };
   const maskingFunction = (mobileNumber) => {
-    let formattedMobileNumber = '';
+    let formattedMobileNumber = "";
 
     const firstDigit = mobileNumber.substring(0, 1);
 
@@ -301,7 +317,7 @@ const MobileOtpConsent = ({
         {!expectedOtp ? (
           <>
             <View>
-              <View style={{ marginTop: verticalScale(40) }}>
+              <View style={{ marginTop: verticalScale(10) }}>
                 <FormControl
                   compType={component.input}
                   label="Mobile No."
@@ -313,13 +329,18 @@ const MobileOtpConsent = ({
                   isDisabled={isVerified || retryCounts >= maxRetries}
                 />
                 {isVerified && (
-                  <View style={{ flexDirection: 'row', padding: 12 }}>
-                    <Icon name="checkcircle" size={20} color={colors.success} />
+                  <View style={{ flexDirection: "row", padding: 12 }}>
+                    <Icon
+                      name="checkcircle"
+                      size={20}
+                      color={colors.success}
+                      style={{ marginTop: 5 }}
+                    />
                     <HelperText
                       type="info"
                       style={{
                         color: colors.black,
-                        fontWeight: 'bold',
+                        fontWeight: "bold",
                         fontSize: 12,
                       }}
                     >
@@ -330,14 +351,19 @@ const MobileOtpConsent = ({
                 {retryCounts &&
                 retryCounts >= maxRetries &&
                 !postData?.OTP_Verified__c ? (
-                  <View style={{ flexDirection: 'row', padding: 12 }}>
-                    <Icon name="closecircle" size={20} color={'#8B0000'} />
+                  <View style={{ flexDirection: "row", padding: 12 }}>
+                    <Icon
+                      name="closecircle"
+                      size={20}
+                      color={"#8B0000"}
+                      style={{ marginTop: 5 }}
+                    />
 
                     <HelperText
                       type="info"
                       style={{
                         color: colors.black,
-                        fontWeight: 'bold',
+                        fontWeight: "bold",
                         fontSize: 12,
                         //paddingBottom:16
                       }}
@@ -357,7 +383,7 @@ const MobileOtpConsent = ({
                 style={{
                   marginVertical: verticalScale(30),
 
-                  alignSelf: 'center',
+                  alignSelf: "center",
                 }}
               >
                 <Button
@@ -393,7 +419,7 @@ const MobileOtpConsent = ({
                   style={{
                     fontSize: customTheme.fonts.mediumText.fontSize,
 
-                    textDecorationLine: 'underline',
+                    textDecorationLine: "underline",
 
                     color: customTheme.colors.primary,
                   }}
@@ -420,7 +446,7 @@ const MobileOtpConsent = ({
                 style={{
                   marginTop: verticalScale(30),
 
-                  alignSelf: 'center',
+                  alignSelf: "center",
                 }}
               >
                 <Button mode="contained" onPress={handleValidateOTP}>
@@ -440,21 +466,15 @@ const MobileOtpConsent = ({
                 </Text>
                 <Touchable
                   onPress={handleResendOTP}
-                  disabled={
-                    resendDisabled ||
-                    (retryCounts && retryCounts >= maxRetries) ||
-                    isVerified
-                  }
+                  disabled={resendDisabled || isVerified}
                 >
                   <Text
                     style={{
                       fontSize: customTheme.fonts.smallText.fontSize,
-                      textDecorationLine: 'underline',
+                      textDecorationLine: "underline",
                       color:
-                        resendDisabled ||
-                        (retryCounts && retryCounts >= maxRetries) ||
-                        isVerified
-                          ? 'gray'
+                        resendDisabled || isVerified
+                          ? "gray"
                           : customTheme.colors.error,
                     }}
                   >

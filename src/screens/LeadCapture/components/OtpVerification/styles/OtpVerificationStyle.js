@@ -3,24 +3,23 @@ import customTheme from "../../../../../common/colors/theme";
 import { colors } from "../../../../../common/colors";
 import { moderateScale, verticalScale } from "../../../../../utils/matrcis";
 
-
 export const otpVerificationStyle = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: verticalScale(5),
     backgroundColor: customTheme.colors.background,
   },
-mobileContainer:{
-  marginTop: verticalScale(5),
-  backgroundColor: customTheme.colors.surfaceVariant,
-  padding: moderateScale(10),
-  borderRadius: 10,
-  marginVertical: 10,
-},
+  mobileContainer: {
+    marginTop: verticalScale(10),
+    backgroundColor: customTheme.colors.surfaceVariant,
+    padding: moderateScale(10),
+    borderRadius: 10,
+    marginVertical: 10,
+  },
   BottomPopoverHeader: {
     fontSize: customTheme.fonts.titleMedium.fontSize,
     textAlign: "center",
-    fontFamily:customTheme.fonts.titleMedium.fontFamily
+    fontFamily: customTheme.fonts.titleMedium.fontFamily,
   },
 
   messageContainer: {
