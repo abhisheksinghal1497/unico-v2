@@ -1,23 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Modal, View } from 'react-native';
-import {
-  Button,
-  Text,
-  TextInput,
-  Dialog,
-  Divider,
-  IconButton,
-} from 'react-native-paper';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text, Dialog, Divider, IconButton } from 'react-native-paper';
 import { colors } from '../../colors';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { moderateScale, verticalScale } from '../../../utils/matrcis';
 import customTheme from '../../colors/theme';
-import CustomDatepicker from '../FormComponents/Datepicker';
 import { FormControl, component } from '../FormComponents/FormControl';
 import { useForm } from 'react-hook-form';
-import Slider from '@react-native-community/slider';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createValidationSchema } from '../../../screens/LeadCapture/components/Handlers/validationSchema';
+
 import * as yup from 'yup';
 import { ScrollView } from 'react-native-gesture-handler';
 const EMICalculatorComponent = ({
@@ -173,7 +163,7 @@ const EMICalculatorComponent = ({
           />
           <FormControl
             compType={component.sliderAndInput}
-            label="Requested Monthly Tenure"
+            label="Requested Tenure in Months"
             name="Tenure"
             control={control}
             setValue={setValue}
@@ -193,7 +183,7 @@ const EMICalculatorComponent = ({
             control={control}
             setValue={setValue}
             required={true}
-            placeholder="Enter Rate of Interest"
+            placeholder="Rate of Interest"
             minValue="1%"
             maxValue="25%"
             steps={1}

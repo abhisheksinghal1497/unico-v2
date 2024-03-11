@@ -16,6 +16,7 @@ export const colors = {
   tabBackground: '#E6F4FF',
   newStatus: '#FFFFFF',
   leadPending: '#D0E9FF',
+  leadPendingAmber: '#FFBF00',
   leadSubmittedUnverified: '#1589EE',
   dedupeLead: '#FFF9C8',
   droppedLead: '#FFBFBF',

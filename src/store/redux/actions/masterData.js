@@ -10,7 +10,7 @@ export const getDsaBrJn = () => {
         soupConfig.dsaBrJn.queryPath,
         soupConfig.dsaBrJn.pageSize
       );
-      //   console.log('Dsa Branch Junction', dsaBrJn);
+      // console.log('Dsa Branch Junction', dsaBrJn);
       dispatch(
         masterDataAction.getDsaBrJnData({
           dsaBrJn: {

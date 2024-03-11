@@ -69,7 +69,7 @@ const LeadActivities = ({
           name={'calculator-outline'}
           color={customTheme.colors.primary}
         />
-        <Text style={styles.toggleLabelStyle}>Emi Calculator</Text>
+        <Text style={styles.toggleLabelStyle}>EMI Calculator</Text>
       </TouchableOpacity>
     </View>
   );

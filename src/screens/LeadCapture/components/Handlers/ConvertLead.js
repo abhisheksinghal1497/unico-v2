@@ -70,7 +70,7 @@ export const ConvertLead = async (lead) => {
     compositeRequest.push({
       url: `/services/data/${net.getApiVersion()}/sobjects/Lead/${
         leadData?.Id
-      }?fields=Id,Lead_Id__c`,
+      }?fields=Id,Lead_Id__c,LeadIdFormula__c`,
       method: 'GET',
       referenceId: 'reference_id_lead_get_1',
     });
