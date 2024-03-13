@@ -192,11 +192,7 @@ const LeadSourceDetails = ({
         control={control}
         setValue={setValue}
         required={false}
-        isVisible={
-          watch().LeadSource === 'DSA' || watch().LeadSource === 'UGA'
-            ? true
-            : false
-        }
+        isVisible={false}
         isDisabled={!isFormEditable}
       />
       <FormControl

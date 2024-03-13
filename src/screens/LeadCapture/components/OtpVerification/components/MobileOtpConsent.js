@@ -96,7 +96,7 @@ const MobileOtpConsent = ({
   };
 
   const resetTimer = () => {
-    setTimer(10);
+    setTimer(120);
   };
 
   // console.log('isMobileNumberChanged', isMobileNumberChanged);
