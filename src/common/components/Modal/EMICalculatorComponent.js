@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Text, Dialog, Divider, IconButton } from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Modal, View } from 'react-native';
+import {
+  Button,
+  Text,
+  TextInput,
+  Dialog,
+  Divider,
+  IconButton,
+} from 'react-native-paper';
 import { colors } from '../../colors';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { moderateScale, verticalScale } from '../../../utils/matrcis';
 import customTheme from '../../colors/theme';
+import CustomDatepicker from '../FormComponents/Datepicker';
 import { FormControl, component } from '../FormComponents/FormControl';
 import { useForm } from 'react-hook-form';
+import Slider from '@react-native-community/slider';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+import { createValidationSchema } from '../../../screens/LeadCapture/components/Handlers/validationSchema';
 import * as yup from 'yup';
 import { ScrollView } from 'react-native-gesture-handler';
 const EMICalculatorComponent = ({
@@ -113,9 +123,11 @@ const EMICalculatorComponent = ({
       setValue('EMI', emiValue.toFixed(2));
       console.log(data);
       setIsEMIVisible(true);
+      setIsEMIVisible(true);
     } else {
       setEmi(0);
       setValue('EMI', 0);
+      setIsEMIVisible(false);
       setIsEMIVisible(false);
     }
   };
@@ -128,6 +140,7 @@ const EMICalculatorComponent = ({
         onPress={() => {
           reset();
           setEmi(0);
+          setIsEMIVisible(false);
           setIsEMIVisible(false);
           onDismiss();
         }}
@@ -183,7 +196,7 @@ const EMICalculatorComponent = ({
             control={control}
             setValue={setValue}
             required={true}
-            placeholder="Rate of Interest"
+            placeholder="Enter Rate of Interest"
             minValue="1%"
             maxValue="25%"
             steps={1}
@@ -201,7 +214,9 @@ const EMICalculatorComponent = ({
         </View>
       ) : null}
 
-      <View style={styles.buttonContainer}>
+      <View
+        style={[styles.buttonContainer, { marginTop: isEMIVisible ? 0 : 10 }]}
+      >
         <Button mode="contained" onPress={handleSubmit(calculateEMI)}>
           Calculate EMI
         </Button>
@@ -245,7 +260,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    margin: verticalScale(20),
+    marginBottom: verticalScale(10),
   },
   button: {
     borderRadius: 6,
@@ -256,6 +271,7 @@ const styles = StyleSheet.create({
   },
   emiValueWrapper: {
     marginTop: verticalScale(10),
+    marginBottom: verticalScale(10),
   },
   emiValue: {
     fontSize: 20,

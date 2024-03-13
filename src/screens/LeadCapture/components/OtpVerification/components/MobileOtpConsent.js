@@ -55,9 +55,14 @@ const MobileOtpConsent = ({
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${parseInt(
-      remainingSeconds
-    )}`;
+    // console.log("remainingSeconds", remainingSeconds);
+    if (remainingSeconds > 0) {
+      return `Time Remaining : ${minutes}:${
+        remainingSeconds < 10 ? '0' : ''
+      }${parseInt(remainingSeconds)}`;
+    } else {
+      return null;
+    }
   };
 
   const checkIfCoolingPeriodPassed = (date) => {
@@ -91,7 +96,7 @@ const MobileOtpConsent = ({
   };
 
   const resetTimer = () => {
-    setTimer(120);
+    setTimer(10);
   };
 
   // console.log('isMobileNumberChanged', isMobileNumberChanged);
@@ -134,6 +139,7 @@ const MobileOtpConsent = ({
 
       if (currentRetryCount < maxRetries) {
         await sendOTP(watch().MobilePhoneOtp, currentRetryCount + 1);
+        // setIsMobileNumberChanged(false);
       } else {
         Toast.show({
           type: 'error',
@@ -152,10 +158,16 @@ const MobileOtpConsent = ({
   // console.log('expected Otp', expectedOtp, postData, isMobileNumberChanged);
   const sendOTP = async (mobilePhone, newRetryCount) => {
     try {
+      let latestRetryCount = newRetryCount;
       const otpRes = await OTPVerificationService(LeadId, mobilePhone);
       setIsMobileNumberChanged(false);
       // Handle OTP Response if it generated succesfully or not when integration is done
-
+      console.log(
+        'Mobile Phone 1',
+        mobilePhone,
+        watch().MobilePhone,
+        watch().MobilePhoneOtp
+      );
       setOtp('');
       //setStateof setExpectedOtp value to once you get the proper response from otpRes
       //setExpectedOtp(otpRes[0]);
@@ -176,32 +188,75 @@ const MobileOtpConsent = ({
         });
         return;
       }
-      setRetryCounts(newRetryCount);
+      setRetryCounts(latestRetryCount);
       let currentDateTime = new Date().toISOString();
-      setValue('MobilePhone', mobilePhone);
+      if (watch().MobilePhone !== watch().MobilePhoneOtp) {
+        setRetryCounts(1);
+        latestRetryCount = 1;
+        setCoolingPeriodTimer(null);
+        setValue('MobilePhone', mobilePhone);
+        console.log(
+          'Mobile Phone 2',
+          mobilePhone,
+          watch().MobilePhone,
+          watch().MobilePhoneOtp
+        );
+      }
+      console.log(
+        'Mobile Phone 3',
+        mobilePhone,
+        watch().MobilePhone,
+        watch().MobilePhoneOtp
+      );
+
       await onSubmitOtp(
         {
           ...postData,
-          OTP_Attempts__c: newRetryCount,
+          OTP_Attempts__c: latestRetryCount,
           OTP_Verified__c: false,
           Last_OTP_Attempt_Time__c: currentDateTime,
           Is_OTP_Limit_Reached__c: newRetryCount === maxRetries ? true : false,
           MobilePhone: mobilePhone,
+          MobilePhoneOtp: mobilePhone,
           Status: 'Lead Submitted - Unverified',
         },
         setPostData
       );
+      console.log(
+        'Mobile Phone 4',
+        mobilePhone,
+        watch().MobilePhone,
+        watch().MobilePhoneOtp
+      );
+
       // setValue('Is_OTP_Limit_Reached__c', false);
       resetTimer();
     } catch (error) {
       console.log('error', error);
     }
   };
+  // console.log(
+  //   'Mobile Phone 4',
+
+  //   watch().MobilePhone,
+  //   watch().MobilePhoneOtp
+  // );
 
   const handleResendOTP = async () => {
+    // console.log('Resend Clicked', retryCounts);
+
     if (!resendDisabled) {
       try {
-        await handleSendOTP();
+        if (retryCounts > 2) {
+          Toast.show({
+            type: 'error',
+            text1: 'OTP Limit Exceeded',
+            text2: 'Please try again after sometime!',
+            position: 'top',
+          });
+        } else {
+          await handleSendOTP();
+        }
       } catch (error) {
         setAddLoading(false);
         console.log('error', error);
@@ -218,7 +273,8 @@ const MobileOtpConsent = ({
           ...postData,
           OTP_Verified__c: true,
           Is_OTP_Limit_Reached__c: watch().Is_OTP_Limit_Reached__c,
-          MobilePhone: watch().MobilePhone,
+          MobilePhone: watch().MobilePhoneOtp,
+          MobilePhoneOtp: watch().MobilePhoneOtp,
           Status: 'Lead Verified',
         };
         // res = await updateObjectData('Lead', data, LeadId);
@@ -314,7 +370,12 @@ const MobileOtpConsent = ({
                 />
                 {isVerified && (
                   <View style={{ flexDirection: 'row', padding: 12 }}>
-                    <Icon name="checkcircle" size={20} color={colors.success} />
+                    <Icon
+                      name="checkcircle"
+                      size={20}
+                      color={colors.success}
+                      style={{ marginTop: 5 }}
+                    />
                     <HelperText
                       type="info"
                       style={{
@@ -331,7 +392,12 @@ const MobileOtpConsent = ({
                 retryCounts >= maxRetries &&
                 !postData?.OTP_Verified__c ? (
                   <View style={{ flexDirection: 'row', padding: 12 }}>
-                    <Icon name="closecircle" size={20} color={'#8B0000'} />
+                    <Icon
+                      name="closecircle"
+                      size={20}
+                      color={customTheme.colors.error}
+                      style={{ marginTop: 5 }}
+                    />
 
                     <HelperText
                       type="info"
@@ -386,7 +452,7 @@ const MobileOtpConsent = ({
                     marginRight: 3,
                   }}
                 >
-                  Code sent to {maskingFunction(watch().MobilePhone)},
+                  Code sent to {maskingFunction(watch().MobilePhoneOtp)},
                 </Text>
 
                 <Text
@@ -440,20 +506,14 @@ const MobileOtpConsent = ({
                 </Text>
                 <Touchable
                   onPress={handleResendOTP}
-                  disabled={
-                    resendDisabled ||
-                    (retryCounts && retryCounts >= maxRetries) ||
-                    isVerified
-                  }
+                  disabled={resendDisabled || isVerified}
                 >
                   <Text
                     style={{
                       fontSize: customTheme.fonts.smallText.fontSize,
                       textDecorationLine: 'underline',
                       color:
-                        resendDisabled ||
-                        (retryCounts && retryCounts >= maxRetries) ||
-                        isVerified
+                        resendDisabled || isVerified
                           ? 'gray'
                           : customTheme.colors.error,
                     }}

@@ -118,6 +118,7 @@ export const soupConfig = {
       'Last_OTP_Attempt_Time__c',
       'OTP_Attempts__c',
       'OTP_Verified__c',
+      'Company',
     ],
   },
   contentVersion: {

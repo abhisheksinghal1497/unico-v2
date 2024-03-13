@@ -133,7 +133,7 @@ const AddLead = ({ navigation }) => {
     dsaBrJnData,
     empRole
   );
-  const validationSchema = createValidationSchema(empRole);
+  const validationSchema = createValidationSchema(empRole, currentPosition);
   const {
     control,
     handleSubmit,
@@ -365,25 +365,31 @@ const AddLead = ({ navigation }) => {
         )}
         {currentPosition === 1 && (
           <>
-            <View>
-              <Button
-                mode="outlined"
-                style={addLeadStyle.cancelButton}
-                onPress={handlePrevSubmit}
-              >
-                Previous
-              </Button>
-            </View>
-            <View>
-              <Button
-                mode={'contained'}
-                style={addLeadStyle.cancelButton}
-                onPress={handleSubmit(convertToLAN)}
-                contentStyle={{ flexDirection: 'row-reverse' }}
-                disabled={addLoading || !watch().OTP_Verified__c}
-              >
-                Submit
-              </Button>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+              }}
+            >
+              <View>
+                <Button
+                  mode="outlined"
+                  style={{ borderColor: customTheme.colors.primary }}
+                  onPress={handlePrevSubmit}
+                >
+                  Previous
+                </Button>
+              </View>
+              <View>
+                <Button
+                  mode={'contained'}
+                  onPress={handleSubmit(convertToLAN)}
+                  disabled={addLoading || !watch().OTP_Verified__c}
+                >
+                  Submit
+                </Button>
+              </View>
             </View>
           </>
         )}

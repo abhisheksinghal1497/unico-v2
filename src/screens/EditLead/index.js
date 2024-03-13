@@ -218,7 +218,7 @@ export default function EditLeadScreen({ navigation }) {
       reset({ ...data });
     }
   }, [postData, teamHeirarchyByUserId, teamHeirarchyMasterData, dsaBrJnData]);
-  const validationSchema = createValidationSchema(empRole);
+  const validationSchema = createValidationSchema(empRole, currentPosition);
   const {
     control,
     handleSubmit,
@@ -325,7 +325,7 @@ export default function EditLeadScreen({ navigation }) {
           onEmiCalculatorClicked={toggleEmiCalculator}
         />
       )}
-      {currentPosition !== 2 && (
+      {currentPosition !== 1 && currentPosition !== 2 && (
         <View
           style={{
             display: 'flex',
@@ -435,25 +435,31 @@ export default function EditLeadScreen({ navigation }) {
         )}
         {currentPosition === 1 && (
           <>
-            <View>
-              <Button
-                mode="outlined"
-                style={addLeadStyle.cancelButton}
-                onPress={handlePrevSubmit}
-              >
-                Previous
-              </Button>
-            </View>
-            <View>
-              <Button
-                mode={'contained'}
-                style={addLeadStyle.cancelButton}
-                onPress={handleSubmit(convertToLAN)}
-                contentStyle={{ flexDirection: 'row-reverse' }}
-                disabled={addLoading || !watch().OTP_Verified__c}
-              >
-                Submit
-              </Button>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+              }}
+            >
+              <View>
+                <Button
+                  mode="outlined"
+                  style={{ borderColor: customTheme.colors.primary }}
+                  onPress={handlePrevSubmit}
+                >
+                  Previous
+                </Button>
+              </View>
+              <View>
+                <Button
+                  mode={'contained'}
+                  onPress={handleSubmit(convertToLAN)}
+                  disabled={addLoading || !watch().OTP_Verified__c}
+                >
+                  Submit
+                </Button>
+              </View>
             </View>
           </>
         )}

@@ -166,7 +166,11 @@ const LeadSourceDetails = ({
 
       <FormControl
         compType={component.searchDropdown}
-        label="Channel Name"
+        label={
+          watch().LeadSource === 'Customer Referral'
+            ? 'Customer ID'
+            : 'Channel Name'
+        }
         name="Channel_Name"
         control={control}
         setValue={setValue}

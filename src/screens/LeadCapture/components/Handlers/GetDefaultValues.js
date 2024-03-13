@@ -49,6 +49,7 @@ export const GetDefaultValues = (
         OTP_Attempts__c: null,
         OTP_Verified__c: false,
         MobilePhoneOtp: '',
+        Company: 'default',
       };
       return defaultValues;
     }
@@ -81,6 +82,7 @@ export const GetDefaultValues = (
         ProductLookup__c: '',
         ProductLookup: '',
         OwnerId: '',
+        Company: 'default',
       };
       return defaultValues;
     }
@@ -114,6 +116,7 @@ export const GetDefaultValues = (
         ProductLookup__c: '',
         ProductLookup: '',
         OwnerId: '',
+        Company: 'default',
       };
       return defaultValues;
     }

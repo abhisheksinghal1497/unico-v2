@@ -13,7 +13,7 @@ const onlyNumbers = /^[0-9]*$/;
 
 // }
 
-export const createValidationSchema = (empRole) => {
+export const createValidationSchema = (empRole, currentPosition) => {
   if (globalConstants.RoleNames.RM === empRole)
     return yup.object().shape({
       //   //-----------------Lead Source Details Validations----------//
@@ -71,6 +71,31 @@ export const createValidationSchema = (empRole) => {
         .string()
         .required('Phone number is required')
         .matches(/^[6-9]\d{9}$/, 'Please enter a valid Mobile Number')
+        .nullable(),
+
+      MobilePhoneOtp: yup
+        .string()
+        .test({
+          name: 'conditional',
+          message: 'Please enter a valid Mobile Number',
+          test: function (value) {
+            const isPhone = this.parent.MobilePhone;
+
+            let reg = new RegExp(/^[6-9]\d{9}$/);
+            let isValid = reg.test(value);
+
+            if (isPhone && currentPosition == 0) {
+              console.log('Inside if');
+              return true;
+            } else if (isPhone && !isValid) {
+              console.log('Inside else if');
+
+              return false;
+            }
+
+            return true;
+          },
+        })
         .nullable(),
       Alternative_Mobile_Number__c: yup
         .string()

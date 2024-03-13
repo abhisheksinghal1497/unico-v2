@@ -68,7 +68,7 @@ const LeadConverted = ({ handleConvertButton, LeadCaptureData }) => {
           <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
             <Text style={convertedLeadStyle.convertedLabel}>{'Phone:'}</Text>
             <Text style={convertedLeadStyle.convertedValues}>
-              {'+91'} {MobilePhone || ''}
+              {MobilePhone || ''}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
