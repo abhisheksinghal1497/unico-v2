@@ -387,7 +387,6 @@ const AddLead = ({ navigation }) => {
                 <Button
                   mode={"contained"}
                   onPress={handleSubmit(convertToLAN)}
-                  // contentStyle={{ flexDirection: "row-reverse" }}
                   disabled={addLoading || !watch().OTP_Verified__c}
                 >
                   Submit

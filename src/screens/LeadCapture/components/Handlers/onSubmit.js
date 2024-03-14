@@ -135,6 +135,16 @@ export const OnSubmitLead = async (
 
     // console.log('Data', data);
 
+    if (!data.OwnerId) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text1: 'Failed to Create Lead',
+        position: 'top',
+      });
+      return;
+    }
+
     let res =
       id.length > 0
         ? await updateRecordOffline(
@@ -188,27 +198,29 @@ export const OnSubmitLead = async (
         console.log('updatedResData------------>', res?.res[0]);
       }
 
-      !id &&
-        Toast.show({
-          type: 'success',
-          text1: 'Lead created successfully',
-          position: 'top',
-        });
-      // id &&
-      //   Toast.show({
-      //     type: 'success',
-      //     text1: 'Lead updated successfully',
-      //     position: 'top',
-      //   });
       // Write Logic for showing otp verification Screen
       // OTP Verification screen can be shown if lead is assigned to RM that means OWNERID and Employee Id are same also if network is there then this screen should be visible otherwise send a toast msg that network is not there
       oauth.getAuthCredentials((cred) => {
         //   console.log('Entered', id);
         if (data?.OwnerId === cred?.userId) {
-          // console.log('Entered 2 ');
+          !id &&
+            Toast.show({
+              type: 'success',
+              text1: 'Lead created successfully',
+              position: 'top',
+            });
           setCurrentPosition((prev) => prev + 1);
           return;
+        } else {
+          !id &&
+            Toast.show({
+              type: 'success',
+              text1:
+                'Lead created successfully  And Assigned to Branch Manager',
+              position: 'top',
+            });
         }
+
         return;
       });
     } else {

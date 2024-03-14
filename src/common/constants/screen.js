@@ -12,5 +12,6 @@ export const screens = {
   cvListStack: "CV List",
   cvList: "CV list",
   cv: "Collateral Visit",
+  signature: "Signature",
   meetingsList: "Meetings",
 };

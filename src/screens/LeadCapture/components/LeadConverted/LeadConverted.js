@@ -45,7 +45,7 @@ const LeadConverted = ({ handleConvertButton, LeadCaptureData }) => {
           <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
             <Text style={convertedLeadStyle.convertedLabel}>{"Lead Id:"}</Text>
             <Text style={convertedLeadStyle.convertedValues}>
-              {leadId?.Lead_Id__c || ""}
+              {leadId?.LeadIdFormula__c || ""}
             </Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "flex-start" }}>

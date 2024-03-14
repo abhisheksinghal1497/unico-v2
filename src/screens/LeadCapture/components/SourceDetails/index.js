@@ -166,7 +166,11 @@ const LeadSourceDetails = ({
 
       <FormControl
         compType={component.searchDropdown}
-        label="Channel Name"
+        label={
+          watch().LeadSource === 'Customer Referral'
+            ? 'Customer ID'
+            : 'Channel Name'
+        }
         name="Channel_Name"
         control={control}
         setValue={setValue}
@@ -188,11 +192,7 @@ const LeadSourceDetails = ({
         control={control}
         setValue={setValue}
         required={false}
-        isVisible={
-          watch().LeadSource === 'DSA' || watch().LeadSource === 'UGA'
-            ? true
-            : false
-        }
+        isVisible={false}
         isDisabled={!isFormEditable}
       />
       <FormControl

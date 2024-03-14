@@ -57,9 +57,9 @@ const MobileOtpConsent = ({
     const remainingSeconds = seconds % 60;
     // console.log("remainingSeconds", remainingSeconds);
     if (remainingSeconds > 0) {
-      return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${parseInt(
-        remainingSeconds
-      )}`;
+      return `Time Remaining : ${minutes}:${
+        remainingSeconds < 10 ? "0" : ""
+      }${parseInt(remainingSeconds)}`;
     } else {
       return null;
     }
@@ -139,6 +139,7 @@ const MobileOtpConsent = ({
 
       if (currentRetryCount < maxRetries) {
         await sendOTP(watch().MobilePhoneOtp, currentRetryCount + 1);
+        // setIsMobileNumberChanged(false);
       } else {
         Toast.show({
           type: "error",
@@ -157,10 +158,16 @@ const MobileOtpConsent = ({
   // console.log('expected Otp', expectedOtp, postData, isMobileNumberChanged);
   const sendOTP = async (mobilePhone, newRetryCount) => {
     try {
+      let latestRetryCount = newRetryCount;
       const otpRes = await OTPVerificationService(LeadId, mobilePhone);
       setIsMobileNumberChanged(false);
       // Handle OTP Response if it generated succesfully or not when integration is done
-
+      console.log(
+        "Mobile Phone 1",
+        mobilePhone,
+        watch().MobilePhone,
+        watch().MobilePhoneOtp
+      );
       setOtp("");
       //setStateof setExpectedOtp value to once you get the proper response from otpRes
       //setExpectedOtp(otpRes[0]);
@@ -181,30 +188,62 @@ const MobileOtpConsent = ({
         });
         return;
       }
-      setRetryCounts(newRetryCount);
+      setRetryCounts(latestRetryCount);
       let currentDateTime = new Date().toISOString();
-      setValue("MobilePhone", mobilePhone);
+      if (watch().MobilePhone !== watch().MobilePhoneOtp) {
+        setRetryCounts(1);
+        latestRetryCount = 1;
+        setCoolingPeriodTimer(null);
+        setValue("MobilePhone", mobilePhone);
+        console.log(
+          "Mobile Phone 2",
+          mobilePhone,
+          watch().MobilePhone,
+          watch().MobilePhoneOtp
+        );
+      }
+      console.log(
+        "Mobile Phone 3",
+        mobilePhone,
+        watch().MobilePhone,
+        watch().MobilePhoneOtp
+      );
+
       await onSubmitOtp(
         {
           ...postData,
-          OTP_Attempts__c: newRetryCount,
+          OTP_Attempts__c: latestRetryCount,
           OTP_Verified__c: false,
           Last_OTP_Attempt_Time__c: currentDateTime,
           Is_OTP_Limit_Reached__c: newRetryCount === maxRetries ? true : false,
           MobilePhone: mobilePhone,
+          MobilePhoneOtp: mobilePhone,
           Status: "Lead Submitted - Unverified",
         },
         setPostData
       );
+      console.log(
+        "Mobile Phone 4",
+        mobilePhone,
+        watch().MobilePhone,
+        watch().MobilePhoneOtp
+      );
+
       // setValue('Is_OTP_Limit_Reached__c', false);
       resetTimer();
     } catch (error) {
       console.log("error", error);
     }
   };
+  // console.log(
+  //   'Mobile Phone 4',
+
+  //   watch().MobilePhone,
+  //   watch().MobilePhoneOtp
+  // );
 
   const handleResendOTP = async () => {
-    console.log("Resend Clicked", retryCounts);
+    // console.log('Resend Clicked', retryCounts);
 
     if (!resendDisabled) {
       try {
@@ -234,7 +273,8 @@ const MobileOtpConsent = ({
           ...postData,
           OTP_Verified__c: true,
           Is_OTP_Limit_Reached__c: watch().Is_OTP_Limit_Reached__c,
-          MobilePhone: watch().MobilePhone,
+          MobilePhone: watch().MobilePhoneOtp,
+          MobilePhoneOtp: watch().MobilePhoneOtp,
           Status: "Lead Verified",
         };
         // res = await updateObjectData('Lead', data, LeadId);
@@ -299,198 +339,193 @@ const MobileOtpConsent = ({
   // -----------------------------------
 
   return (
-    <>
-      <View style={{ marginHorizontal: horizontalScale(10) }}>
-        {addLoading && (
-          <View style={addLeadStyle.loaderView}>
-            <ActivityIndicator
-              size="large"
-              color={customTheme.colors.primary}
-            />
-          </View>
-        )}
-        <View style={otpVerificationStyle.mobileContainer}>
-          <Text style={otpVerificationStyle.BottomPopoverHeader}>
-            Mobile OTP Consent
-          </Text>
+    <View style={{ marginHorizontal: horizontalScale(10) }}>
+      {addLoading && (
+        <View style={addLeadStyle.loaderView}>
+          <ActivityIndicator size="large" color={customTheme.colors.primary} />
         </View>
-        {!expectedOtp ? (
-          <>
-            <View>
-              <View style={{ marginTop: verticalScale(10) }}>
-                <FormControl
-                  compType={component.input}
-                  label="Mobile No."
-                  name="MobilePhoneOtp"
-                  control={control}
-                  required={true}
-                  type="phone-pad"
-                  right="phone"
-                  isDisabled={isVerified || retryCounts >= maxRetries}
-                />
-                {isVerified && (
-                  <View style={{ flexDirection: "row", padding: 12 }}>
-                    <Icon
-                      name="checkcircle"
-                      size={20}
-                      color={colors.success}
-                      style={{ marginTop: 5 }}
-                    />
-                    <HelperText
-                      type="info"
-                      style={{
-                        color: colors.black,
-                        fontWeight: "bold",
-                        fontSize: 12,
-                      }}
-                    >
-                      Mobile Number is Verified Successfully
-                    </HelperText>
-                  </View>
-                )}
-                {retryCounts &&
-                retryCounts >= maxRetries &&
-                !postData?.OTP_Verified__c ? (
-                  <View style={{ flexDirection: "row", padding: 12 }}>
-                    <Icon
-                      name="closecircle"
-                      size={20}
-                      color={customTheme.colors.error}
-                      style={{ marginTop: 5 }}
-                    />
-
-                    <HelperText
-                      type="info"
-                      style={{
-                        color: colors.black,
-                        fontWeight: "bold",
-                        fontSize: 12,
-                        //paddingBottom:16
-                      }}
-                    >
-                      {`OTP Limit Reached. Please Try After ${formatTime(
-                        coolingPeriodTimer
-                      )} Minutes`}
-                    </HelperText>
-                    <Text style={otpVerificationStyle.timerLabel}></Text>
-                  </View>
-                ) : (
-                  <></>
-                )}
-              </View>
-
-              <View
-                style={{
-                  marginVertical: verticalScale(30),
-
-                  alignSelf: "center",
-                }}
-              >
-                <Button
-                  mode="contained"
-                  onPress={handleSubmit(handleSendOTP)}
-                  disabled={
-                    isOnline &&
-                    ((retryCounts && retryCounts >= maxRetries) || isVerified)
-                      ? true
-                      : false
-                  }
-                >
-                  Send OTP
-                </Button>
-              </View>
-            </View>
-          </>
-        ) : (
-          <>
-            <View style={{ marginTop: verticalScale(15) }}>
-              <View style={otpVerificationStyle.editMobNumContainer}>
-                <Text
-                  style={{
-                    fontSize: customTheme.fonts.mediumText.fontSize,
-
-                    marginRight: 3,
-                  }}
-                >
-                  Code sent to {maskingFunction(watch().MobilePhone)},
-                </Text>
-
-                <Text
-                  style={{
-                    fontSize: customTheme.fonts.mediumText.fontSize,
-
-                    textDecorationLine: "underline",
-
-                    color: customTheme.colors.primary,
-                  }}
-                  onPress={editHandler}
-                >
-                  Edit
-                </Text>
-              </View>
-
+      )}
+      <View style={otpVerificationStyle.mobileContainer}>
+        <Text style={otpVerificationStyle.BottomPopoverHeader}>
+          Mobile OTP Consent
+        </Text>
+      </View>
+      {!expectedOtp ? (
+        <>
+          <View>
+            <View style={{ marginTop: verticalScale(10) }}>
               <FormControl
-                compType={component.otpInput}
-                label="OTP"
-                name="Otp__c"
+                compType={component.input}
+                label="Mobile No."
+                name="MobilePhoneOtp"
                 control={control}
                 required={true}
                 type="phone-pad"
                 right="phone"
-                // isDisabled={!timer}
-                otp={otp}
-                setOtp={setOtp}
+                isDisabled={isVerified || retryCounts >= maxRetries}
               />
+              {isVerified && (
+                <View style={{ flexDirection: "row", padding: 12 }}>
+                  <Icon
+                    name="checkcircle"
+                    size={20}
+                    color={colors.success}
+                    style={{ marginTop: 5 }}
+                  />
+                  <HelperText
+                    type="info"
+                    style={{
+                      color: colors.black,
+                      fontWeight: "bold",
+                      fontSize: 12,
+                    }}
+                  >
+                    Mobile Number is Verified Successfully
+                  </HelperText>
+                </View>
+              )}
+              {retryCounts &&
+              retryCounts >= maxRetries &&
+              !postData?.OTP_Verified__c ? (
+                <View style={{ flexDirection: "row", padding: 12 }}>
+                  <Icon
+                    name="closecircle"
+                    size={20}
+                    color={customTheme.colors.error}
+                    style={{ marginTop: 5 }}
+                  />
 
-              <View
+                  <HelperText
+                    type="info"
+                    style={{
+                      color: colors.black,
+                      fontWeight: "bold",
+                      fontSize: 12,
+                      //paddingBottom:16
+                    }}
+                  >
+                    {`OTP Limit Reached. Please Try After ${formatTime(
+                      coolingPeriodTimer
+                    )} Minutes`}
+                  </HelperText>
+                  <Text style={otpVerificationStyle.timerLabel}></Text>
+                </View>
+              ) : (
+                <></>
+              )}
+            </View>
+
+            <View
+              style={{
+                marginVertical: verticalScale(30),
+
+                alignSelf: "center",
+              }}
+            >
+              <Button
+                mode="contained"
+                onPress={handleSubmit(handleSendOTP)}
+                disabled={
+                  isOnline &&
+                  ((retryCounts && retryCounts >= maxRetries) || isVerified)
+                    ? true
+                    : false
+                }
+              >
+                Send OTP
+              </Button>
+            </View>
+          </View>
+        </>
+      ) : (
+        <>
+          <View style={{ marginTop: verticalScale(15) }}>
+            <View style={otpVerificationStyle.editMobNumContainer}>
+              <Text
                 style={{
-                  marginTop: verticalScale(30),
+                  fontSize: customTheme.fonts.mediumText.fontSize,
 
-                  alignSelf: "center",
+                  marginRight: 3,
                 }}
               >
-                <Button mode="contained" onPress={handleValidateOTP}>
-                  Validate
-                </Button>
-              </View>
+                Code sent to {maskingFunction(watch().MobilePhoneOtp)},
+              </Text>
 
-              <View style={otpVerificationStyle.resendContainer}>
+              <Text
+                style={{
+                  fontSize: customTheme.fonts.mediumText.fontSize,
+
+                  textDecorationLine: "underline",
+
+                  color: customTheme.colors.primary,
+                }}
+                onPress={editHandler}
+              >
+                Edit
+              </Text>
+            </View>
+
+            <FormControl
+              compType={component.otpInput}
+              label="OTP"
+              name="Otp__c"
+              control={control}
+              required={true}
+              type="phone-pad"
+              right="phone"
+              // isDisabled={!timer}
+              otp={otp}
+              setOtp={setOtp}
+            />
+
+            <View
+              style={{
+                marginTop: verticalScale(30),
+
+                alignSelf: "center",
+              }}
+            >
+              <Button mode="contained" onPress={handleValidateOTP}>
+                Validate
+              </Button>
+            </View>
+
+            <View style={otpVerificationStyle.resendContainer}>
+              <Text
+                style={{
+                  fontSize: customTheme.fonts.smallText.fontSize,
+
+                  marginRight: 3,
+                }}
+              >
+                Didn't receive the OTP?
+              </Text>
+              <Touchable
+                onPress={handleResendOTP}
+                disabled={resendDisabled || isVerified}
+              >
                 <Text
                   style={{
                     fontSize: customTheme.fonts.smallText.fontSize,
-
-                    marginRight: 3,
+                    textDecorationLine: "underline",
+                    color:
+                      resendDisabled || isVerified
+                        ? "gray"
+                        : customTheme.colors.error,
                   }}
                 >
-                  Didn't receive the OTP?
+                  Send OTP
                 </Text>
-                <Touchable
-                  onPress={handleResendOTP}
-                  disabled={resendDisabled || isVerified}
-                >
-                  <Text
-                    style={{
-                      fontSize: customTheme.fonts.smallText.fontSize,
-                      textDecorationLine: "underline",
-                      color:
-                        resendDisabled || isVerified
-                          ? "gray"
-                          : customTheme.colors.error,
-                    }}
-                  >
-                    Send OTP
-                  </Text>
-                </Touchable>
-              </View>
-
-              <Text style={otpVerificationStyle.timerLabel}>
-                {formatTime(timer)}
-              </Text>
+              </Touchable>
             </View>
-          </>
-        )}
-      </View>
-    </>
+
+            <Text style={otpVerificationStyle.timerLabel}>
+              {formatTime(timer)}
+            </Text>
+          </View>
+        </>
+      )}
+    </View>
   );
 };
 

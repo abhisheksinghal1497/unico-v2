@@ -13,7 +13,7 @@ export const RoleProvider = ({ children }) => {
   );
   const { dsaBrJnData } = useSelector((state) => state.masterData.dsaBrJn);
   const dispatch = useDispatch();
-
+  console.log('userInfoMasterData', userInfoMasterData, dsaBrJnData);
   const [empRole, setEmpRole] = useState('');
   const getRole = async (userInfoMasterData) => {
     if (

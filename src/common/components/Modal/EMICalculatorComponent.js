@@ -123,11 +123,9 @@ const EMICalculatorComponent = ({
       setValue("EMI", emiValue.toFixed(2));
       console.log(data);
       setIsEMIVisible(true);
-      setIsEMIVisible(true);
     } else {
       setEmi(0);
       setValue("EMI", 0);
-      setIsEMIVisible(false);
       setIsEMIVisible(false);
     }
   };
