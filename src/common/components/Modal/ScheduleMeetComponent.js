@@ -27,6 +27,7 @@ const ScheduleMeetComponent = ({
   onDismiss,
   onSave,
   setAddLoading,
+  LeadId,
 }) => {
   const validationSchema = yup.object().shape({
     StartDateTime: yup
@@ -65,6 +66,7 @@ const ScheduleMeetComponent = ({
     Description: "",
     ReminderDateTime: "",
     IsReminderSet: true,
+    WhoId: LeadId,
   };
 
   const {
@@ -89,17 +91,11 @@ const ScheduleMeetComponent = ({
       );
       let passedStartDate = new Date(data.StartDateTime);
       let passedEndDate = new Date(data.EndDateTime);
-      //  console.log('Before Convert', passedStartDate, passedEndDate);
-      //  console.log(
-      //    'Before Convert',
-      //    typeof passedStartDate,
-      //    typeof passedEndDate
-      //  );
 
       data.ReminderDateTime = convertToDateString(ReminderValue);
       data.StartDateTime = convertToDateString(passedStartDate);
       data.EndDateTime = convertToDateString(passedEndDate);
-
+      console.log("On Submit", data);
       let res = await postObjectData("Event", data);
       if (res.success) {
         //  console.log('Success');

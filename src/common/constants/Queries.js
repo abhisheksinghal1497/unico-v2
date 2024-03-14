@@ -1,6 +1,8 @@
+import { parseISO, startOfISOWeek, endOfISOWeek } from "date-fns";
+
 export const query = {
   getLeadsQuery:
-    'Select Id, Status, Name, LeadSource, Lead_Id__c,CreatedDate,Branch_Name__c,Channel_Name__c from Lead ORDER BY LASTMODIFIEDDATE DESC',
+    "Select Id, Status, Name, LeadSource, Lead_Id__c,CreatedDate,Branch_Name__c,Channel_Name__c from Lead ORDER BY LASTMODIFIEDDATE DESC",
 
   getLeadByIdQuery: (id) =>
     `Select Lead_Id__c,Id,LeadSource,Status,RM_SM_Name__c,Channel_Name__c,Branch_Name__c,Employee_Code__c,Customer_Name__c,DSA_Code__c,Bank_Branch__c,
@@ -8,7 +10,7 @@ Branch_Manager__c,Customer_Profile__c,MobilePhone,Alternative_Mobile_Number__c,F
   filterLeadQuery: (status) =>
     `Select Id, Status, Name, LeadSource, Lead_Id__c,CreatedDate from Lead WHERE Status = '${status}' ORDER BY LASTMODIFIEDDATE DESC`,
   getLocationMasterQuery:
-    'Select Id,City__c,(Select Id,ProductType__c,IsActive__c from Location_Branch_Junctions__r) from LocMstr__c',
+    "Select Id,City__c,(Select Id,ProductType__c,IsActive__c from Location_Branch_Junctions__r) from LocMstr__c",
   // "SELECT Id,City__c,IsServiceable__c,State__c FROM LocMstr__c",
   getTeamHierarchyQuery: `SELECT EmpBrch__c,EmpBrch__r.Name,Employee__c,EmpRole__c,FullName__c,Id,IsActive__c,Name,Product_Type__c,Supervisor__c,Employee__r.Name,BranchCode__c,Employee_Code__c FROM TeamHierarchy__c WHERE  IsActive__c = true`,
   // Employee__c = '${userId}' AND
@@ -36,5 +38,7 @@ Branch_Manager__c,Customer_Profile__c,MobilePhone,Alternative_Mobile_Number__c,F
   getBankBranchMasterData: `SELECT Id,Name,LocationMaster__c,BrchCode__c FROM BankBrchMstr__c`,
   getLocationBrJnMasterData: `SELECT Id,Name,Location__c,Branch__c FROM LocBrchJn__c  WHERE IsActive__c=true `,
   getPincodeMasterData: `SELECT Id,Name,Bank_Branch__c,PinCode__c,Product_Type__c,Bank_Branch__r.Name,Bank_Branch__r.BrchCode__c,PinCode__r.PIN__c,PinCode__r.State__c,PinCode__r.IsServicable__c FROM PinBrchJn__c where PinCode__r.IsServicable__c=true`,
+  getMeetingData: (startDate, endDate) =>
+    `SELECT Id, StartDateTime,EndDateTime,Subject,Description,WhoId,Who.Name FROM Event WHERE WhoId != null AND StartDateTime >= ${startDate} AND  EndDateTime <= ${endDate}`,
   // getPincodeMasterData: `SELECT Id,Name,City__c,PIN__c,State__c,IsServicable__c FROM PincodeMstr__c WHERE IsServicable__c=true `,
 };

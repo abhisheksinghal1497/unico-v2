@@ -355,7 +355,7 @@ const MobileOtpConsent = ({
                     <Icon
                       name="closecircle"
                       size={20}
-                      color={"#8B0000"}
+                      color={customTheme.colors.error}
                       style={{ marginTop: 5 }}
                     />
 

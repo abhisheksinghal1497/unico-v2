@@ -241,7 +241,6 @@ export default function EditLeadScreen({ navigation }) {
   };
   //------ Handlers------//
   const handlePrevSubmit = () => {
-    setValue("MobilePhoneOtp", watch().MobilePhone);
     setCurrentPosition((prev) => prev - 1);
   };
 
@@ -474,6 +473,7 @@ export default function EditLeadScreen({ navigation }) {
         cancelBtnLabel={"Close"}
         visible={scheduleModalVisible}
         setAddLoading={setAddLoading}
+        LeadId={id}
       />
       <EMICalculatorComponent
         control={control}

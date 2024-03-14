@@ -1,10 +1,11 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import leadReducer from './slices/LeadSlice';
-import credentialReducer from './slices/CredentialsSlice';
-import teamHeirarchyReducer from './slices/TeamHeirarchySlice';
-import leadMetaDataReducer from './slices/LeadMetaData';
-import masterDataReducer from './slices/MasterData';
-import thunk from 'redux-thunk';
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import leadReducer from "./slices/LeadSlice";
+import credentialReducer from "./slices/CredentialsSlice";
+import teamHeirarchyReducer from "./slices/TeamHeirarchySlice";
+import leadMetaDataReducer from "./slices/LeadMetaData";
+import masterDataReducer from "./slices/MasterData";
+import meetingDataReducer from "./slices/MeetingDataSlice";
+import thunk from "redux-thunk";
 
 const reducer = combineReducers({
   leads: leadReducer,
@@ -12,6 +13,7 @@ const reducer = combineReducers({
   teamHeirarchy: teamHeirarchyReducer,
   leadMetadata: leadMetaDataReducer,
   masterData: masterDataReducer,
+  meetingdata: meetingDataReducer,
 });
 
 const store = configureStore({

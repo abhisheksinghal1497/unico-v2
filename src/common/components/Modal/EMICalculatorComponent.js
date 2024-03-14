@@ -213,13 +213,10 @@ const EMICalculatorComponent = ({
           <Text style={styles.emiValue}> EMI ₹ {emi}</Text>
         </View>
       ) : null}
-      {isEMIVisible ? (
-        <View style={styles.emiValueWrapper}>
-          <Text style={styles.emiValue}> EMI ₹ {emi}</Text>
-        </View>
-      ) : null}
 
-      <View style={styles.buttonContainer}>
+      <View
+        style={[styles.buttonContainer, { marginTop: isEMIVisible ? 0 : 10 }]}
+      >
         <Button mode="contained" onPress={handleSubmit(calculateEMI)}>
           Calculate EMI
         </Button>
@@ -263,7 +260,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginBottom: verticalScale(20),
+    marginBottom: verticalScale(10),
   },
   button: {
     borderRadius: 6,
@@ -274,7 +271,7 @@ const styles = StyleSheet.create({
   },
   emiValueWrapper: {
     marginTop: verticalScale(10),
-    marginTop: verticalScale(10),
+    marginBottom: verticalScale(10),
   },
   emiValue: {
     fontSize: 20,

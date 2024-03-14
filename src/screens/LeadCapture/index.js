@@ -407,6 +407,7 @@ const AddLead = ({ navigation }) => {
         visible={scheduleModalVisible}
         setAddLoading={setAddLoading}
         addLoading={addLoading}
+        LeadId={id}
       />
       <EMICalculatorComponent
         control={control}
