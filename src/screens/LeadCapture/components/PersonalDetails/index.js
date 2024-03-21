@@ -30,7 +30,7 @@ const LeadPersonalDetails = ({
 
   const GetPincodePicklist = (leadSource, branchName, channelName) => {
     try {
-      console.log('Lead Source', leadSource, channelName);
+      console.log("Lead Source", leadSource, channelName);
 
       let pincodePicklist = [];
       // if (role === globalConstants.RoleNames.RM) {
@@ -55,14 +55,7 @@ const LeadPersonalDetails = ({
           }
         });
       }
-<<<<<<< HEAD
       if ((leadSource === "DSA" || leadSource === "UGA") && channelName) {
-        let branch = dsaBrJn.find((dbr) => dbr.Account__r.Name === channelName);
-        // console.log('Entered', channelName, branch, pincodeMasterData);
-        pincodeMasterData.map((pin) => {
-          if (branch?.BanchBrch__r.Name === pin?.Bank_Branch__r?.Name) {
-=======
-      if ((leadSource === 'DSA' || leadSource === 'UGA') && channelName) {
         let filteredBranch = dsaBrJnMasterData?.filter(
           (dbr) => dbr.Account__r?.Name === channelName
         );
@@ -76,7 +69,6 @@ const LeadPersonalDetails = ({
             bankBranchNames?.length > 0 &&
             bankBranchNames?.includes(pin?.Bank_Branch__r?.Name)
           ) {
->>>>>>> b09505211f18fd0ca3a2d0371f93cea40834921a
             pincodePicklist.push({
               label: pin?.PinCode__r?.PIN__c,
               value: pin?.PinCode__r?.PIN__c,
@@ -84,7 +76,7 @@ const LeadPersonalDetails = ({
           }
         });
       }
-      console.log('Pincode Picklist', pincodePicklist);
+      console.log("Pincode Picklist", pincodePicklist);
       // }
       return pincodePicklist;
     } catch (error) {
