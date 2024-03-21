@@ -59,6 +59,8 @@ import { verticalScale } from "../../utils/matrcis";
 export default function EditLeadScreen({ navigation }) {
   const route = useRoute();
   let leadId = route.params.Id;
+  let leadStatus = route.params.statusName;
+  let days = route.params.dateDifference;
   const isOnline = useInternet();
   const empRole = useRole();
   const { hideBottomTab, setHideBottomTab } = useContext(BottomTabContext);
@@ -335,7 +337,12 @@ export default function EditLeadScreen({ navigation }) {
             marginTop: verticalScale(20),
           }}
         >
-          <StatusCard status={watch()?.Status} />
+          <StatusCard
+            status={
+              watch()?.Status == "Lead Pending" ? leadStatus : watch()?.Status
+            }
+            days={days}
+          />
         </View>
       )}
       {currentPosition === 0 && (

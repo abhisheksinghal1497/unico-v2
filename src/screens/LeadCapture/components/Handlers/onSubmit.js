@@ -1,22 +1,22 @@
 // import CustomAlert from '../../../../common/components/BottomPopover/CustomAlert';
-import { globalConstants } from '../../../../common/constants/globalConstants';
-import { soupConfig } from '../../../../common/constants/soupConstants';
-import { QuerySoupById } from '../../../../services/QueryRequests/QuerySoupById';
+import { globalConstants } from "../../../../common/constants/globalConstants";
+import { soupConfig } from "../../../../common/constants/soupConstants";
+import { QuerySoupById } from "../../../../services/QueryRequests/QuerySoupById";
 import {
   saveRecordOffline,
   updateRecordOffline,
-} from '../../../../store/soups/LeadSoup';
-import leadSyncUp from '../../../../store/soups/LeadSoup/LeadSyncUp';
-import { GetBrManagerId } from './GetBranchManagerId';
+} from "../../../../store/soups/LeadSoup";
+import leadSyncUp from "../../../../store/soups/LeadSoup/LeadSyncUp";
+import { GetBrManagerId } from "./GetBranchManagerId";
 import {
   GetBrIdByBrName,
   GetChannelId,
   GetRmBranchName,
   GetRmIdByRmName,
-} from './GetChannelId';
-import Toast from 'react-native-toast-message';
-import { GetProductId } from './GetProductId';
-import { oauth } from 'react-native-force';
+} from "./GetChannelId";
+import Toast from "react-native-toast-message";
+import { GetProductId } from "./GetProductId";
+import { oauth } from "react-native-force";
 
 export const OnSubmitLead = async (
   data,
@@ -65,13 +65,13 @@ export const OnSubmitLead = async (
         data.Br_Manager_Br_Name
       );
       // Lead Assignment when RM Logs in
-      if (data.LeadSource === 'Direct-RM') {
+      if (data.LeadSource === "Direct-RM") {
         data.RM_SM_Name__c = teamHeirarchyByUserId
           ? teamHeirarchyByUserId?.Employee__c
-          : '';
+          : "";
         data.OwnerId = teamHeirarchyByUserId
           ? teamHeirarchyByUserId?.Employee__c
-          : '';
+          : "";
       } else {
         // check if selected Bank_branch__c(Brnach Name) exist in Logged in RM Juridiction
         const isValidJurisdiction =
@@ -82,10 +82,10 @@ export const OnSubmitLead = async (
         if (isValidJurisdiction) {
           data.RM_SM_Name__c = teamHeirarchyByUserId
             ? teamHeirarchyByUserId?.Employee__c
-            : '';
+            : "";
           data.OwnerId = teamHeirarchyByUserId
             ? teamHeirarchyByUserId?.Employee__c
-            : '';
+            : "";
         } else {
           data.OwnerId = data.Branch_Manager__c;
         }
@@ -137,10 +137,10 @@ export const OnSubmitLead = async (
 
     if (!data.OwnerId) {
       Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text1: 'Failed to Create Lead',
-        position: 'top',
+        type: "error",
+        text1: "Error",
+        text1: "Failed to Create Lead",
+        position: "top",
       });
       return;
     }
@@ -168,10 +168,10 @@ export const OnSubmitLead = async (
     if (res.success) {
       // console.log('ID in submit Fxn', res);
       // ----------------------
-      if (id.length < 1 || id.includes('local')) {
+      if (id.length < 1 || id.includes("local")) {
         let offlineLead = await QuerySoupById(
           soupConfig.lead.soupName,
-          'localId',
+          "localId",
           res.success && res?.res[0].Id,
           soupConfig.lead.pageSize
         );
@@ -180,44 +180,45 @@ export const OnSubmitLead = async (
         res.success && setId(updatedLeadData?.Id);
         res.success && setPostData(updatedLeadData);
 
-        console.log('updatedLeadData------------>', updatedLeadData);
+        console.log("updatedLeadData------------>", updatedLeadData);
 
         if (
           updatedLeadData &&
-          updatedLeadData.hasOwnProperty('__last_error__')
+          updatedLeadData.hasOwnProperty("__last_error__")
         ) {
           Toast.show({
-            type: 'error',
-            text1: 'Failed to Create/Update Lead',
-            position: 'top',
+            type: "error",
+            text1: "Failed to Create/Update Lead",
+            position: "top",
           });
         }
       } else {
         setId(res?.res[0].Id);
         setPostData(res?.res[0]);
-        console.log('updatedResData------------>', res?.res[0]);
+        console.log("updatedResData------------>", res?.res[0]);
       }
 
       // Write Logic for showing otp verification Screen
       // OTP Verification screen can be shown if lead is assigned to RM that means OWNERID and Employee Id are same also if network is there then this screen should be visible otherwise send a toast msg that network is not there
       oauth.getAuthCredentials((cred) => {
         //   console.log('Entered', id);
+        console.log("Owner ID is ", data.OwnerId, cred.userId);
         if (data?.OwnerId === cred?.userId) {
           !id &&
             Toast.show({
-              type: 'success',
-              text1: 'Lead created successfully',
-              position: 'top',
+              type: "success",
+              text1: "Lead created successfully",
+              position: "top",
             });
           setCurrentPosition((prev) => prev + 1);
           return;
         } else {
           !id &&
             Toast.show({
-              type: 'success',
-              text1:
-                'Lead created successfully  And Assigned to Branch Manager',
-              position: 'top',
+              type: "success",
+              text1: "Lead created successfully",
+              text2: "Lead Assigned to Branch Manager",
+              position: "top",
             });
         }
 
@@ -228,18 +229,18 @@ export const OnSubmitLead = async (
       setCurrentPosition(currentPosition);
     }
   } catch (error) {
-    console.log('Error OnSubmitLead ', error);
+    console.log("Error OnSubmitLead ", error);
     !id &&
       Toast.show({
-        type: 'error',
-        text1: 'Failed to Create Lead',
-        position: 'top',
+        type: "error",
+        text1: "Failed to Create Lead",
+        position: "top",
       });
     id &&
       Toast.show({
-        type: 'error',
-        text1: 'Failed to Update Lead',
-        position: 'top',
+        type: "error",
+        text1: "Failed to Update Lead",
+        position: "top",
       });
   }
 };

@@ -1,35 +1,35 @@
-import React, { useEffect, useCallback, useRef, useContext } from 'react';
-import { FlatList, View, Keyboard, Alert } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { ActivityIndicator, Button, Searchbar } from 'react-native-paper';
-import Toast from 'react-native-toast-message';
+import React, { useEffect, useCallback, useRef, useContext } from "react";
+import { FlatList, View, Keyboard, Alert } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { ActivityIndicator, Button, Searchbar } from "react-native-paper";
+import Toast from "react-native-toast-message";
 
 import {
   getLeadListViews,
   getLeadsByQuery,
-} from '../../store/redux/actions/lead';
-import { useInternet } from '../../store/context/Internet';
-import { SearchLead } from '../../services/SearchLead';
-import { LeadListStyles } from './styles/LeadListStyles';
-import LeadItem from './component/LeadItem';
-import Filter from './component/Filter';
-import ErrorScreen from './component/ErrorScreen';
-import { ErrorMessage } from '../../common/constants/ErrorConstants';
-import { screens } from '../../common/constants/screen';
-import customTheme from '../../common/colors/theme';
-import { BottomTabContext } from '../../navigation/mainNavigation';
-import { QuerySoup } from '../../services/QuerySoup';
-import { soupConfig } from '../../common/constants/soupConstants';
-import leadSyncUp from '../../store/soups/LeadSoup/LeadSyncUp';
-import { globalConstants } from '../../common/constants/globalConstants';
-import { useRole } from '../../store/context/RoleProvider';
+} from "../../store/redux/actions/lead";
+import { useInternet } from "../../store/context/Internet";
+import { SearchLead } from "../../services/SearchLead";
+import { LeadListStyles } from "./styles/LeadListStyles";
+import LeadItem from "./component/LeadItem";
+import Filter from "./component/Filter";
+import ErrorScreen from "./component/ErrorScreen";
+import { ErrorMessage } from "../../common/constants/ErrorConstants";
+import { screens } from "../../common/constants/screen";
+import customTheme from "../../common/colors/theme";
+import { BottomTabContext } from "../../navigation/mainNavigation";
+import { QuerySoup } from "../../services/QuerySoup";
+import { soupConfig } from "../../common/constants/soupConstants";
+import leadSyncUp from "../../store/soups/LeadSoup/LeadSyncUp";
+import { globalConstants } from "../../common/constants/globalConstants";
+import { useRole } from "../../store/context/RoleProvider";
 
 export default function LeadList({ navigation }) {
   const searchbarRef = useRef(null);
   // const navigation = useNavigation
   const { hideBottomTab, setHideBottomTab } = useContext(BottomTabContext);
   const [selectedListView, setSelectedListView] = React.useState({});
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [leadListData, setLeadListData] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -58,7 +58,7 @@ export default function LeadList({ navigation }) {
       setLeadListData([...filteredOffilneData]);
       return filteredOffilneData;
     } catch (error) {
-      console.log('Error getOfflineLeadList', error);
+      console.log("Error getOfflineLeadList", error);
       return [];
     }
   };
@@ -69,9 +69,9 @@ export default function LeadList({ navigation }) {
   const closeMenu = () => setVisible(false);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       setHideBottomTab(false);
-      setSearchQuery('');
+      setSearchQuery("");
       Object.keys(selectedListView)?.length > 0 &&
         dispatch(getLeadsByQuery(selectedListView?.query));
     });
@@ -81,7 +81,7 @@ export default function LeadList({ navigation }) {
 
   useEffect(() => {
     const keyboardDismissListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => {
         if (searchbarRef.current) {
           searchbarRef.current.blur();
@@ -139,7 +139,7 @@ export default function LeadList({ navigation }) {
 
       dispatch(getLeadsByQuery(selectedListView?.query));
     } catch (error) {
-      console.log('Error handleStatusDropDownData', error);
+      console.log("Error handleStatusDropDownData", error);
     }
   };
 
@@ -147,15 +147,15 @@ export default function LeadList({ navigation }) {
     async (searchString) => {
       try {
         const result = await SearchLead(searchString);
-        console.log('Search Result', result);
+        console.log("Search Result", result);
         setLeadListData(result.searchRecords);
       } catch (error) {
         Toast.show({
-          type: 'error',
-          text1: 'Error Fetching data',
-          position: 'top',
+          type: "error",
+          text1: "Error Fetching data",
+          position: "top",
         });
-        console.log('Error Fetching data', error);
+        console.log("Error Fetching data", error);
       }
     },
     [searchQuery]
@@ -204,7 +204,7 @@ export default function LeadList({ navigation }) {
   };
 
   const onSearchClearPress = () => {
-    setSearchQuery('');
+    setSearchQuery("");
     if (isOnline) {
       setLeadListData(leads?.records);
     } else {
@@ -212,8 +212,8 @@ export default function LeadList({ navigation }) {
     }
   };
 
-  const handleRenderItem = (Id) => {
-    navigation.navigate(screens.editLead, { Id });
+  const handleRenderItem = (Id, statusName, dateDifference) => {
+    navigation.navigate(screens.editLead, { Id, statusName, dateDifference });
   };
 
   const renderItem = ({ item }) => {
@@ -263,9 +263,6 @@ export default function LeadList({ navigation }) {
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.Id.toString() || String(Math.random())}
-        ItemSeparatorComponent={() => (
-          <View style={LeadListStyles.itemSeparator} />
-        )}
         refreshing={refreshing}
         onRefresh={onRefresh}
       />
