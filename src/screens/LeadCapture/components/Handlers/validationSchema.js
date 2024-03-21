@@ -245,10 +245,7 @@ export const createValidationSchema = (empRole, currentPosition) => {
         .matches(onlyAlphabeticRegex, 'Please enter a valid Last Name')
         .nullable(),
       Pincode__c: yup.string().required('Pincode is required').nullable(),
-      Br_Manager_Br_Name: yup
-        .string()
-        .required('Branch Name is required')
-        .nullable(),
+      RM_Name: yup.string().required('RM Name is required').nullable(),
 
       //   //-------------------------Loan Validation scheme ------------------------//
       Product__c: yup.string().required('Product is required').nullable(),

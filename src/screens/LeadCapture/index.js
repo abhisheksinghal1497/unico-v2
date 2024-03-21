@@ -244,6 +244,7 @@ const AddLead = ({ navigation }) => {
   };
 
   // console.log('Lead MetaData', leadMetadata);
+  // console.log('Validation Errors', errors);
 
   //-----Schedule Meeting Button------//
 
@@ -300,6 +301,7 @@ const AddLead = ({ navigation }) => {
                 watch={watch}
                 collapsedError={hasErrors}
                 pincodeMasterData={pincodeMasterData}
+                dsaBrJnMasterData={dsaBrJnMasterData}
                 isFormEditable={isFormEditable}
               />
             )}

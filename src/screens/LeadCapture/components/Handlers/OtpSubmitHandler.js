@@ -7,7 +7,7 @@ import Toast from 'react-native-toast-message';
 
 export const onSubmitOtp = async (data, setPostData) => {
   try {
-    // console.log('On submit Data', data);
+    // console.log('On submit OTP Data', data);
 
     // Saving the Data locally
 

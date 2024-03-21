@@ -28,8 +28,8 @@ export const GetRmSmName = (thData, rmId) => {
 export const GetRmBranchName = (thData, rmId) => {
   if (thData && thData?.length > 0) {
     let th = thData?.find((t) => t.Employee__c === rmId);
-    // console.log('Th Data', th);
-    return th ? th?.BanchBrch__r.Name : '';
+    console.log('Th Data', th);
+    return th ? th?.EmpBrch__r?.Name : '';
   }
 
   return '';
@@ -37,7 +37,7 @@ export const GetRmBranchName = (thData, rmId) => {
 export const GetRmIdByRmName = (thData, rmName) => {
   if (thData && thData?.length > 0) {
     let th = thData?.find((t) => t.Employee__r.Name === rmName);
-    // console.log('Th Data', th);
+    console.log('Th Data', th);
     return th ? th?.Employee__c : '';
   }
 
@@ -49,7 +49,7 @@ export const GetBrIdByBrName = (pincodeMasterData, brname) => {
     let br = pincodeMasterData.find(
       (pin) => pin?.Bank_Branch__r?.Name === brname
     );
-
+    // console.log('Branch Name');
     if (br) {
       return br?.Bank_Branch__c;
     } else {

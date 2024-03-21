@@ -25,12 +25,12 @@ const LeadPersonalDetails = ({
   const [pincodePicklist, setPincodePicklist] = useState([]);
   const [brNamePicklist, setBrNamePicklist] = useState([]);
   const [rmNamePicklist, setRmNamePicklist] = useState([]);
-  // console.log('Pincode Master', pincodeMasterData);
+  // console.log('DSA Branch Junction', dsaBrJn);
   const role = useRole();
 
   const GetPincodePicklist = (leadSource, branchName, channelName) => {
     try {
-      console.log('Lead Source', leadSource, channelName);
+      // console.log('Lead Source', leadSource, channelName);
 
       let pincodePicklist = [];
       // if (role === globalConstants.RoleNames.RM) {
@@ -76,7 +76,7 @@ const LeadPersonalDetails = ({
           }
         });
       }
-      console.log('Pincode Picklist', pincodePicklist);
+      // console.log('Pincode Picklist', pincodePicklist);
       // }
       return pincodePicklist;
     } catch (error) {

@@ -18,6 +18,7 @@ const LeadSourceDetails = ({
   collapsedError,
   pincodeMasterData,
   isFormEditable,
+  dsaBrJnMasterData,
 }) => {
   const [leadSourcePicklist, setLeadSourcePicklist] = useState([]);
   const [channelNamePicklist, setChannelNamePicklist] = useState([]);
@@ -43,6 +44,13 @@ const LeadSourceDetails = ({
       });
       return channelNames;
     }
+    // if(leadSource ==='DSA'){
+    //   dsaBrJnMasterData.map((value)=>{
+    //     if (value.Account__r?.RecordType.Name === leadSource && ){
+
+    //     }
+    //   })
+    // }
     dsaBrJn?.map((value) => {
       if (value.Account__r?.RecordType.Name === leadSource) {
         channelNames.push({
