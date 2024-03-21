@@ -13,7 +13,7 @@ const SMARTSTORE_CHANGED = soupConfig.productMapping.SMARTSTORE_CHANGED;
 
 const objectName = soupConfig.productMapping.objectName;
 
-export const syncProductMappingData = async (teamHeirarchyByUserId) => {
+export const syncProductMappingData = async () => {
   try {
     // const { productType } = await getProductType(teamHeirarchyByUserId);
 

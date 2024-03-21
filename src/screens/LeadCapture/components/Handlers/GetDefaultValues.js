@@ -22,6 +22,7 @@ export const GetDefaultValues = (
         Employee_Code__c: '',
         Customer_Name__c: '',
         DSA_Code__c: '',
+        DSA_UGA_User__c: '',
         Bank_Branch__c: '', // Branch Name of User Logged in
         Branch_Manager__c: '', //
         Br_Manager_Br_Name: '',
@@ -43,7 +44,7 @@ export const GetDefaultValues = (
 
         Requested_loan_amount__c: null,
         Requested_tenure_in_Months__c: null,
-        OwnerId: '',
+        // OwnerId: '',
         Is_OTP_Limit_Reached__c: false,
         Last_OTP_Attempt_Time__c: '',
         OTP_Attempts__c: null,
@@ -56,6 +57,7 @@ export const GetDefaultValues = (
     if (empRole === globalConstants.RoleNames.DSA) {
       let dsaBrJn =
         dsaBrJnData && dsaBrJnData.length > 0 ? dsaBrJnData[0] : null;
+      // console.log('DSA Br Jn DATA ----->', dsaBrJn);
       defaultValues = {
         LeadSource: 'DSA',
         Status: 'New Lead',
@@ -65,7 +67,7 @@ export const GetDefaultValues = (
         DSA_UGA_User__c: dsaBrJn ? dsaBrJn?.DSAUGA__c : '',
         // BranchCode__c: '', No need to update as it is a formula field
         DSA_Code__c: dsaBrJn ? dsaBrJn?.DSA_UGA_Code__c : '',
-        Bank_Branch__c: dsaBrJn ? dsaBrJn?.BanchBrch__c : '', // Branch Name of User Logged in
+        Bank_Branch__c: '', // Branch Name of Branch Selected
         Branch_Manager__c: '', //
         Br_Manager_Br_Name: '',
         //-----------Personal details--------------//
@@ -99,7 +101,7 @@ export const GetDefaultValues = (
         DSA_UGA_User__c: dsaBrJn ? dsaBrJn?.DSAUGA__c : '',
         // BranchCode__c: '', No need to update as it is a formula field
         DSA_Code__c: dsaBrJn ? dsaBrJn?.DSA_UGA_Code__c : '',
-        Bank_Branch__c: dsaBrJn ? dsaBrJn?.BanchBrch__c : '', // Branch Name of User Logged in
+        Bank_Branch__c: '', // Branch Name of Branch Selected
         Branch_Manager__c: '', //
         Br_Manager_Br_Name: '',
         //-----------Personal details--------------//
@@ -115,7 +117,7 @@ export const GetDefaultValues = (
         Product__c: '',
         ProductLookup__c: '',
         ProductLookup: '',
-        OwnerId: '',
+        // OwnerId: '',
         Company: 'default',
       };
       return defaultValues;

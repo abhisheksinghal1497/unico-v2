@@ -6,6 +6,11 @@ const initialMasterDataState = {
     loading: false,
     hasError: false,
   },
+  dsaBrJnMaster: {
+    dsaBrJnMasterData: [],
+    loading: false,
+    hasError: false,
+  },
   locationMaster: {
     locationMasterData: [],
     hasError: false,
@@ -51,6 +56,12 @@ const masterDataSlice = createSlice({
       state.dsaBrJn.loading = false;
       state.dsaBrJn.dsaBrJnData = payload.dsaBrJn.dsaBrJnData;
       state.dsaBrJn.hasError = payload.dsaBrJn.hasError;
+    },
+    getDsaBrJnMasterData: (state, { payload }) => {
+      state.dsaBrJnMaster.loading = false;
+      state.dsaBrJnMaster.dsaBrJnMasterData =
+        payload.dsaBrJnMaster.dsaBrJnMasterData;
+      state.dsaBrJnMaster.hasError = payload.dsaBrJnMaster.hasError;
     },
     getLocationMaster: (state, { payload }) => {
       state.locationMaster.locationMasterData =

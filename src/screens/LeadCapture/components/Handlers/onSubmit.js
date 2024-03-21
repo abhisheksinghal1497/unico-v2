@@ -133,7 +133,7 @@ export const OnSubmitLead = async (
 
     // Saving the Data locally
 
-    // console.log('Data', data);
+    console.log('Data', data);
 
     if (!data.OwnerId) {
       Toast.show({
@@ -180,22 +180,39 @@ export const OnSubmitLead = async (
         res.success && setId(updatedLeadData?.Id);
         res.success && setPostData(updatedLeadData);
 
-        console.log('updatedLeadData------------>', updatedLeadData);
+        console.log(
+          'updatedLeadData------------>',
+          updatedLeadData,
+          updatedLeadData?.hasOwnProperty('__last_error__')
+        );
 
         if (
           updatedLeadData &&
-          updatedLeadData.hasOwnProperty('__last_error__')
+          updatedLeadData?.hasOwnProperty('__last_error__')
         ) {
           Toast.show({
             type: 'error',
             text1: 'Failed to Create/Update Lead',
             position: 'top',
           });
+          return;
         }
       } else {
         setId(res?.res[0].Id);
         setPostData(res?.res[0]);
-        console.log('updatedResData------------>', res?.res[0]);
+        console.log(
+          'updatedResData------------>',
+          res?.res[0],
+          res?.res[0]?.hasOwnProperty('__last_error__')
+        );
+        if (res?.res && res?.res[0]?.hasOwnProperty('__last_error__')) {
+          Toast.show({
+            type: 'error',
+            text1: 'Failed to Create/Update Lead',
+            position: 'top',
+          });
+          return;
+        }
       }
 
       // Write Logic for showing otp verification Screen
@@ -215,8 +232,8 @@ export const OnSubmitLead = async (
           !id &&
             Toast.show({
               type: 'success',
-              text1:
-                'Lead created successfully  And Assigned to Branch Manager',
+              text1: 'Lead created successfully',
+              text2: 'Assigned to Branch Manager',
               position: 'top',
             });
         }

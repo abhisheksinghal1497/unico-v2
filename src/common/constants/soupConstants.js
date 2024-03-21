@@ -97,6 +97,7 @@ export const soupConfig = {
       'Employee_Code__c',
       'Customer_Name__c',
       'DSA_Code__c',
+      'DSA_UGA_User__c',
       'Bank_Branch__c',
       'Branch_Manager__c',
       'Customer_Profile__c',
