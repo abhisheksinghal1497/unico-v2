@@ -133,7 +133,7 @@ export const OnSubmitLead = async (
 
     // Saving the Data locally
 
-    // console.log('Data', data);
+    console.log('Data', data);
 
     if (!data.OwnerId) {
       Toast.show({
@@ -180,22 +180,51 @@ export const OnSubmitLead = async (
         res.success && setId(updatedLeadData?.Id);
         res.success && setPostData(updatedLeadData);
 
+<<<<<<< HEAD
         console.log("updatedLeadData------------>", updatedLeadData);
 
         if (
           updatedLeadData &&
           updatedLeadData.hasOwnProperty("__last_error__")
+=======
+        console.log(
+          'updatedLeadData------------>',
+          updatedLeadData,
+          updatedLeadData?.hasOwnProperty('__last_error__')
+        );
+
+        if (
+          updatedLeadData &&
+          updatedLeadData?.hasOwnProperty('__last_error__')
+>>>>>>> b09505211f18fd0ca3a2d0371f93cea40834921a
         ) {
           Toast.show({
             type: "error",
             text1: "Failed to Create/Update Lead",
             position: "top",
           });
+          return;
         }
       } else {
         setId(res?.res[0].Id);
         setPostData(res?.res[0]);
+<<<<<<< HEAD
         console.log("updatedResData------------>", res?.res[0]);
+=======
+        console.log(
+          'updatedResData------------>',
+          res?.res[0],
+          res?.res[0]?.hasOwnProperty('__last_error__')
+        );
+        if (res?.res && res?.res[0]?.hasOwnProperty('__last_error__')) {
+          Toast.show({
+            type: 'error',
+            text1: 'Failed to Create/Update Lead',
+            position: 'top',
+          });
+          return;
+        }
+>>>>>>> b09505211f18fd0ca3a2d0371f93cea40834921a
       }
 
       // Write Logic for showing otp verification Screen
@@ -215,10 +244,17 @@ export const OnSubmitLead = async (
         } else {
           !id &&
             Toast.show({
+<<<<<<< HEAD
               type: "success",
               text1: "Lead created successfully",
               text2: "Lead Assigned to Branch Manager",
               position: "top",
+=======
+              type: 'success',
+              text1: 'Lead created successfully',
+              text2: 'Assigned to Branch Manager',
+              position: 'top',
+>>>>>>> b09505211f18fd0ca3a2d0371f93cea40834921a
             });
         }
 

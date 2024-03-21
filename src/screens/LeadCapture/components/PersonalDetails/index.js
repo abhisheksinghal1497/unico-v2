@@ -19,6 +19,7 @@ const LeadPersonalDetails = ({
   teamHeirarchyByUserId,
   watch,
   isFormEditable,
+  dsaBrJnMasterData,
 }) => {
   const [customerProfilePicklist, setCustomerProfilePicklist] = useState([]);
   const [pincodePicklist, setPincodePicklist] = useState([]);
@@ -29,6 +30,8 @@ const LeadPersonalDetails = ({
 
   const GetPincodePicklist = (leadSource, branchName, channelName) => {
     try {
+      console.log('Lead Source', leadSource, channelName);
+
       let pincodePicklist = [];
       // if (role === globalConstants.RoleNames.RM) {
       if (
@@ -52,11 +55,28 @@ const LeadPersonalDetails = ({
           }
         });
       }
+<<<<<<< HEAD
       if ((leadSource === "DSA" || leadSource === "UGA") && channelName) {
         let branch = dsaBrJn.find((dbr) => dbr.Account__r.Name === channelName);
         // console.log('Entered', channelName, branch, pincodeMasterData);
         pincodeMasterData.map((pin) => {
           if (branch?.BanchBrch__r.Name === pin?.Bank_Branch__r?.Name) {
+=======
+      if ((leadSource === 'DSA' || leadSource === 'UGA') && channelName) {
+        let filteredBranch = dsaBrJnMasterData?.filter(
+          (dbr) => dbr.Account__r?.Name === channelName
+        );
+        const bankBranchNames = filteredBranch?.map(
+          (item) => item?.BanchBrch__r && item?.BanchBrch__r?.Name
+        );
+        // console.log('bankBranchNames', filteredBranch, bankBranchNames);
+        pincodeMasterData?.map((pin) => {
+          if (
+            bankBranchNames &&
+            bankBranchNames?.length > 0 &&
+            bankBranchNames?.includes(pin?.Bank_Branch__r?.Name)
+          ) {
+>>>>>>> b09505211f18fd0ca3a2d0371f93cea40834921a
             pincodePicklist.push({
               label: pin?.PinCode__r?.PIN__c,
               value: pin?.PinCode__r?.PIN__c,
@@ -64,6 +84,7 @@ const LeadPersonalDetails = ({
           }
         });
       }
+      console.log('Pincode Picklist', pincodePicklist);
       // }
       return pincodePicklist;
     } catch (error) {
@@ -115,6 +136,8 @@ const LeadPersonalDetails = ({
     watch().LeadSource,
     teamHeirarchyByUserId?.EmpBrch__r.Name,
     watch().Channel_Name,
+    dsaBrJnMasterData,
+    pincodeMasterData,
   ]);
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <servers>
+    <server name="Dev" url="https://page-drive-2970--leadmgmt.sandbox.my.site.com/LOS" />
     <server name="UAT" url="https://test.salesforce.com" />
 </servers>

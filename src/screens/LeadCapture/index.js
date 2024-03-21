@@ -16,6 +16,7 @@ import {
   getBankBranchMaster,
   getCustomerMaster,
   getDsaBrJn,
+  getDsaBrJnMaster,
   getLocationBrJnMaster,
   getPincodeMaster,
   getProductMapping,
@@ -85,6 +86,9 @@ const AddLead = ({ navigation }) => {
   );
 
   const { dsaBrJnData } = useSelector((state) => state.masterData.dsaBrJn);
+  const { dsaBrJnMasterData } = useSelector(
+    (state) => state.masterData.dsaBrJnMaster
+  );
   const { customerMasterData } = useSelector(
     (state) => state.masterData.customerMaster
   );
@@ -93,6 +97,9 @@ const AddLead = ({ navigation }) => {
     (state) => state.masterData.pincodeMaster
   );
   // console.log('Pin Code Master Data', pincodeMasterData);
+  // console.log('productMappingData Data', productMappingData);
+  // console.log('leadMetadata Data', leadMetadata);
+  // console.log('teamHeirarchyMasterData ', teamHeirarchyMasterData);
   const checkOwner = (postData) => {
     oauth.getAuthCredentials((cred) => {
       if (id && id.length > 0) {
@@ -121,6 +128,7 @@ const AddLead = ({ navigation }) => {
     dispatch(getProductMapping());
     dispatch(getLeadMetadata());
     dispatch(getDsaBrJn());
+    dispatch(getDsaBrJnMaster());
     dispatch(getCustomerMaster());
     dispatch(getThMaster());
     dispatch(getPincodeMaster());
@@ -263,15 +271,17 @@ const AddLead = ({ navigation }) => {
           currentPosition={currentPosition}
         />
       )}
-      {isFormEditable && currentPosition !== 2 && (
-        <LeadActivities
-          id={id}
-          mobileNumber={watch().MobilePhone}
-          onScheduleClicked={toggleSchedule}
-          leadStatus={watch().Status}
-          onEmiCalculatorClicked={toggleEmiCalculator}
-        />
-      )}
+      {globalConstants.RoleNames.RM === empRole &&
+        isFormEditable &&
+        currentPosition !== 2 && (
+          <LeadActivities
+            id={id}
+            mobileNumber={watch().MobilePhone}
+            onScheduleClicked={toggleSchedule}
+            leadStatus={watch().Status}
+            onEmiCalculatorClicked={toggleEmiCalculator}
+          />
+        )}
 
       {currentPosition === 0 && (
         <KeyboardAvoidingView
@@ -301,6 +311,7 @@ const AddLead = ({ navigation }) => {
               setValue={setValue}
               collapsedError={hasErrors}
               pincodeMasterData={pincodeMasterData}
+              dsaBrJnMasterData={dsaBrJnMasterData}
               teamHeirarchyMasterData={teamHeirarchyMasterData}
               teamHeirarchyByUserId={teamHeirarchyByUserId}
               dsaBrJn={dsaBrJnData}

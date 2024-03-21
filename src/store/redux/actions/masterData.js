@@ -1,6 +1,8 @@
+import { oauth } from 'react-native-force';
 import { soupConfig } from '../../../common/constants/soupConstants';
 import { QuerySoup } from '../../../services/QuerySoup';
 import { masterDataAction } from '../slices/MasterData';
+import { getAuthCredentials } from '../../../services/GetRequestService/GetAuthCredentials';
 
 export const getDsaBrJn = () => {
   return async (dispatch) => {
@@ -10,11 +12,23 @@ export const getDsaBrJn = () => {
         soupConfig.dsaBrJn.queryPath,
         soupConfig.dsaBrJn.pageSize
       );
-      // console.log('Dsa Branch Junction', dsaBrJn);
+      let userDetails = await getAuthCredentials();
+      let dsaBrJnDataByUserId = dsaBrJn?.filter(
+        (dsaBr) =>
+          dsaBr?.RMUsr__c === userDetails?.userId ||
+          dsaBr?.DSAUGA__c === userDetails?.userId
+      );
+
+      // console.log(
+      //   'Dsa Branch Junction',
+      //   dsaBrJn,
+      //   userDetails,
+      //   dsaBrJnDataByUserId
+      // );
       dispatch(
         masterDataAction.getDsaBrJnData({
           dsaBrJn: {
-            dsaBrJnData: dsaBrJn,
+            dsaBrJnData: dsaBrJnDataByUserId,
             hasError: false,
           },
         })
@@ -24,6 +38,36 @@ export const getDsaBrJn = () => {
         masterDataAction.getDsaBrJnData({
           dsaBrJn: {
             dsaBrJnData: [],
+            hasError: true,
+          },
+        })
+      );
+      console.log('getDsaBrJn Error', error);
+    }
+  };
+};
+export const getDsaBrJnMaster = () => {
+  return async (dispatch) => {
+    try {
+      const dsaBrJn = await QuerySoup(
+        soupConfig.dsaBrJn.soupName,
+        soupConfig.dsaBrJn.queryPath,
+        soupConfig.dsaBrJn.pageSize
+      );
+      // console.log('Dsa Branch Junction', dsaBrJn);
+      dispatch(
+        masterDataAction.getDsaBrJnMasterData({
+          dsaBrJnMaster: {
+            dsaBrJnMasterData: dsaBrJn,
+            hasError: false,
+          },
+        })
+      );
+    } catch (error) {
+      dispatch(
+        masterDataAction.getDsaBrJnMasterData({
+          dsaBrJnMaster: {
+            dsaBrJnMasterData: [],
             hasError: true,
           },
         })

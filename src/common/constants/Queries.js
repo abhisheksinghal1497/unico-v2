@@ -19,7 +19,8 @@ Branch_Manager__c,Customer_Profile__c,MobilePhone,Alternative_Mobile_Number__c,F
 
   getDsaBranchJunction: (userId) =>
     `SELECT Account__c,Account__r.Name,Account__r.RecordType.name,Account__r.DSAConnId__c
-,BanchBrch__c,BanchBrch__r.Name,BanchBrch__r.BrchCode__c,Id,IsActive__c,Name,RMUsr__c,RMUsr__r.Name,DSA_UGA_Code__c,DSAUGA__c FROM DSABrchJn__c WHERE (RMUsr__c = '${userId}' OR DSAUGA__c = '${userId}') AND IsActive__c = true`,
+,BanchBrch__c,BanchBrch__r.Name,BanchBrch__r.BrchCode__c,Id,IsActive__c,Name,RMUsr__c,RMUsr__r.Name,DSA_UGA_Code__c,DSAUGA__c FROM DSABrchJn__c WHERE  IsActive__c = true`,
+  // (RMUsr__c = '${userId}' OR DSAUGA__c = '${userId}') AND
   getDsaBranchJunctionForDsaUga: (userId) =>
     `SELECT Account__c,Account__r.Name,Account__r.RecordType.name,Account__r.DSAConnId__c
 ,BanchBrch__c,BanchBrch__r.Name,BanchBrch__r.BrchCode__c,Id,IsActive__c,Name,RMUsr__c,RMUsr__r.Name,DSA_UGA_Code__c,DSAUGA__c FROM DSABrchJn__c WHERE DSAUGA__c = '${userId}' AND IsActive__c = true`,
