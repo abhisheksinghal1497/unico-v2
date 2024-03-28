@@ -47,7 +47,7 @@ const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
   return (
     <Touchable
       style={styles.item}
-      onPress={() => handleRenderItem(leadData.Id)}
+      onPress={() => handleRenderItem(leadData.Id, statusName)}
     >
       <View style={styles.headWrapper}>
         <View style={styles.idWrapper}>

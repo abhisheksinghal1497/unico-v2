@@ -27,6 +27,7 @@ const ScheduleMeetComponent = ({
   onDismiss,
   onSave,
   setAddLoading,
+  leadId,
 }) => {
   const validationSchema = yup.object().shape({
     StartDateTime: yup
@@ -65,7 +66,7 @@ const ScheduleMeetComponent = ({
     Description: '',
     ReminderDateTime: '',
     IsReminderSet: true,
-    // WhoId:'',
+    WhoId: leadId,
   };
 
   const {

@@ -13,4 +13,5 @@ export const screens = {
   cvList: 'CV list',
   cv: 'Collateral Visit',
   signature: 'Signature',
+  meetingList: 'Meetings',
 };

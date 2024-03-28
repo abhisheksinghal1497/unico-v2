@@ -37,5 +37,7 @@ Branch_Manager__c,Customer_Profile__c,MobilePhone,Alternative_Mobile_Number__c,F
   getBankBranchMasterData: `SELECT Id,Name,LocationMaster__c,BrchCode__c FROM BankBrchMstr__c`,
   getLocationBrJnMasterData: `SELECT Id,Name,Location__c,Branch__c FROM LocBrchJn__c  WHERE IsActive__c=true `,
   getPincodeMasterData: `SELECT Id,Name,Bank_Branch__c,PinCode__c,Product_Type__c,Bank_Branch__r.Name,Bank_Branch__r.BrchCode__c,PinCode__r.PIN__c,PinCode__r.State__c,PinCode__r.IsServicable__c FROM PinBrchJn__c where PinCode__r.IsServicable__c=true`,
+  getMeetingData: (startDate, endDate) =>
+    `SELECT Id, StartDateTime,EndDateTime,Subject,Description,WhoId,Who.Name FROM Event WHERE WhoId != null AND StartDateTime >= ${startDate} AND  EndDateTime <= ${endDate}`,
   // getPincodeMasterData: `SELECT Id,Name,City__c,PIN__c,State__c,IsServicable__c FROM PincodeMstr__c WHERE IsServicable__c=true `,
 };

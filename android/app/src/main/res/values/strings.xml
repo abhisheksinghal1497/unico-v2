@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="account_type">com.unico.react.login</string>
+	<string name="account_type">com.unico.react.login</string>
 	<string name="app_name">unico</string>
 	<string name="app_package">com.unico.react</string>
+
 </resources>

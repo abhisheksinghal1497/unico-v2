@@ -72,6 +72,15 @@ const MainNavigator = () => {
           defaultScreen: screens.leadList,
         }}
       />
+      {ROLES.SCHEDULE_Meeting.includes(empRole) && (
+        <Tab.Screen
+          name="Meeting List"
+          component={SharedStackNavigator}
+          initialParams={{
+            defaultScreen: screens.meetingList,
+          }}
+        />
+      )}
       {ROLES.WEBVIEW.includes(empRole) && (
         <Tab.Screen
           name={screens.WebViewStack}
@@ -88,63 +97,6 @@ const MainNavigator = () => {
       )}
     </>
   );
-  // const tabsForUnAuthUser = (
-  //   <>
-  //     <Tab.Screen
-  //       name={screens.leadListStack}
-  //       component={UnauthorizedScreen}
-  //       options={navOptionHandler}
-  //       initialParams={{
-  //         defaultScreen: screens.leadList,
-  //       }}
-  //     />
-  //   </>
-  // );
-
-  // const tabsForPD = (
-  //   <>
-  //     <Tab.Screen
-  //       name={screens.pdListStack}
-  //       component={
-  //         //SharedStackNavigator
-  //         // ROLES.PD_LIST.includes(empRole)
-  //         //   ?
-  //           SharedStackNavigator
-  //           // : unauthorizedscreen
-  //       }
-  //       options={navOptionHandler}
-  //       initialParams={{
-  //         defaultScreen: screens.pdList,
-  //       }}
-  //     />
-  //     <Tab.Screen
-  //       name={screens.cvListStack}
-  //       component={
-  //         //SharedStackNavigator
-  //         // ROLES.PD_LIST.includes(empRole)
-  //         //   ?
-  //           SharedStackNavigator
-  //           // : UnauthorizedScreen
-  //       }
-  //       options={navOptionHandler}
-  //       initialParams={{
-  //         defaultScreen: screens.cvList,
-  //       }}
-  //     />
-  //     {/* <Tab.Screen
-  //       name={screens.WebViewStack}
-  //       component={SfWebView}
-  //       options={() => {
-  //         return {
-  //           tabBarStyle: { display: "none" },
-  //           tabBarVisible: false,
-  //           headerShown: true,
-  //         };
-  //       }}
-  //       initialParams={{ employeeRole: empRole }}
-  //     /> */}
-  //   </>
-  // );
 
   return (
     <BottomTabContext.Provider value={{ hideBottomTab, setHideBottomTab }}>
@@ -168,10 +120,8 @@ const MainNavigator = () => {
               iconName = focused ? 'list' : 'list-outline';
             } else if (rn === screens.WebViewStack) {
               iconName = focused ? 'globe' : 'globe-outline';
-            } else if (rn === screens.pdListStack) {
-              iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
-            } else if (rn === screens.cvListStack) {
-              iconName = focused ? 'reader' : 'reader-outline';
+            } else if (rn === 'Meeting List') {
+              iconName = focused ? 'calendar' : 'calendar-outline';
             }
             // else if (rn === screens.pdList) {
             //   iconName = focused ? "chatbubbles" : "chatbubbles-outline";

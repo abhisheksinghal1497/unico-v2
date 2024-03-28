@@ -32,6 +32,7 @@ import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import com.facebook.react.modules.network.OkHttpClientProvider;
 import com.facebook.soloader.SoLoader;
 import com.salesforce.androidsdk.BuildConfig;
 import com.salesforce.androidsdk.reactnative.app.SalesforceReactSDKManager;
@@ -91,5 +92,12 @@ public class MainApplication extends Application implements ReactApplication {
 		 * for the key 'androidPushNotificationClientId'.
 		 */
         // SalesforceReactSDKManager.getInstance().setPushNotificationReceiver(pnInterface);
+
+		try{
+    //SSLPinningFactory sslPinningFactory = new SSLPinningFactory();
+
+        OkHttpClientProvider.setOkHttpClientFactory(new SSLPinningFactory());
+
+}catch (Exception e){}
 	}
 }

@@ -70,7 +70,9 @@ export default function LeadList({ navigation }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      setHideBottomTab(false);
+      if (empRole === globalConstants.RoleNames.RM) {
+        setHideBottomTab(false);
+      }
       setSearchQuery('');
       Object.keys(selectedListView)?.length > 0 &&
         dispatch(getLeadsByQuery(selectedListView?.query));
@@ -212,8 +214,8 @@ export default function LeadList({ navigation }) {
     }
   };
 
-  const handleRenderItem = (Id) => {
-    navigation.navigate(screens.editLead, { Id });
+  const handleRenderItem = (Id, statusName) => {
+    navigation.navigate(screens.editLead, { Id, statusName });
   };
 
   const renderItem = ({ item }) => {

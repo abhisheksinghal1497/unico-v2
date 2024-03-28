@@ -4,7 +4,15 @@ import { Button, Text } from 'react-native-paper';
 import { colors } from '../../colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { moderateScale, verticalScale } from '../../../utils/matrcis';
-import customTheme from '../../colors/theme';
+export const customAlertDefaultState = {
+  visible: false,
+  onClickYes: () => {},
+  title: '',
+  onDismiss: () => {},
+  confirmBtnLabel: '',
+  cancelBtnLabel: '',
+  ionIconName: '',
+};
 const CustomAlert = ({
   visible,
   onClickYes,

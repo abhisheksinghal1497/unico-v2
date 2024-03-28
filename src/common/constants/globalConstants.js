@@ -32,6 +32,7 @@ export const globalConstants = {
 export const ROLES = {
   LEAD_CAPTURE: ['RM', 'DSA', 'UGA'],
   WEBVIEW: ['RM'],
+  SCHEDULE_Meeting: ['RM'],
   // PD_LIST: ['UW', 'ACM', 'RCM', 'NCM', 'CH', 'ZCM', 'CPA'],
 };
 

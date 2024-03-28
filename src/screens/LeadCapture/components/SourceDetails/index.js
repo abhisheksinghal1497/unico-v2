@@ -19,6 +19,7 @@ const LeadSourceDetails = ({
   pincodeMasterData,
   isFormEditable,
   dsaBrJnMasterData,
+  teamHeirarchyByUserId,
 }) => {
   const [leadSourcePicklist, setLeadSourcePicklist] = useState([]);
   const [channelNamePicklist, setChannelNamePicklist] = useState([]);
@@ -32,7 +33,7 @@ const LeadSourceDetails = ({
     );
     setLeadSourcePicklist(picklist);
   }, [leadMetadata]);
-  // console.log('Dsa Br Jn Data', dsaBrJn);
+  // console.log('Dsa Br Jn Data', dsaBrJn, teamHeirarchyByUserId);
   const GetChannelName = (dsaBrJn, leadSource, customerMasterData) => {
     let channelNames = [];
     if (leadSource === `Customer Referral`) {
@@ -44,21 +45,30 @@ const LeadSourceDetails = ({
       });
       return channelNames;
     }
-    // if(leadSource ==='DSA'){
-    //   dsaBrJnMasterData.map((value)=>{
-    //     if (value.Account__r?.RecordType.Name === leadSource && ){
-
-    //     }
-    //   })
-    // }
-    dsaBrJn?.map((value) => {
-      if (value.Account__r?.RecordType.Name === leadSource) {
-        channelNames.push({
-          label: value?.Account__r?.Name,
-          value: value?.Account__r?.Name,
-        });
-      }
-    });
+    if (leadSource === 'DSA') {
+      dsaBrJnMasterData.map((value) => {
+        if (
+          value.Account__r?.RecordType.Name === leadSource &&
+          teamHeirarchyByUserId &&
+          teamHeirarchyByUserId?.EmpBrch__r?.Name === value?.BanchBrch__r.Name
+        ) {
+          channelNames.push({
+            label: value?.Account__r?.Name,
+            value: value?.Account__r?.Name,
+          });
+        }
+      });
+    }
+    if (leadSource === 'UGA') {
+      dsaBrJn?.map((value) => {
+        if (value.Account__r?.RecordType.Name === leadSource) {
+          channelNames.push({
+            label: value?.Account__r?.Name,
+            value: value?.Account__r?.Name,
+          });
+        }
+      });
+    }
 
     return channelNames;
   };

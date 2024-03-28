@@ -15,6 +15,7 @@ import {
   getBankBranchMaster,
   getCustomerMaster,
   getDsaBrJn,
+  getDsaBrJnMaster,
   getLocationBrJnMaster,
   getPincodeMaster,
   getProductMapping,
@@ -30,7 +31,9 @@ import { getThMaster } from '../../store/redux/actions/teamHeirarchy';
 import { useRole } from '../../store/context/RoleProvider';
 import { globalConstants } from '../../common/constants/globalConstants';
 import Toast from 'react-native-toast-message';
-import CustomAlert from '../../common/components/BottomPopover/CustomAlert';
+import CustomAlert, {
+  customAlertDefaultState,
+} from '../../common/components/BottomPopover/CustomAlert';
 import { createValidationSchema } from '../LeadCapture/components/Handlers/validationSchema';
 import { QueryObject } from '../../services/QueryObject';
 import { query } from '../../common/constants/Queries';
@@ -59,9 +62,11 @@ import { verticalScale } from '../../utils/matrcis';
 export default function EditLeadScreen({ navigation }) {
   const route = useRoute();
   let leadId = route.params.Id;
+  let leadStatus = route.params.statusName;
   const isOnline = useInternet();
   const empRole = useRole();
   const { hideBottomTab, setHideBottomTab } = useContext(BottomTabContext);
+  const [alert, setAlert] = useState(customAlertDefaultState);
   const [conversionResponse, setConversionResponse] = useState({});
   const [hasErrors, setHasErrors] = React.useState(false);
   const [postData, setPostData] = useState({});
@@ -92,6 +97,9 @@ export default function EditLeadScreen({ navigation }) {
     (state) => state.masterData.productMapping
   );
   const { dsaBrJnData } = useSelector((state) => state.masterData.dsaBrJn);
+  const { dsaBrJnMasterData } = useSelector(
+    (state) => state.masterData.dsaBrJnMaster
+  );
   const { customerMasterData } = useSelector(
     (state) => state.masterData.customerMaster
   );
@@ -153,6 +161,7 @@ export default function EditLeadScreen({ navigation }) {
     dispatch(getProductMapping());
     dispatch(getLeadMetadata());
     dispatch(getDsaBrJn());
+    dispatch(getDsaBrJnMaster());
     dispatch(getCustomerMaster());
     dispatch(getThMaster());
     dispatch(getPincodeMaster());
@@ -192,7 +201,7 @@ export default function EditLeadScreen({ navigation }) {
 
       let getChannelNameByIdOrName = () => {
         return data?.Channel_Name__c && data?.Channel_Name__c.length > 0
-          ? dsaBrJnData?.find(
+          ? dsaBrJnMasterData?.find(
               (value) =>
                 value.Account__r.Name === data.Channel_Name__c ||
                 value.Account__c === data.Channel_Name__c
@@ -205,6 +214,9 @@ export default function EditLeadScreen({ navigation }) {
         teamHeirarchyMasterData,
         data.RM_SM_Name__c
       );
+      if (empRole === globalConstants.RoleNames.UGA) {
+        data.RM_Name = GetRmSmName(teamHeirarchyMasterData, data.RM_SM_Name__c);
+      }
       data.Br_Manager_Br_Name = GetBrNameByBrId(
         pincodeMasterData,
         data.Bank_Branch__c
@@ -217,7 +229,12 @@ export default function EditLeadScreen({ navigation }) {
 
       reset({ ...data });
     }
-  }, [postData, teamHeirarchyByUserId, teamHeirarchyMasterData, dsaBrJnData]);
+  }, [
+    postData,
+    teamHeirarchyByUserId,
+    teamHeirarchyMasterData,
+    dsaBrJnMasterData,
+  ]);
   const validationSchema = createValidationSchema(empRole, currentPosition);
   const {
     control,
@@ -265,7 +282,8 @@ export default function EditLeadScreen({ navigation }) {
         teamHeirarchyMasterData,
         productMappingData,
         pincodeMasterData,
-        setIsMobileNumberChanged
+        setIsMobileNumberChanged,
+        dsaBrJnMasterData
       );
       //   setCurrentPosition((prev) => prev + 1);
       setAddLoading(false);
@@ -291,10 +309,18 @@ export default function EditLeadScreen({ navigation }) {
     try {
       setAddLoading(true);
 
-      const res = await ConvertLead(data);
+      const res = await ConvertLead(
+        data,
+        setPostData,
+        alert,
+        setAlert,
+        navigation
+      );
       //   console.log('Res Lead Convert', res);
-      setConversionResponse(res);
-      setCurrentPosition((prev) => prev + 1);
+      if (res && Object.keys(res).length > 0) {
+        setConversionResponse(res);
+        setCurrentPosition((prev) => prev + 1);
+      }
       setAddLoading(false);
     } catch (error) {
       setAddLoading(false);
@@ -309,6 +335,15 @@ export default function EditLeadScreen({ navigation }) {
           <ActivityIndicator size="large" color={customTheme.colors.primary} />
         </View>
       )}
+      <CustomAlert
+        visible={alert.visible}
+        onClickYes={alert.onClickYes}
+        title={alert.title}
+        confirmBtnLabel={alert.confirmBtnLabel}
+        ionIconName={alert.ionIconName}
+        cancelBtnLabel={alert.cancelBtnLabel}
+        onDismiss={alert.onDismiss}
+      />
       {globalConstants.RoleNames.RM === empRole && (
         <Stepper
           steps={steps}
@@ -335,7 +370,11 @@ export default function EditLeadScreen({ navigation }) {
             marginTop: verticalScale(20),
           }}
         >
-          <StatusCard status={watch()?.Status} />
+          <StatusCard
+            status={
+              watch()?.Status == 'Lead Pending' ? leadStatus : watch()?.Status
+            }
+          />
         </View>
       )}
       {currentPosition === 0 && (
@@ -360,7 +399,9 @@ export default function EditLeadScreen({ navigation }) {
                 watch={watch}
                 collapsedError={hasErrors}
                 pincodeMasterData={pincodeMasterData}
+                dsaBrJnMasterData={dsaBrJnMasterData}
                 isFormEditable={isFormEditable}
+                teamHeirarchyByUserId={teamHeirarchyByUserId}
               />
             )}
             <LeadPersonalDetails
@@ -368,6 +409,7 @@ export default function EditLeadScreen({ navigation }) {
               control={control}
               setValue={setValue}
               collapsedError={hasErrors}
+              dsaBrJnMasterData={dsaBrJnMasterData}
               pincodeMasterData={pincodeMasterData}
               teamHeirarchyMasterData={teamHeirarchyMasterData}
               teamHeirarchyByUserId={teamHeirarchyByUserId}
@@ -473,6 +515,7 @@ export default function EditLeadScreen({ navigation }) {
         cancelBtnLabel={'Close'}
         visible={scheduleModalVisible}
         setAddLoading={setAddLoading}
+        leadId={id}
       />
       <EMICalculatorComponent
         control={control}

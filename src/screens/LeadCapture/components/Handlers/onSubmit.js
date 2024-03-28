@@ -32,7 +32,8 @@ export const OnSubmitLead = async (
   teamHeirarchyMasterData,
   productMappingData,
   pincodeMasterData,
-  setIsMobileNumberChanged
+  setIsMobileNumberChanged,
+  dsaBrJnMasterData
 ) => {
   try {
     // RM Data Mapping And Lead assignment
@@ -50,7 +51,10 @@ export const OnSubmitLead = async (
         data?.Requested_tenure_in_Months__c != 0
           ? data?.Requested_tenure_in_Months__c
           : null;
-      data.Channel_Name__c = await GetChannelId(dsaBrJnData, data.Channel_Name);
+      data.Channel_Name__c = await GetChannelId(
+        dsaBrJnMasterData,
+        data.Channel_Name
+      );
       data.ProductLookup__c = GetProductId(
         productMappingData,
         data.ProductLookup
@@ -229,13 +233,23 @@ export const OnSubmitLead = async (
           setCurrentPosition((prev) => prev + 1);
           return;
         } else {
-          !id &&
-            Toast.show({
-              type: 'success',
-              text1: 'Lead created successfully',
-              text2: 'Assigned to Branch Manager',
-              position: 'top',
-            });
+          if (empRole === globalConstants.RoleNames.UGA) {
+            !id &&
+              Toast.show({
+                type: 'success',
+                text1: 'Lead created successfully',
+                text2: 'Assigned to RM',
+                position: 'top',
+              });
+          } else {
+            !id &&
+              Toast.show({
+                type: 'success',
+                text1: 'Lead created successfully',
+                text2: 'Assigned to Branch Manager',
+                position: 'top',
+              });
+          }
         }
 
         return;

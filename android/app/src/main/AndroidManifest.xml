@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"   xmlns:tools="http://schemas.android.com/tools"
     package="com.unico.react"
     android:versionCode="1"
     android:versionName="1.0"
@@ -13,6 +13,20 @@
         android:name=".MainApplication"
         android:manageSpaceActivity="com.salesforce.androidsdk.ui.ManageSpaceActivity"
         android:usesCleartextTraffic="true">
+
+        <!-- Metadata for supported app restrictions -->
+        <!-- <meta-data android:name="android.content.APP_RESTRICTIONS"
+            android:resource="@xml/app_restrictions" /> -->
+        <!-- Service required for authentication -->
+        <!-- <service android:exported="true"
+            android:name="com.salesforce.androidsdk.auth.AuthenticatorService"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service> -->
 
         <!-- Launcher screen -->
         <activity android:name=".MainActivity"
@@ -44,8 +58,8 @@
             'scheme' would be "sfdc", 'host' would be "login.salesforce.com",
             and 'path' would be "/oauth/done".
         -->
-        <!--
-        <activity android:name="com.salesforce.androidsdk.ui.LoginActivity"
+
+        <!-- <activity android:name="com.salesforce.androidsdk.ui.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:launchMode="singleInstance"
             android:exported="true">
@@ -58,8 +72,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-        -->
+        </activity> -->
+
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     </application>
     <permission android:name="com.fedfina.react.C2D_MESSAGE" android:protectionLevel="signature" />

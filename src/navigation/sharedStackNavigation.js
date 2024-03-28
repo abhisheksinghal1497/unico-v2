@@ -8,6 +8,7 @@ import { Platform } from 'react-native';
 import LeadList from '../screens/LeadList';
 import AddLead from '../screens/LeadCapture';
 import EditLeadScreen from '../screens/EditLead';
+import MeetingList from '../screens/MeetingList';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,8 @@ const SharedStackNavigator = () => {
         /* Add Dynamic screens here */
         defaultScreen === screens.leadList ? (
           <Stack.Screen name={screens.leadList} component={LeadList} />
+        ) : defaultScreen === screens.meetingList ? (
+          <Stack.Screen name={screens.meetingList} component={MeetingList} />
         ) : defaultScreen === screens.WebView ? (
           <Stack.Screen
             name={screens.WebView}

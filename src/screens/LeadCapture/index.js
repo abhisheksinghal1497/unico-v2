@@ -46,6 +46,9 @@ import EMICalculatorComponent from '../../common/components/Modal/EMICalculatorC
 import { oauth } from 'react-native-force';
 import { ConvertLead } from './components/Handlers/ConvertLead';
 import { screens } from '../../common/constants/screen';
+import CustomAlert, {
+  customAlertDefaultState,
+} from '../../common/components/BottomPopover/CustomAlert';
 
 const AddLead = ({ navigation }) => {
   // --------Define Variables Here----------//
@@ -55,6 +58,7 @@ const AddLead = ({ navigation }) => {
   const { hideBottomTab, setHideBottomTab } = useContext(BottomTabContext);
   const [hasErrors, setHasErrors] = React.useState(false);
   const [postData, setPostData] = useState({});
+  const [alert, setAlert] = useState(customAlertDefaultState);
   const [id, setId] = useState('');
   const [currentPosition, setCurrentPosition] = useState(0);
   const [isFormEditable, setFormEditable] = useState(true);
@@ -205,7 +209,8 @@ const AddLead = ({ navigation }) => {
         teamHeirarchyMasterData,
         productMappingData,
         pincodeMasterData,
-        setIsMobileNumberChanged
+        setIsMobileNumberChanged,
+        dsaBrJnMasterData
       );
       // setCurrentPosition((prev) => prev + 1);
       setAddLoading(false);
@@ -232,10 +237,18 @@ const AddLead = ({ navigation }) => {
   const convertToLAN = async (data) => {
     try {
       setAddLoading(true);
-      const res = await ConvertLead(data);
+      const res = await ConvertLead(
+        data,
+        setPostData,
+        alert,
+        setAlert,
+        navigation
+      );
       //   console.log('Res Lead Convert', res);
-      setConversionResponse(res);
-      setCurrentPosition((prev) => prev + 1);
+      if (res && Object.keys(res).length > 0) {
+        setConversionResponse(res);
+        setCurrentPosition((prev) => prev + 1);
+      }
       setAddLoading(false);
     } catch (error) {
       setAddLoading(false);
@@ -262,6 +275,15 @@ const AddLead = ({ navigation }) => {
           <ActivityIndicator size="large" color={customTheme.colors.primary} />
         </View>
       )}
+      <CustomAlert
+        visible={alert.visible}
+        onClickYes={alert.onClickYes}
+        title={alert.title}
+        confirmBtnLabel={alert.confirmBtnLabel}
+        ionIconName={alert.ionIconName}
+        cancelBtnLabel={alert.cancelBtnLabel}
+        onDismiss={alert.onDismiss}
+      />
 
       {globalConstants.RoleNames.RM === empRole && (
         <Stepper
@@ -302,6 +324,7 @@ const AddLead = ({ navigation }) => {
                 collapsedError={hasErrors}
                 pincodeMasterData={pincodeMasterData}
                 dsaBrJnMasterData={dsaBrJnMasterData}
+                teamHeirarchyByUserId={teamHeirarchyByUserId}
                 isFormEditable={isFormEditable}
               />
             )}
@@ -415,6 +438,7 @@ const AddLead = ({ navigation }) => {
         setValue={setValue}
         cancelBtnLabel={'Close'}
         visible={scheduleModalVisible}
+        leadId={id}
       />
       <EMICalculatorComponent
         control={control}

@@ -37,6 +37,7 @@ public class MainActivity extends SalesforceReactActivity {
      */
 	@Override
 	public boolean shouldAuthenticate() {
+			// System.out.println("djfssdf");
 		return true;
 	}
 
