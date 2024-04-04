@@ -16,6 +16,7 @@ import { getTeamHeirarchyByUserId } from '../store/redux/actions/teamHeirarchy';
 import { ROLES } from '../common/constants/globalConstants';
 import UnauthorizedScreen from '../common/constants/unAuthScreen';
 import { useRole } from '../store/context/RoleProvider';
+import { getCredentials } from '../store/redux/actions/credentials';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -37,7 +38,7 @@ const MainNavigator = () => {
   const dispatch = useDispatch();
   const isOnline = useInternet();
   useEffect(() => {
-    // dispatch(getCredentials());
+    dispatch(getCredentials());
     dispatch(getTeamHeirarchyByUserId());
     // dispatch(getLeadMetadata());
     if (isOnline) {
