@@ -36,10 +36,4 @@ export const ROLES = {
   // PD_LIST: ['UW', 'ACM', 'RCM', 'NCM', 'CH', 'ZCM', 'CPA'],
 };
 
-export const firebaseConfig = {
-  apiKey: 'AIzaSyAH9BBOJgAnuiewnFlt-7uqloIeATeP1Ww',
-  projectId: 'fedfina-sales-pro',
-  storageBucket: 'fedfina-sales-pro.appspot.com',
-  messagingSenderId: '512281335360',
-  appId: '1:512281335360:android:88b537ea72a469d4c5b1a5',
-};
+

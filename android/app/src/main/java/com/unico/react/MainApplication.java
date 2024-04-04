@@ -93,11 +93,11 @@ public class MainApplication extends Application implements ReactApplication {
 		 */
         // SalesforceReactSDKManager.getInstance().setPushNotificationReceiver(pnInterface);
 
-		try{
-    //SSLPinningFactory sslPinningFactory = new SSLPinningFactory();
+		// try{
+    
 
-        OkHttpClientProvider.setOkHttpClientFactory(new SSLPinningFactory());
+        // OkHttpClientProvider.setOkHttpClientFactory(new SSLPinningFactory());
 
-}catch (Exception e){}
+// }catch (Exception e){}
 	}
 }

@@ -11,8 +11,8 @@ export async function LocationProvider() {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       {
-        title: 'Fedfina Sales Pro',
-        message: 'Fedfina Sales Pro want access to your location ',
+        title: 'Unico Sales Pro',
+        message: 'Unico Sales Pro want access to your location ',
       }
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
