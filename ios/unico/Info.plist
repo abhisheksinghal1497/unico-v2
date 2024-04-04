@@ -54,5 +54,33 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>SFDCOAuthLoginHost</key>
+	<string>page-drive-2970--unicoqa.sandbox.my.site.com/LOSApp</string>
+	<key>UIAppFonts</key>
+    <array>
+        <string>Fonts/FontAwesome.ttf</string>
+        <string>Fonts/FontAwesome5_Brands.ttf</string>
+        <string>Fonts/FontAwesome5_Regular.ttf</string>
+        <string>Fonts/FontAwesome5_Solid.ttf</string>
+        <string>Fonts/FontAwesome6_Brands.ttf</string>
+        <string>Fonts/FontAwesome6_Regular.ttf</string>
+        <string>Fonts/FontAwesome6_Solid.ttf</string>
+        <string>Fonts/Entypo.ttf</string>
+        <string>Fonts/Evillcons.ttf</string>
+        <string>Fonts/Feather.ttf</string>
+        <string>Fonts/Fontisto.ttf</string>
+        <string>Fonts/Octicons.ttf</string>
+        <string>Fonts/SimpleLineIcons.ttf</string>
+        <string>Fonts/Zocial.ttf</string>
+        <string>Fonts/AntDesign.ttf</string>
+        <string>Fonts/Ionicons.ttf</string>
+        <string>Fonts/Foundation.ttf</string>
+        <string>Fonts/MaterialCommunityIcons.ttf</string>
+        <string>Fonts/MaterialIcons.ttf</string>
+        <string>Fonts/Inter-VariableFont_slnt,wght.ttf</string>
+    </array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	
 </dict>
 </plist>

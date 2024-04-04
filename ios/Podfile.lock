@@ -245,7 +245,17 @@ PODS:
   - React-jsinspector (0.70.6)
   - React-logger (0.70.6):
     - glog
+  - react-native-background-timer (2.4.1):
+    - React-Core
+  - react-native-date-picker (4.4.2):
+    - React-Core
+  - react-native-netinfo (11.3.1):
+    - React-Core
   - react-native-safe-area-context (3.4.1):
+    - React-Core
+  - react-native-slider (4.5.0):
+    - React-Core
+  - react-native-webview (13.8.4):
     - React-Core
   - React-perflogger (0.70.6)
   - React-RCTActionSheet (0.70.6):
@@ -313,13 +323,17 @@ PODS:
     - React-jsi (= 0.70.6)
     - React-logger (= 0.70.6)
     - React-perflogger (= 0.70.6)
+  - RNBackgroundFetch (4.2.4):
+    - React-Core
   - RNCMaskedView (0.2.9):
     - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNScreens (3.29.0):
+  - RNScreens (3.4.0):
     - React-Core
     - React-RCTImage
+  - RNVectorIcons (9.2.0):
+    - React-Core
   - SalesforceAnalytics (11.0.0):
     - SalesforceAnalytics/SalesforceAnalytics (= 11.0.0)
   - SalesforceAnalytics/SalesforceAnalytics (11.0.0):
@@ -378,7 +392,12 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
+  - react-native-date-picker (from `../node_modules/react-native-date-picker`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -391,9 +410,11 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - SalesforceAnalytics (from `../mobile_sdk/SalesforceMobileSDK-iOS`)
   - SalesforceReact (from `../node_modules/react-native-force`)
   - SalesforceSDKCommon (from `../mobile_sdk/SalesforceMobileSDK-iOS`)
@@ -453,8 +474,18 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-background-timer:
+    :path: "../node_modules/react-native-background-timer"
+  react-native-date-picker:
+    :path: "../node_modules/react-native-date-picker"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -479,12 +510,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNBackgroundFetch:
+    :path: "../node_modules/react-native-background-fetch"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   SalesforceAnalytics:
     :path: "../mobile_sdk/SalesforceMobileSDK-iOS"
   SalesforceReact:
@@ -524,7 +559,12 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b4a65947391c658450151275aa406f2b8263178f
   React-jsinspector: 60769e5a0a6d4b32294a2456077f59d0266f9a8b
   React-logger: 1623c216abaa88974afce404dc8f479406bbc3a0
+  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
+  react-native-date-picker: 312c387d2ff873c66c5e4cf78ff6827fa91644e2
+  react-native-netinfo: bdb108d340cdb41875c9ced535977cac6d2ff321
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
+  react-native-slider: 323128c304ef8282671d185a09928d62415b400d
+  react-native-webview: 17d6151e9c25e90a2755e5a2b393c47e5d16f157
   React-perflogger: 8c79399b0500a30ee8152d0f9f11beae7fc36595
   React-RCTActionSheet: 7316773acabb374642b926c19aef1c115df5c466
   React-RCTAnimation: 5341e288375451297057391227f691d9b2326c3d
@@ -537,9 +577,11 @@ SPEC CHECKSUMS:
   React-RCTVibration: c75ceef7aa60a33b2d5731ebe5800ddde40cefc4
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
+  RNBackgroundFetch: 7c2d0c55e2b8924ecbdcd56b010feddff0f8463d
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNScreens: fa9b582d85ae5d62c91c66003b5278458fed7aaa
+  RNScreens: 21b73c94c9117e1110a79ee0ee80c93ccefed8ce
+  RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SalesforceAnalytics: c1bee566991448139a6bad8d3e749929ea99bb9a
   SalesforceReact: 5205ba8f3af788d3f03f6e35f1c36c20f5019b28
   SalesforceSDKCommon: 920567a5a2ec4c90f742d030f9f5c9c28a252409
@@ -548,6 +590,6 @@ SPEC CHECKSUMS:
   SQLCipher: 838309284f29953a28ad2e81d87d55ea6b7c74fd
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
 
-PODFILE CHECKSUM: 88c34a09b8e33076b0bbbc2e046e62a0b36f688e
+PODFILE CHECKSUM: 5ca12f7734fd27660b43ebe3d9f5ebe947392fa9
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2

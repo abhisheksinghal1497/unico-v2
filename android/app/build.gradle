@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "com.google.gms.google-services"
 
 import com.android.build.OutputFile
 
@@ -125,6 +126,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+
     defaultConfig {
         applicationId "com.unico.react"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -177,6 +179,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation platform('com.google.firebase:firebase-bom:32.8.0')
+    // implementation 'com.google.firebase:firebase-analytics'
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':libs:SalesforceReact') // From node_modules

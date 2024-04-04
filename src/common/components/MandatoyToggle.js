@@ -55,7 +55,7 @@ const LeadActivities = ({
       >
         <Ionicons
           size={25}
-          name={'calendar-number-sharp'}
+          name={'calendar-outline'}
           color={customTheme.colors.primary}
         />
         <Text style={styles.toggleLabelStyle}>Schedule Meeting</Text>

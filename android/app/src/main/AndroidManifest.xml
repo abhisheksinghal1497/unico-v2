@@ -14,19 +14,7 @@
         android:manageSpaceActivity="com.salesforce.androidsdk.ui.ManageSpaceActivity"
         android:usesCleartextTraffic="true">
 
-        <!-- Metadata for supported app restrictions -->
-        <!-- <meta-data android:name="android.content.APP_RESTRICTIONS"
-            android:resource="@xml/app_restrictions" /> -->
-        <!-- Service required for authentication -->
-        <!-- <service android:exported="true"
-            android:name="com.salesforce.androidsdk.auth.AuthenticatorService"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
-            </intent-filter>
-            <meta-data android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
-        </service> -->
+       
 
         <!-- Launcher screen -->
         <activity android:name=".MainActivity"
