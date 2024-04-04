@@ -76,7 +76,7 @@
 
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     </application>
-    <permission android:name="com.fedfina.react.C2D_MESSAGE" android:protectionLevel="signature" />
+    <permission android:name="com.unico.react.C2D_MESSAGE" android:protectionLevel="signature" />
 
     <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
 
@@ -88,7 +88,7 @@
 
     <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
 
-    <uses-permission android:name="com.fedfina.react.C2D_MESSAGE" />
+    <uses-permission android:name="com.unico.react.C2D_MESSAGE" />
 
 
     <!-- <uses-permission android:name="android.permission.RECORD_AUDIO" /> -->
