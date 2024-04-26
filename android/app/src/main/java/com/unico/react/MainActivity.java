@@ -45,14 +45,14 @@ import com.salesforce.androidsdk.reactnative.ui.SalesforceReactActivity;
 
 public class MainActivity extends SalesforceReactActivity {
 
-    /**
-     *
-     * @return true if you want login to happen when application launches
-     *         false otherwise
-     */
+	/**
+	 *
+	 * @return true if you want login to happen when application launches
+	 *         false otherwise
+	 */
 	@Override
 	public boolean shouldAuthenticate() {
-			// System.out.println("djfssdf");
+		// System.out.println("djfssdf");
 		return true;
 	}
 
@@ -65,6 +65,7 @@ public class MainActivity extends SalesforceReactActivity {
 		return "unico";
 	}
 
+	// --------Push NotificaTION SETUP----------
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class MainActivity extends SalesforceReactActivity {
 
 		builder.show();
 	}
+
 	private void handleNotificationIntent(Intent intent) {
 		if (intent != null && intent.getAction() != null) {
 			if ("NOTIFICATION_CLICKED".equals(intent.getAction())) {
@@ -114,6 +116,7 @@ public class MainActivity extends SalesforceReactActivity {
 			}
 		}
 	}
+
 	private void parseNotificationData(Intent intent) {
 		if (intent != null) {
 			String sid = intent.getStringExtra("sid");
@@ -126,26 +129,26 @@ public class MainActivity extends SalesforceReactActivity {
 
 	private void sendNotificationEvent(String sid) {
 		try {
-//
-//			getReactInstanceManager().getCurrentReactContext()
-//					.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-//					.emit("onNotificationClicked", sid);
-
+			//
+			// getReactInstanceManager().getCurrentReactContext()
+			// .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+			// .emit("onNotificationClicked", sid);
 
 			ReactInstanceManager reactInstanceManager = getReactNativeHost().getReactInstanceManager();
 			ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
-			if(reactContext != null) {
+			if (reactContext != null) {
 				reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
 						.emit("onNotificationClicked", sid);
 			} else {
-				reactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
-					@Override
-					public void onReactContextInitialized(ReactContext context) {
-						context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-								.emit("onNotificationClicked", sid);
-						reactInstanceManager.removeReactInstanceEventListener(this);
-					}
-				});
+				reactInstanceManager
+						.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
+							@Override
+							public void onReactContextInitialized(ReactContext context) {
+								context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+										.emit("onNotificationClicked", sid);
+								reactInstanceManager.removeReactInstanceEventListener(this);
+							}
+						});
 			}
 
 		} catch (Exception e) {
@@ -153,12 +156,9 @@ public class MainActivity extends SalesforceReactActivity {
 		}
 	}
 
-
 	@Override
 	public void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		handleNotificationIntent(intent);
 	}
 }
-
-

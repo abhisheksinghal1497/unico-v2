@@ -1,21 +1,27 @@
-import { View, ActivityIndicator } from 'react-native';
-import { Text, Button, HelperText } from 'react-native-paper';
-import React, { useState, useEffect } from 'react';
-import Toast from 'react-native-toast-message';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { View, ActivityIndicator } from "react-native";
+import { Text, Button, HelperText } from "react-native-paper";
+import React, { useState, useEffect } from "react";
+import Toast from "react-native-toast-message";
+import Icon from "react-native-vector-icons/AntDesign";
 import {
   FormControl,
   component,
-} from '../../../../../common/components/FormComponents/FormControl';
-import { useInternet } from '../../../../../store/context/Internet';
-import customTheme from '../../../../../common/colors/theme';
-import { otpVerificationStyle } from '../styles/OtpVerificationStyle';
-import { horizontalScale, verticalScale } from '../../../../../utils/matrcis';
-import { OTPVerificationService } from '../../../../../services/PostRequestService/PostObjectData';
-import { colors } from '../../../../../common/colors';
-import { onSubmitOtp } from '../../Handlers/OtpSubmitHandler';
-import { convertToDateString } from '../../../../../common/functions/ConvertToDateString';
-import Touchable from '../../../../../common/components/TouchableComponent/Touchable';
+} from "../../../../../common/components/FormComponents/FormControl";
+import { useInternet } from "../../../../../store/context/Internet";
+import customTheme from "../../../../../common/colors/theme";
+import { otpVerificationStyle } from "../styles/OtpVerificationStyle";
+import { horizontalScale, verticalScale } from "../../../../../utils/matrcis";
+import {
+  OTPVerificationService,
+  ValidateOTPService,
+} from "../../../../../services/PostRequestService/PostObjectData";
+import { colors } from "../../../../../common/colors";
+import { onSubmitOtp } from "../../Handlers/OtpSubmitHandler";
+import { convertToDateString } from "../../../../../common/functions/ConvertToDateString";
+import Touchable from "../../../../../common/components/TouchableComponent/Touchable";
+import { QueryObject } from "../../../../../services/QueryObject";
+import { query } from "../../../../../common/constants/Queries";
+import { globalConstants } from "../../../../../common/constants/globalConstants";
 
 const MobileOtpConsent = ({
   control,
@@ -45,7 +51,7 @@ const MobileOtpConsent = ({
   const enteredOTP = otp;
   useEffect(() => {
     // setExpectedOtp(null);
-    setOtp('');
+    setOtp("");
   }, []);
   const isOnline = useInternet();
   // --------------Timer------------------
@@ -58,7 +64,7 @@ const MobileOtpConsent = ({
     // console.log("remainingSeconds", remainingSeconds);
     if (remainingSeconds > 0) {
       return `Time Remaining : ${minutes}:${
-        remainingSeconds < 10 ? '0' : ''
+        remainingSeconds < 10 ? "0" : ""
       }${parseInt(remainingSeconds)}`;
     } else {
       return null;
@@ -96,7 +102,7 @@ const MobileOtpConsent = ({
   };
 
   const resetTimer = () => {
-    setTimer(120);
+    setTimer(globalConstants.otpTimer);
   };
 
   // console.log('isMobileNumberChanged', isMobileNumberChanged);
@@ -108,7 +114,7 @@ const MobileOtpConsent = ({
       if (isMobileNumberChanged) {
         setRetryCounts(0);
         setExpectedOtp(null);
-        setOtp('');
+        setOtp("");
         // setIsMobileNumberChanged(false);
         setCoolingPeriodTimer(null);
       }
@@ -129,6 +135,14 @@ const MobileOtpConsent = ({
 
   useEffect(() => {
     setResendDisabled(timer > 0);
+    if (timer <= 0) {
+      setExpectedOtp(null);
+      Toast.show({
+        type: "error",
+        text1: "OTP Expired",
+        position: "top",
+      });
+    }
   }, [timer]);
 
   const handleSendOTP = async () => {
@@ -142,17 +156,17 @@ const MobileOtpConsent = ({
         // setIsMobileNumberChanged(false);
       } else {
         Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Maximum Retries reached',
-          position: 'top',
+          type: "error",
+          text1: "Error",
+          text2: "Maximum Retries reached",
+          position: "top",
         });
       }
 
       setAddLoading(false);
     } catch (error) {
       setAddLoading(false);
-      console.log('error', error);
+      console.log("error", error);
     }
   };
   // console.log('expected Otp', expectedOtp, postData, isMobileNumberChanged);
@@ -162,52 +176,37 @@ const MobileOtpConsent = ({
       const otpRes = await OTPVerificationService(LeadId, mobilePhone);
       setIsMobileNumberChanged(false);
       // Handle OTP Response if it generated succesfully or not when integration is done
-      console.log(
-        'Mobile Phone 1',
-        mobilePhone,
-        watch().MobilePhone,
-        watch().MobilePhoneOtp
-      );
-      setOtp('');
-      //setStateof setExpectedOtp value to once you get the proper response from otpRes
-      //setExpectedOtp(otpRes[0]);
-      if (otpRes) {
+      console.log("OTP RESPONSE ______", typeof otpRes, otpRes?.message);
+      if (otpRes?.error && otpRes?.error?.length > 0) {
         Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: 'OTP Generated Successfully',
-          position: 'top',
-        });
-        setExpectedOtp(otpRes);
-      } else {
-        Toast.show({
-          type: 'success',
-          text1: 'Error',
-          text2: 'Failed to Generate OTP',
-          position: 'top',
+          type: "error",
+          text1: "Error",
+          text2: "Failed to send OTP",
+          position: "top",
         });
         return;
       }
+      setOtp("");
+
+      if (otpRes?.message && otpRes?.message?.length > 0) {
+        console.log("OTP Generated Successfully----");
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: "OTP Generated Successfully",
+          position: "top",
+        });
+        setExpectedOtp(otpRes?.message);
+      }
+
       setRetryCounts(latestRetryCount);
       let currentDateTime = new Date().toISOString();
       if (watch().MobilePhone !== watch().MobilePhoneOtp) {
         setRetryCounts(1);
         latestRetryCount = 1;
         setCoolingPeriodTimer(null);
-        setValue('MobilePhone', mobilePhone);
-        console.log(
-          'Mobile Phone 2',
-          mobilePhone,
-          watch().MobilePhone,
-          watch().MobilePhoneOtp
-        );
+        setValue("MobilePhone", mobilePhone);
       }
-      console.log(
-        'Mobile Phone 3',
-        mobilePhone,
-        watch().MobilePhone,
-        watch().MobilePhoneOtp
-      );
 
       await onSubmitOtp(
         {
@@ -218,29 +217,16 @@ const MobileOtpConsent = ({
           Is_OTP_Limit_Reached__c: newRetryCount === maxRetries ? true : false,
           MobilePhone: mobilePhone,
           MobilePhoneOtp: mobilePhone,
-          Status: 'Lead Submitted - Unverified',
+          Status: "Lead Submitted - Unverified",
         },
         setPostData
       );
-      console.log(
-        'Mobile Phone 4',
-        mobilePhone,
-        watch().MobilePhone,
-        watch().MobilePhoneOtp
-      );
 
-      // setValue('Is_OTP_Limit_Reached__c', false);
       resetTimer();
     } catch (error) {
-      console.log('error', error);
+      console.log("error", error);
     }
   };
-  // console.log(
-  //   'Mobile Phone 4',
-
-  //   watch().MobilePhone,
-  //   watch().MobilePhoneOtp
-  // );
 
   const handleResendOTP = async () => {
     // console.log('Resend Clicked', retryCounts);
@@ -249,17 +235,17 @@ const MobileOtpConsent = ({
       try {
         if (retryCounts > 2) {
           Toast.show({
-            type: 'error',
-            text1: 'OTP Limit Exceeded',
-            text2: 'Please try again after sometime!',
-            position: 'top',
+            type: "error",
+            text1: "OTP Limit Exceeded",
+            text2: "Please try again after sometime!",
+            position: "top",
           });
         } else {
           await handleSendOTP();
         }
       } catch (error) {
         setAddLoading(false);
-        console.log('error', error);
+        console.log("error", error);
       }
     }
   };
@@ -268,67 +254,88 @@ const MobileOtpConsent = ({
     try {
       // let res = {};
       setAddLoading(true);
-      if (enteredOTP === expectedOtp) {
-        const data = {
+      let validateRes = await ValidateOTPService(expectedOtp, enteredOTP);
+      console.log(
+        "Validate OTP RESPONSE_________",
+        validateRes,
+        validateRes?.message
+      );
+
+      if (
+        validateRes &&
+        validateRes?.message &&
+        validateRes?.message?.length > 0
+      ) {
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: "OTP Verified Successfully",
+          position: "top",
+        });
+        let updatedLeadData = {};
+        let leadById = await QueryObject(query.getLeadByIdQuery(postData?.Id));
+        updatedLeadData =
+          leadById?.records?.length > 0 ? { ...leadById?.records[0] } : {};
+        console.log("Updated Lead Data", updatedLeadData);
+        setPostData({
           ...postData,
-          OTP_Verified__c: true,
-          Is_OTP_Limit_Reached__c: watch().Is_OTP_Limit_Reached__c,
-          MobilePhone: watch().MobilePhoneOtp,
-          MobilePhoneOtp: watch().MobilePhoneOtp,
-          Status: 'Lead Verified',
-        };
-        // res = await updateObjectData('Lead', data, LeadId);
-        let res = await onSubmitOtp(data, setPostData);
-        // console.log(res);
-
-        if (res) {
-          Toast.show({
-            type: 'success',
-            text1: 'Success',
-            text2: 'OTP Verified Successfully',
-            position: 'top',
-          });
-          setExpectedOtp(null);
-          setOtp('');
-        }
-
-        setAddLoading(false);
-        // setValue('OTP_Verified__c', true);
-        // isVerified = true;
-      }
-      if (otp === '') {
-        setAddLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Please enter a valid OTP',
-          position: 'top',
+          OTP_Verified__c: updatedLeadData?.OTP_Verified__c,
+          Status: updatedLeadData?.Status,
         });
-        return;
-      } else if (enteredOTP !== expectedOtp) {
+        setExpectedOtp(null);
+        setOtp("");
         setAddLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Please enter a valid OTP',
-          position: 'top',
-        });
         return;
       }
+
+      if (validateRes && validateRes?.error && validateRes?.error?.length > 0) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Please enter a valid OTP",
+          position: "top",
+        });
+        setAddLoading(false);
+        return;
+      }
+
+      setAddLoading(false);
+      //   // setValue('OTP_Verified__c', true);
+      //   // isVerified = true;
+      // }
+      // if (otp === "") {
+      //   setAddLoading(false);
+      //   Toast.show({
+      //     type: "error",
+      //     text1: "Error",
+      //     text2: "Please enter a valid OTP",
+      //     position: "top",
+      //   });
+      //   return;
+      // } else if (enteredOTP !== expectedOtp) {
+      //   setAddLoading(false);
+      //   Toast.show({
+      //     type: "error",
+      //     text1: "Error",
+      //     text2: "Please enter a valid OTP",
+      //     position: "top",
+      //   });
+      //   return;
+      // }
     } catch (error) {
       setAddLoading(false);
-      console.log('Error handleValidateOTP', error);
+      console.log("Error handleValidateOTP", error);
     }
   };
 
   const editHandler = () => {
     // if (!resendDisabled) {
     setExpectedOtp(null);
-    setOtp('');
+    setOtp("");
     // }
   };
   const maskingFunction = (mobileNumber) => {
-    let formattedMobileNumber = '';
+    let formattedMobileNumber = "";
 
     const firstDigit = mobileNumber.substring(0, 1);
 
@@ -369,7 +376,7 @@ const MobileOtpConsent = ({
                   isDisabled={isVerified || retryCounts >= maxRetries}
                 />
                 {isVerified && (
-                  <View style={{ flexDirection: 'row', padding: 12 }}>
+                  <View style={{ flexDirection: "row", padding: 12 }}>
                     <Icon
                       name="checkcircle"
                       size={20}
@@ -380,7 +387,7 @@ const MobileOtpConsent = ({
                       type="info"
                       style={{
                         color: colors.black,
-                        fontWeight: 'bold',
+                        fontWeight: "bold",
                         fontSize: 12,
                       }}
                     >
@@ -391,7 +398,7 @@ const MobileOtpConsent = ({
                 {retryCounts &&
                 retryCounts >= maxRetries &&
                 !postData?.OTP_Verified__c ? (
-                  <View style={{ flexDirection: 'row', padding: 12 }}>
+                  <View style={{ flexDirection: "row", padding: 12 }}>
                     <Icon
                       name="closecircle"
                       size={20}
@@ -403,7 +410,7 @@ const MobileOtpConsent = ({
                       type="info"
                       style={{
                         color: colors.black,
-                        fontWeight: 'bold',
+                        fontWeight: "bold",
                         fontSize: 12,
                         //paddingBottom:16
                       }}
@@ -423,7 +430,7 @@ const MobileOtpConsent = ({
                 style={{
                   marginVertical: verticalScale(30),
 
-                  alignSelf: 'center',
+                  alignSelf: "center",
                 }}
               >
                 <Button
@@ -459,7 +466,7 @@ const MobileOtpConsent = ({
                   style={{
                     fontSize: customTheme.fonts.mediumText.fontSize,
 
-                    textDecorationLine: 'underline',
+                    textDecorationLine: "underline",
 
                     color: customTheme.colors.primary,
                   }}
@@ -486,7 +493,7 @@ const MobileOtpConsent = ({
                 style={{
                   marginTop: verticalScale(30),
 
-                  alignSelf: 'center',
+                  alignSelf: "center",
                 }}
               >
                 <Button mode="contained" onPress={handleValidateOTP}>
@@ -494,7 +501,7 @@ const MobileOtpConsent = ({
                 </Button>
               </View>
 
-              <View style={otpVerificationStyle.resendContainer}>
+              {/* <View style={otpVerificationStyle.resendContainer}>
                 <Text
                   style={{
                     fontSize: customTheme.fonts.smallText.fontSize,
@@ -503,6 +510,7 @@ const MobileOtpConsent = ({
                   }}
                 >
                   Didn't receive the OTP?
+                  
                 </Text>
                 <Touchable
                   onPress={handleResendOTP}
@@ -511,17 +519,17 @@ const MobileOtpConsent = ({
                   <Text
                     style={{
                       fontSize: customTheme.fonts.smallText.fontSize,
-                      textDecorationLine: 'underline',
+                      textDecorationLine: "underline",
                       color:
                         resendDisabled || isVerified
-                          ? 'gray'
+                          ? "gray"
                           : customTheme.colors.error,
                     }}
                   >
                     Send OTP
                   </Text>
                 </Touchable>
-              </View>
+              </View> */}
 
               <Text style={otpVerificationStyle.timerLabel}>
                 {formatTime(timer)}
@@ -535,26 +543,3 @@ const MobileOtpConsent = ({
 };
 
 export default MobileOtpConsent;
-// const handleMaxRetries = async () => {
-//   try {
-//     const data = {
-//       Id: LeadId,
-//       OTP_Verified__c: false,
-//       Is_OTP_Limit_Reached__c: true,
-//       MobilePhone: watch().MobilePhone,
-//     };
-//     await onSubmitOtp(data, setPostData);
-
-//     // setRetryCounts(0);
-//     setExpectedOtp(null);
-//     setOtp('');
-
-//     Toast.show({
-//       type: 'error',
-//       text1: 'Maximum Retries reached',
-//       position: 'top',
-//     });
-//   } catch (error) {
-//     console.log('Error on otp limit reached', error);
-//   }
-// };

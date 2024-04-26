@@ -48,15 +48,14 @@ public class NotificationModule extends ReactContextBaseJavaModule {
                     reactContext,
                     0,
                     notificationIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-            );
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             builder.setContentIntent(contentIntent);
 
-            NotificationManager notificationManager = (NotificationManager) reactContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            emitEventToReactNative("onNotificationReceived", title,message);
+            NotificationManager notificationManager = (NotificationManager) reactContext
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            emitEventToReactNative("onNotificationReceived", title, message);
             notificationManager.notify(1, builder.build());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e(NotificationModule.class.getSimpleName(), "Error in showNotification: " + e.getMessage());
         }
     }
@@ -74,7 +73,7 @@ public class NotificationModule extends ReactContextBaseJavaModule {
         }
     }
 
-    private void emitEventToReactNative(String eventName,String title, String message) {
+    private void emitEventToReactNative(String eventName, String title, String message) {
         WritableMap params = Arguments.createMap();
         params.putString("title", title);
         params.putString("message", message);
@@ -83,7 +82,5 @@ public class NotificationModule extends ReactContextBaseJavaModule {
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, params);
     }
-
-
 
 }

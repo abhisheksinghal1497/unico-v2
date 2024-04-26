@@ -34,6 +34,8 @@ public class NotificationService extends SFDCFcmListenerService {
         // Extract data from the message payload
         Map<String, String> data = message.getData();
 
+      Log.e("Notification Res","Notification Triggered"+data);
+
         try {
             // Extract the "content" field as a JSON string
             String contentString = data.get("content");
@@ -52,50 +54,49 @@ public class NotificationService extends SFDCFcmListenerService {
             alertTitle = removeHtmlTags(alertTitle);
             alertBody = removeHtmlTags(alertBody);
 
-
             // Display notification
             sendNotification(alertTitle, alertBody, LoanApplId);
         } catch (JSONException e) {
-            Log.e(NotificationModule.class.getSimpleName(), "Error parsing push notification payload: " + e.getMessage(), e);
+            Log.e(NotificationModule.class.getSimpleName(),
+                    "Error parsing push notification payload: " + e.getMessage(), e);
         }
     }
+
     private String removeHtmlTags(String input) {
         return android.text.Html.fromHtml(input, android.text.Html.FROM_HTML_MODE_LEGACY).toString();
     }
 
-        private void sendNotification(String title, String body, String LoanApplId) {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    private void sendNotification(String title, String body, String LoanApplId) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            int notificationId = 1; // You can use a unique ID for each notification
-            String channelId = "Fedfina"; // The id of the channel.
-            CharSequence channelName = "Fedfina sales pro"; // The user-visible name of the channel.
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setAction("NOTIFICATION_CLICKED");
+        int notificationId = 1; // You can use a unique ID for each notification
+        String channelId = "UNICO"; // The id of the channel.
+        CharSequence channelName = "UNICO sales pro"; // The user-visible name of the channel.
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setAction("NOTIFICATION_CLICKED");
 
+        intent.putExtra("sid", LoanApplId);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-            intent.putExtra("sid",LoanApplId);
-            PendingIntent pendingIntent = PendingIntent.getActivity(
-                    this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-            );
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                    .setSmallIcon(R.drawable.sf__icon)
-                    .setContentTitle(title)
-                    .setContentText(body)
-                    .setAutoCancel(true);
-            builder.setContentIntent(pendingIntent);
-            // For Android Oreo and higher, you need to create a notification channel
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                int importance = NotificationManager.IMPORTANCE_HIGH;
-                NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-                channel.enableLights(true);
-                channel.setLightColor(Color.RED);
-                channel.enableVibration(true);
-                builder.setChannelId(channelId);
-                notificationManager.createNotificationChannel(channel);
-            }
-
-            Notification notification = builder.build();
-            notificationManager.notify(notificationId, notification);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.sf__icon)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setAutoCancel(true);
+        builder.setContentIntent(pendingIntent);
+        // For Android Oreo and higher, you need to create a notification channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+            channel.enableVibration(true);
+            builder.setChannelId(channelId);
+            notificationManager.createNotificationChannel(channel);
         }
+
+        Notification notification = builder.build();
+        notificationManager.notify(notificationId, notification);
     }
+}

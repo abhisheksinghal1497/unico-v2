@@ -4,14 +4,14 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native';
-import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useContext, useState } from 'react';
-import { useInternet } from '../../store/context/Internet';
-import { BottomTabContext } from '../../navigation/mainNavigation';
-import { useDispatch, useSelector } from 'react-redux';
-import BackgroundTimer from 'react-native-background-timer';
-import { useEffect } from 'react';
+} from "react-native";
+import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useContext, useState } from "react";
+import { useInternet } from "../../store/context/Internet";
+import { BottomTabContext } from "../../navigation/mainNavigation";
+import { useDispatch, useSelector } from "react-redux";
+import BackgroundTimer from "react-native-background-timer";
+import { useEffect } from "react";
 import {
   getBankBranchMaster,
   getCustomerMaster,
@@ -20,35 +20,35 @@ import {
   getLocationBrJnMaster,
   getPincodeMaster,
   getProductMapping,
-} from '../../store/redux/actions/masterData';
-import { getLeadMetadata } from '../../store/redux/actions/leadMetadata';
-import { useForm } from 'react-hook-form';
-import customTheme from '../../common/colors/theme';
-import { addLeadStyle } from './styles/AddLeadStyle';
-import Stepper from '../../common/components/StepperComponent/Stepper';
-import LeadActivities from '../../common/components/MandatoyToggle';
-import LeadSourceDetails from './components/SourceDetails';
-import LeadPersonalDetails from './components/PersonalDetails';
-import { ScrollView } from 'react-native-gesture-handler';
-import LeadAdditionalDetails from './components/AdditionalDetails';
-import { Button } from 'react-native-paper';
-import { getThMaster } from '../../store/redux/actions/teamHeirarchy';
-import { OnSubmitLead } from './components/Handlers/onSubmit';
-import { useRole } from '../../store/context/RoleProvider';
-import { globalConstants } from '../../common/constants/globalConstants';
-import { createValidationSchema } from './components/Handlers/validationSchema';
-import Toast from 'react-native-toast-message';
-import { GetDefaultValues } from './components/Handlers/GetDefaultValues';
-import MobileOtpConsent from './components/OtpVerification/components/MobileOtpConsent';
-import LeadConverted from './components/LeadConverted/LeadConverted';
-import ScheduleMeetComponent from '../../common/components/Modal/ScheduleMeetComponent';
-import EMICalculatorComponent from '../../common/components/Modal/EMICalculatorComponent';
-import { oauth } from 'react-native-force';
-import { ConvertLead } from './components/Handlers/ConvertLead';
-import { screens } from '../../common/constants/screen';
+} from "../../store/redux/actions/masterData";
+import { getLeadMetadata } from "../../store/redux/actions/leadMetadata";
+import { useForm } from "react-hook-form";
+import customTheme from "../../common/colors/theme";
+import { addLeadStyle } from "./styles/AddLeadStyle";
+import Stepper from "../../common/components/StepperComponent/Stepper";
+import LeadActivities from "../../common/components/MandatoyToggle";
+import LeadSourceDetails from "./components/SourceDetails";
+import LeadPersonalDetails from "./components/PersonalDetails";
+import { ScrollView } from "react-native-gesture-handler";
+import LeadAdditionalDetails from "./components/AdditionalDetails";
+import { Button } from "react-native-paper";
+import { getThMaster } from "../../store/redux/actions/teamHeirarchy";
+import { OnSubmitLead } from "./components/Handlers/onSubmit";
+import { useRole } from "../../store/context/RoleProvider";
+import { globalConstants } from "../../common/constants/globalConstants";
+import { createValidationSchema } from "./components/Handlers/validationSchema";
+import Toast from "react-native-toast-message";
+import { GetDefaultValues } from "./components/Handlers/GetDefaultValues";
+import MobileOtpConsent from "./components/OtpVerification/components/MobileOtpConsent";
+import LeadConverted from "./components/LeadConverted/LeadConverted";
+import ScheduleMeetComponent from "../../common/components/Modal/ScheduleMeetComponent";
+import EMICalculatorComponent from "../../common/components/Modal/EMICalculatorComponent";
+import { oauth } from "react-native-force";
+import { ConvertLead } from "./components/Handlers/ConvertLead";
+import { screens } from "../../common/constants/screen";
 import CustomAlert, {
   customAlertDefaultState,
-} from '../../common/components/BottomPopover/CustomAlert';
+} from "../../common/components/BottomPopover/CustomAlert";
 
 const AddLead = ({ navigation }) => {
   // --------Define Variables Here----------//
@@ -59,7 +59,7 @@ const AddLead = ({ navigation }) => {
   const [hasErrors, setHasErrors] = React.useState(false);
   const [postData, setPostData] = useState({});
   const [alert, setAlert] = useState(customAlertDefaultState);
-  const [id, setId] = useState('');
+  const [id, setId] = useState("");
   const [currentPosition, setCurrentPosition] = useState(0);
   const [isFormEditable, setFormEditable] = useState(true);
   const [conversionResponse, setConversionResponse] = useState({});
@@ -69,11 +69,11 @@ const AddLead = ({ navigation }) => {
   const [expectedOtp, setExpectedOtp] = useState(null);
   const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
   const [emiModalVisible, setEmiModalVisible] = useState(false);
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(globalConstants.otpTimer);
   const [coolingPeriodTimer, setCoolingPeriodTimer] = useState(null);
   const maxRetries = globalConstants.otpRetries;
-  const steps = ['Basic details', 'OTP Verification'];
+  const steps = ["Basic details", "OTP Verification"];
   const dispatch = useDispatch();
   //Fetch Data from store//
   const { leadMetadata } = useSelector((state) => state.leadMetadata);
@@ -107,7 +107,7 @@ const AddLead = ({ navigation }) => {
   const checkOwner = (postData) => {
     oauth.getAuthCredentials((cred) => {
       if (id && id.length > 0) {
-        if (postData?.Status === 'Closed Lead') {
+        if (postData?.Status === "Closed Lead") {
           setFormEditable(false);
           return;
         }
@@ -156,7 +156,7 @@ const AddLead = ({ navigation }) => {
   } = useForm({
     defaultValues,
     resolver: yupResolver(validationSchema),
-    mode: 'all',
+    mode: "all",
   });
 
   useEffect(() => {
@@ -210,7 +210,8 @@ const AddLead = ({ navigation }) => {
         productMappingData,
         pincodeMasterData,
         setIsMobileNumberChanged,
-        dsaBrJnMasterData
+        dsaBrJnMasterData,
+        customerMasterData
       );
       // setCurrentPosition((prev) => prev + 1);
       setAddLoading(false);
@@ -218,11 +219,11 @@ const AddLead = ({ navigation }) => {
     } catch (error) {
       setAddLoading(false);
       Toast.show({
-        type: 'error',
-        text1: 'Failed to create lead',
-        position: 'top',
+        type: "error",
+        text1: "Failed to create lead",
+        position: "top",
       });
-      console.log('Error in handleSubmit: ', error);
+      console.log("Error in handleSubmit: ", error);
     }
   };
   const handleConvertButton = () => {
@@ -242,7 +243,8 @@ const AddLead = ({ navigation }) => {
         setPostData,
         alert,
         setAlert,
-        navigation
+        navigation,
+        productMappingData
       );
       //   console.log('Res Lead Convert', res);
       if (res && Object.keys(res).length > 0) {
@@ -252,7 +254,7 @@ const AddLead = ({ navigation }) => {
       setAddLoading(false);
     } catch (error) {
       setAddLoading(false);
-      console.log('Convert to LAN', error);
+      console.log("Convert to LAN", error);
     }
   };
 
@@ -307,7 +309,7 @@ const AddLead = ({ navigation }) => {
       {currentPosition === 0 && (
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : null}
+          behavior={Platform.OS === "ios" ? "padding" : null}
           enabled
           keyboardVerticalOffset={Platform.select({ ios: 125, android: 500 })}
         >
@@ -389,14 +391,14 @@ const AddLead = ({ navigation }) => {
       <View style={addLeadStyle.buttonContainer}>
         {currentPosition === 0 && (
           <Button
-            mode={!isFormEditable ? 'contained' : 'outlined'}
+            mode={!isFormEditable ? "contained" : "outlined"}
             style={addLeadStyle.cancelButton}
             disabled={!isFormEditable}
             onPress={handleSubmit(onSubmit)}
             icon="play"
-            contentStyle={{ flexDirection: 'row-reverse' }}
+            contentStyle={{ flexDirection: "row-reverse" }}
           >
-            {globalConstants.RoleNames.RM === empRole ? 'Next' : 'Save'}
+            {globalConstants.RoleNames.RM === empRole ? "Next" : "Save"}
           </Button>
         )}
         {currentPosition === 1 && (
@@ -404,8 +406,8 @@ const AddLead = ({ navigation }) => {
             <View
               style={{
                 flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
+                flexDirection: "row",
+                justifyContent: "space-evenly",
               }}
             >
               <View>
@@ -419,7 +421,7 @@ const AddLead = ({ navigation }) => {
               </View>
               <View>
                 <Button
-                  mode={'contained'}
+                  mode={"contained"}
                   onPress={handleSubmit(convertToLAN)}
                   disabled={addLoading || !watch().OTP_Verified__c}
                 >
@@ -436,13 +438,14 @@ const AddLead = ({ navigation }) => {
           setScheduleModalVisible(!scheduleModalVisible);
         }}
         setValue={setValue}
-        cancelBtnLabel={'Close'}
+        cancelBtnLabel={"Close"}
         visible={scheduleModalVisible}
         leadId={id}
+        setAddLoading={setAddLoading}
       />
       <EMICalculatorComponent
         control={control}
-        cancelBtnLabel={'Close'}
+        cancelBtnLabel={"Close"}
         visible={emiModalVisible}
         onDismiss={() => {
           setEmiModalVisible(!emiModalVisible);

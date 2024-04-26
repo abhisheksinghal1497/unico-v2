@@ -1,15 +1,15 @@
-import React from 'react';
-import Accordion from '../../../../common/components/AccordionComponent/Accordion';
+import React from "react";
+import Accordion from "../../../../common/components/AccordionComponent/Accordion";
 import {
   FormControl,
   component,
-} from '../../../../common/components/FormComponents/FormControl';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { GetPicklistValues } from '../../../../common/functions/getPicklistValues';
-import { getProductType } from '../../../../common/functions/getProductType';
-import { useRole } from '../../../../store/context/RoleProvider';
-import { globalConstants } from '../../../../common/constants/globalConstants';
+} from "../../../../common/components/FormComponents/FormControl";
+import { useState } from "react";
+import { useEffect } from "react";
+import { GetPicklistValues } from "../../../../common/functions/getPicklistValues";
+import { getProductType } from "../../../../common/functions/getProductType";
+import { useRole } from "../../../../store/context/RoleProvider";
+import { globalConstants } from "../../../../common/constants/globalConstants";
 
 const LeadAdditionalDetails = ({
   control,
@@ -43,7 +43,7 @@ const LeadAdditionalDetails = ({
   useEffect(() => {
     const propertyIdentifiedList = GetPicklistValues(
       leadMetadata,
-      'Property_Identified__c'
+      "Property_Identified__c"
     );
     setPropertyIdentified(propertyIdentifiedList);
     const productPickList = getProductType(productMapping);
@@ -60,8 +60,8 @@ const LeadAdditionalDetails = ({
   }));
   return (
     <Accordion
-      title={'Additional Details'}
-      Id={'AdditionalDetails'}
+      title={"Additional Details"}
+      Id={"AdditionalDetails"}
       collapsedError={collapsedError}
       initialState={false}
     >
@@ -99,6 +99,15 @@ const LeadAdditionalDetails = ({
         compType={component.numberPad}
         label="Requested Tenure in Months"
         name="Requested_tenure_in_Months__c"
+        control={control}
+        required={false}
+        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isDisabled={!isFormEditable}
+      />
+      <FormControl
+        compType={component.numberPad}
+        label="Physical Application Number"
+        name="Physical_Application_Number__c"
         control={control}
         required={false}
         isVisible={role === globalConstants.RoleNames.RM ? true : false}
