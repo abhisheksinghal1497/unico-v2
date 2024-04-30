@@ -56,6 +56,7 @@ const MobileOtpConsent = ({
   const isOnline = useInternet();
   // --------------Timer------------------
   const [resendDisabled, setResendDisabled] = useState(false);
+  const [isOtpRequested, setIsOtpRequested] = useState(false);
   // console.log();
 
   const formatTime = (seconds) => {
@@ -135,13 +136,14 @@ const MobileOtpConsent = ({
 
   useEffect(() => {
     setResendDisabled(timer > 0);
-    if (timer <= 0) {
+    if (timer <= 0 && isOtpRequested) {
       setExpectedOtp(null);
       Toast.show({
         type: "error",
         text1: "OTP Expired",
         position: "top",
       });
+      setIsOtpRequested(false);
     }
   }, [timer]);
 
@@ -173,6 +175,7 @@ const MobileOtpConsent = ({
   const sendOTP = async (mobilePhone, newRetryCount) => {
     try {
       let latestRetryCount = newRetryCount;
+      setIsOtpRequested(true);
       const otpRes = await OTPVerificationService(LeadId, mobilePhone);
       setIsMobileNumberChanged(false);
       // Handle OTP Response if it generated succesfully or not when integration is done
@@ -497,7 +500,7 @@ const MobileOtpConsent = ({
                 }}
               >
                 <Button mode="contained" onPress={handleValidateOTP}>
-                  Validate
+                  Validate OTP
                 </Button>
               </View>
 
