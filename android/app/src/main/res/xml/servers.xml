@@ -4,5 +4,5 @@
     <server name="QA" url="https://page-drive-2970--unicoqa.sandbox.my.site.com/LOSApp" />
     <server name="Dev" url="https://page-drive-2970--leadmgmt.sandbox.my.site.com/LOS" />
     <server name="UAT" url="https://test.salesforce.com" />
-
+    <server name="FedFina" url="https://fedbank--dev.sandbox.my.site.com/LOS" />
 </servers>

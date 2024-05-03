@@ -98,6 +98,26 @@ const MainNavigator = () => {
     </>
   );
 
+
+  const tabsForPD = (
+    <>
+      <Tab.Screen
+        name={screens.pdListStack}
+        component={
+          //SharedStackNavigator
+          ROLES.PD_LIST.includes(empRole)
+            ? SharedStackNavigator
+            : UnauthorizedScreen
+        }
+        options={navOptionHandler}
+        initialParams={{
+          defaultScreen: screens.pdList,
+        }}
+      />
+    </>
+  );
+
+  
   return (
     <BottomTabContext.Provider value={{ hideBottomTab, setHideBottomTab }}>
       <Tab.Navigator
@@ -120,6 +140,8 @@ const MainNavigator = () => {
               iconName = focused ? 'list' : 'list-outline';
             } else if (rn === screens.WebViewStack) {
               iconName = focused ? 'globe' : 'globe-outline';
+            }  else if (rn === screens.pdListStack) {
+              iconName = focused ? "chatbubbles" : "chatbubbles-outline";
             } else if (rn === 'Meeting List') {
               iconName = focused ? 'calendar' : 'calendar-outline';
             }
@@ -134,7 +156,11 @@ const MainNavigator = () => {
         })}
       >
         {/* ----------------Tab1---------------------- */}
-        {tabsForLead}
+        {ROLES.LEAD_CAPTURE.includes(empRole)
+            ? tabsForLead
+            : ROLES.PD_LIST.includes(empRole)
+            ? tabsForPD
+            : tabsForUnAuthUser}
       </Tab.Navigator>
     </BottomTabContext.Provider>
   );

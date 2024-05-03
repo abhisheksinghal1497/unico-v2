@@ -51,9 +51,9 @@ export const App = function () {
     // backgroundSync();
     oauth.getAuthCredentials(
       async (credentials) => {
-        // console.log('Credentials', credentials, isOnline);
+        console.log('Credentials', credentials, isOnline);
         // if (isOnline) {
-
+        console.log(isLoading,credentials)
         credentials && (await syncUserInfoData(credentials?.userId));
         credentials && (await syncTeamHierarchyData(credentials?.userId));
         credentials && (await syncDSABrJnData(credentials?.userId));

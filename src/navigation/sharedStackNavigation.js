@@ -9,13 +9,14 @@ import LeadList from '../screens/LeadList';
 import AddLead from '../screens/LeadCapture';
 import EditLeadScreen from '../screens/EditLead';
 import MeetingList from '../screens/MeetingList';
+import PdListScreen from "../screens/PD/PdListScreen";
 
 const Stack = createStackNavigator();
 
 const SharedStackNavigator = () => {
   const route = useRoute();
   const { defaultScreen } = route.params || {};
-
+  console.log(route)
   return (
     // ----------------------Shared Stack--------------------------------------
     <Stack.Navigator
@@ -27,6 +28,8 @@ const SharedStackNavigator = () => {
         /* Add Dynamic screens here */
         defaultScreen === screens.leadList ? (
           <Stack.Screen name={screens.leadList} component={LeadList} />
+        ): defaultScreen === screens.pdList ? (
+          <Stack.Screen name={screens.pdList} component={PdListScreen} />
         ) : defaultScreen === screens.meetingList ? (
           <Stack.Screen name={screens.meetingList} component={MeetingList} />
         ) : defaultScreen === screens.WebView ? (

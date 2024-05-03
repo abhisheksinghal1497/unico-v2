@@ -5,10 +5,12 @@ import teamHeirarchyReducer from './slices/TeamHeirarchySlice';
 import leadMetaDataReducer from './slices/LeadMetaData';
 import masterDataReducer from './slices/MasterData';
 import meetingDataReducer from './slices/MeetingDataSlice';
+import pdReducer from "./slices/PdListSlice";
 import thunk from 'redux-thunk';
 
 const reducer = combineReducers({
   leads: leadReducer,
+  pd: pdReducer,
   credentials: credentialReducer,
   teamHeirarchy: teamHeirarchyReducer,
   leadMetadata: leadMetaDataReducer,
