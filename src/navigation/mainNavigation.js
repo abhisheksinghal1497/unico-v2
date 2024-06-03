@@ -31,10 +31,24 @@ export const BottomTabContext = React.createContext({
 // ----------------------Main Tab Navigator---------------------------------
 const MainNavigator = () => {
   const [hideBottomTab, setHideBottomTab] = React.useState(false);
+  const [isAuthorized, setIsAuthorized] = React.useState(false);
   // const { teamHeirarchyByUserId } = useSelector((state) => state.teamHeirarchyByUserId);
 
   // const empRole = GetEmployeeRole(teamHeirarchyByUserId);
   const empRole = useRole();
+
+  useEffect(() => {
+    if (
+      ROLES.LEAD_CAPTURE.includes(empRole) ||
+      ROLES.WEBVIEW.includes(empRole) ||
+      ROLES.SCHEDULE_Meeting.includes(empRole)
+    ) {
+      setIsAuthorized(true);
+    } else {
+      setIsAuthorized(false);
+    }
+  }, [empRole]);
+
   // console.log('empRole', empRole);
   const dispatch = useDispatch();
   const isOnline = useInternet();
@@ -66,18 +80,20 @@ const MainNavigator = () => {
 
   const tabsForLead = (
     <>
-      <Tab.Screen
-        name={screens.leadListStack}
-        component={
-          ROLES.LEAD_CAPTURE.includes(empRole)
-            ? SharedStackNavigator
-            : UnauthorizedScreen
-        }
-        options={navOptionHandler}
-        initialParams={{
-          defaultScreen: screens.leadList,
-        }}
-      />
+      {ROLES.LEAD_CAPTURE.includes(empRole) && (
+        <Tab.Screen
+          name={screens.leadListStack}
+          component={
+            ROLES.LEAD_CAPTURE.includes(empRole)
+              ? SharedStackNavigator
+              : UnauthorizedScreen
+          }
+          options={navOptionHandler}
+          initialParams={{
+            defaultScreen: screens.leadList,
+          }}
+        />
+      )}
       {ROLES.SCHEDULE_Meeting.includes(empRole) && (
         <Tab.Screen
           name="Meeting List"
@@ -98,51 +114,63 @@ const MainNavigator = () => {
               headerShown: true,
             };
           }}
-          // initialParams={{ employeeRole: empRole }}
         />
       )}
     </>
   );
 
   return (
-    <BottomTabContext.Provider value={{ hideBottomTab, setHideBottomTab }}>
-      <Tab.Navigator
-        initialRouteName={screens.leadList}
-        activeColor={colors.tertiary}
-        inactiveColor={colors.gray250}
-        barStyle={{
-          ...customTheme.tab.barStyle,
-          display: hideBottomTab ? "none" : "flex",
-        }}
-        compact={true}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            let rn = route.name;
+    <>
+      {empRole && (
+        <>
+          {isAuthorized ? (
+            <BottomTabContext.Provider
+              value={{ hideBottomTab, setHideBottomTab }}
+            >
+              <Tab.Navigator
+                initialRouteName={screens.leadList}
+                activeColor={colors.tertiary}
+                inactiveColor={colors.gray250}
+                barStyle={{
+                  ...customTheme.tab.barStyle,
+                  display: hideBottomTab ? "none" : "flex",
+                }}
+                compact={true}
+                screenOptions={({ route }) => ({
+                  tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+                    let rn = route.name;
 
-            if (rn === screens.AddLeadStack) {
-              iconName = focused ? "person-add" : "person-add-outline";
-            } else if (rn === screens.leadListStack) {
-              iconName = focused ? "list" : "list-outline";
-            } else if (rn === screens.WebViewStack) {
-              iconName = focused ? "globe" : "globe-outline";
-            } else if (rn === "Meeting List") {
-              iconName = focused ? "calendar" : "calendar-outline";
-            }
-            // else if (rn === screens.pdList) {
-            //   iconName = focused ? "chatbubbles" : "chatbubbles-outline";
-            // }
+                    if (rn === screens.AddLeadStack) {
+                      iconName = focused ? "person-add" : "person-add-outline";
+                    } else if (rn === screens.leadListStack) {
+                      iconName = focused ? "list" : "list-outline";
+                    } else if (rn === screens.WebViewStack) {
+                      iconName = focused ? "globe" : "globe-outline";
+                    } else if (rn === "Meeting List") {
+                      iconName = focused ? "calendar" : "calendar-outline";
+                    } else if (rn === screens.pdList) {
+                      iconName = focused
+                        ? "chatbubbles"
+                        : "chatbubbles-outline";
+                    }
 
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={20} color={color} />;
-          },
-          tabBarHideOnKeyboard: true,
-        })}
-      >
-        {/* ----------------Tab1---------------------- */}
-        {tabsForLead}
-      </Tab.Navigator>
-    </BottomTabContext.Provider>
+                    // You can return any component that you like here!
+                    return <Ionicons name={iconName} size={20} color={color} />;
+                  },
+                  tabBarHideOnKeyboard: true,
+                })}
+              >
+                {/* ----------------Tab1---------------------- */}
+                {tabsForLead}
+              </Tab.Navigator>
+            </BottomTabContext.Provider>
+          ) : (
+            <UnauthorizedScreen />
+          )}
+        </>
+      )}
+    </>
   );
 };
 export default MainNavigator;

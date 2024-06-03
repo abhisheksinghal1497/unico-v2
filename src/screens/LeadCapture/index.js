@@ -100,7 +100,7 @@ const AddLead = ({ navigation }) => {
   const { pincodeMasterData } = useSelector(
     (state) => state.masterData.pincodeMaster
   );
-  // console.log('Pin Code Master Data', pincodeMasterData);
+  // console.log("Pin Code Master Data", pincodeMasterData);
   // console.log('productMappingData Data', productMappingData);
   // console.log('leadMetadata Data', leadMetadata);
   // console.log('teamHeirarchyMasterData ', teamHeirarchyMasterData);

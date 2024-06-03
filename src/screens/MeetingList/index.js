@@ -4,7 +4,7 @@ import React, {
   useRef,
   useContext,
   useState,
-} from 'react';
+} from "react";
 import {
   FlatList,
   View,
@@ -12,21 +12,21 @@ import {
   Alert,
   StyleSheet,
   Text,
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { ActivityIndicator, Searchbar, Button } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { useInternet } from '../../store/context/Internet';
-import { ErrorMessage } from '../../common/constants/ErrorConstants';
-import customTheme from '../../common/colors/theme';
-import { moderateScale } from '../../utils/matrcis';
-import { LeadListStyles } from '../LeadList/styles/LeadListStyles';
-import ErrorScreen from '../LeadList/component/ErrorScreen';
-import { colors } from '../../common/colors';
-import { format, parseISO } from 'date-fns';
-import { convertToDateString } from '../../common/functions/ConvertToDateString';
-import { getMeetingData } from '../../store/redux/actions/meetingData';
-import { NoInternet } from '../../common/components/NoInternetComponent/NoInternetScreen';
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { ActivityIndicator, Searchbar, Button } from "react-native-paper";
+import Icon from "react-native-vector-icons/AntDesign";
+import { useInternet } from "../../store/context/Internet";
+import { ErrorMessage } from "../../common/constants/ErrorConstants";
+import customTheme from "../../common/colors/theme";
+import { moderateScale, verticalScale } from "../../utils/matrcis";
+import { LeadListStyles } from "../LeadList/styles/LeadListStyles";
+import ErrorScreen from "../LeadList/component/ErrorScreen";
+import { colors } from "../../common/colors";
+import { format, parseISO } from "date-fns";
+import { convertToDateString } from "../../common/functions/ConvertToDateString";
+import { getMeetingData } from "../../store/redux/actions/meetingData";
+import { NoInternet } from "../../common/components/NoInternetComponent/NoInternetScreen";
 export default function MeetingList({ navigation }) {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = React.useState(false);
@@ -55,7 +55,7 @@ export default function MeetingList({ navigation }) {
       let dateFromApi = item?.StartDateTime?.slice(0, 10);
       return dateFromApi == onlyDate;
     });
-    console.log('filterdedData', filterdedData);
+    // console.log("filterdedData", filterdedData);
     setTodaysData(filterdedData);
   };
 
@@ -68,14 +68,14 @@ export default function MeetingList({ navigation }) {
   };
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       dispatch(getMeetingData());
     });
     return unsubscribe;
   }, [isOnline, navigation]);
 
   useEffect(() => {
-    console.log('Is Online or not', isOnline);
+    // console.log("Is Online or not", isOnline);
     getDataList(meetingdata);
   }, [meetingdata]);
 
@@ -95,7 +95,7 @@ export default function MeetingList({ navigation }) {
   };
 
   const tryAgainButton = () => {
-    console.log('Try Again Button clicked');
+    console.log("Try Again Button clicked");
   };
 
   const renderItem = ({ item }) => {
@@ -107,16 +107,16 @@ export default function MeetingList({ navigation }) {
     // );
     let formatedDate =
       item?.StartDateTime &&
-      format(parseISO(item?.StartDateTime), 'dd/MM/yyyy');
+      format(parseISO(item?.StartDateTime), "dd/MM/yyyy");
     let formatedStartTime =
-      item?.StartDateTime && format(parseISO(item?.StartDateTime), 'hh:mm a');
+      item?.StartDateTime && format(parseISO(item?.StartDateTime), "hh:mm a");
     let formatedEndTime =
-      item?.EndDateTime && format(parseISO(item?.EndDateTime), 'hh:mm a');
+      item?.EndDateTime && format(parseISO(item?.EndDateTime), "hh:mm a");
 
     return (
       <View style={styles.itemStyle}>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ flexDirection: 'row', flex: 1 }}>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", flex: 1 }}>
             <View>
               <Icon
                 name="calendar"
@@ -131,10 +131,10 @@ export default function MeetingList({ navigation }) {
             </View>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={[styles.date, { textAlign: 'right' }]}>
+            <Text style={[styles.date, { textAlign: "right" }]}>
               {formatedDate}
             </Text>
-            <Text style={{ textAlign: 'right' }}>
+            <Text style={{ textAlign: "right" }}>
               {formatedStartTime} to {formatedEndTime}
             </Text>
           </View>
@@ -154,15 +154,15 @@ export default function MeetingList({ navigation }) {
         <View>
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
+              flexDirection: "row",
+              justifyContent: "space-evenly",
               margin: 10,
             }}
           >
             <View>
               <Button
                 onPress={thisWeekButton}
-                mode={isWeekActive ? 'contained' : 'outlined'}
+                mode={isWeekActive ? "contained" : "outlined"}
                 style={{
                   borderColor: customTheme.colors.primary,
                 }}
@@ -173,7 +173,7 @@ export default function MeetingList({ navigation }) {
             <View>
               <Button
                 onPress={todaysButton}
-                mode={isTodayActive ? 'contained' : 'outlined'}
+                mode={isTodayActive ? "contained" : "outlined"}
                 style={{
                   borderColor: customTheme.colors.primary,
                 }}
@@ -207,20 +207,21 @@ export default function MeetingList({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: verticalScale(50),
   },
   date: {
     color: colors.black,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 16,
   },
   itemStyle: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    flexDirection: "column",
+    justifyContent: "space-between",
     backgroundColor: colors.bgLight,
     margin: 10,
     padding: moderateScale(10),
     borderRadius: moderateScale(10),
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 20,
       height: 2,

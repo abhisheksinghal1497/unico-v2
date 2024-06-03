@@ -7,9 +7,9 @@
 
 // Suppose if i select DSA in lead Source then i should show only DSA Records ELse if i select connector then show only connector records
 
-import { soupConfig } from '../../../common/constants/soupConstants';
-import { query } from '../../../common/constants/Queries';
-import { syncData } from '.';
+import { soupConfig } from "../../../common/constants/soupConstants";
+import { query } from "../../../common/constants/Queries";
+import { syncData } from ".";
 
 let syncInFlight = false;
 
@@ -25,7 +25,7 @@ export const syncDSABrJnData = async (userId) => {
   try {
     const queryData = await query.getDsaBranchJunction(userId);
 
-    console.log('queryData', queryData);
+    // console.log('queryData', queryData);
 
     return await syncData(
       queryData,

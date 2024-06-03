@@ -34,7 +34,7 @@ public class NotificationService extends SFDCFcmListenerService {
         // Extract data from the message payload
         Map<String, String> data = message.getData();
 
-      Log.e("Notification Res","Notification Triggered"+data);
+        Log.e("Notification Res", "Notification Triggered" + data);
 
         try {
             // Extract the "content" field as a JSON string
@@ -80,7 +80,7 @@ public class NotificationService extends SFDCFcmListenerService {
                 this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.sf__icon)
+                .setSmallIcon(R.drawable.ic_launcher_foreground) // Set Notification icon
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true);

@@ -20,6 +20,7 @@ export const GetDefaultValues = (
         Branch_Name__c: "",
         Cust_ID__c: "",
         Cust_ID: "",
+        // Branch_Code__c: "",
         // BranchCode__c: '', No need to update as it is a formula field
         Employee_Code__c: "",
         Customer_Name__c: "",

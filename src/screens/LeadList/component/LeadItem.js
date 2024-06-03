@@ -76,7 +76,7 @@ const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
           </Text>
 
           <Text style={styles.branchChannelName}>
-            {leadData?.Channel_Name__r ? leadData?.Channel_Name__r?.Name : ""}
+            {leadData?.LeadSource ? leadData?.LeadSource : ""}
           </Text>
         </View>
       </View>

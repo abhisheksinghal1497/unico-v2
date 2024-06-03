@@ -72,8 +72,17 @@ export const ConvertLead = async (
       referenceId: "reference_id_lead_upsert_1",
     });
 
+    // Get Lead Id Number
+
+    compositeRequest.push({
+      url: `/services/data/${net.getApiVersion()}/sobjects/Lead/${
+        leadData?.Id
+      }?fields=Id,Lead_Id__c,LeadIdFormula__c,BranchCode__c`,
+      method: "GET",
+      referenceId: "reference_id_lead_get_1",
+    });
     let loanApplData = {
-      BrchCode__c: leadData?.Branch_Code__c,
+      // BrchCode__c: leadData?.Branch_Code__c,
       Bank_Branch_Name__c: leadData?.Bank_Branch__c,
       ChanelNme__c: leadData?.Channel_Name__c,
       LeadSource__c: leadData?.LeadSource,
@@ -91,7 +100,10 @@ export const ConvertLead = async (
     };
     compositeRequest.push({
       url: `/services/data/${net.getApiVersion()}/sobjects/LoanAppl__c/`,
-      body: loanApplData,
+      body: {
+        ...loanApplData,
+        BrchCode__c: "@{reference_id_lead_get_1.BranchCode__c}",
+      },
       method: "POST",
       referenceId: "reference_id_loan_appl_create_1",
     });
@@ -123,23 +135,13 @@ export const ConvertLead = async (
       referenceId: "reference_id_loan_appl_get_1",
     });
 
-    // Get Lead Id Number
-
-    compositeRequest.push({
-      url: `/services/data/${net.getApiVersion()}/sobjects/Lead/${
-        leadData?.Id
-      }?fields=Id,Lead_Id__c,LeadIdFormula__c`,
-      method: "GET",
-      referenceId: "reference_id_lead_get_1",
-    });
-
     let graphRes = await compositeGraphApi([
       {
         graphId: "1",
         compositeRequest,
       },
     ]);
-    // console.log("Graph Res", graphRes);
+    console.log("Graph Res", graphRes);
     if (graphRes?.graphs[0].isSuccessful) {
       leadData.fileDetails = [];
       // console.log('graph res success');

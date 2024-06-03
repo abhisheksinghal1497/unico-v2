@@ -1,4 +1,4 @@
-import { net } from "react-native-force";
+import { net, oauth } from "react-native-force";
 
 export const postObjectData = (objectName, data) => {
   return new Promise((resolve, reject) => {
@@ -16,6 +16,7 @@ export const postObjectData = (objectName, data) => {
     );
   });
 };
+
 export const OTPVerificationService = (LeadId, mobileNumber) => {
   return new Promise((resolve, reject) => {
     net.sendRequest(

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   component,
-} from '../../../../common/components/FormComponents/FormControl';
-import { GetPicklistValues } from '../../../../common/functions/getPicklistValues';
-import Accordion from '../../../../common/components/AccordionComponent/Accordion';
-import { useRole } from '../../../../store/context/RoleProvider';
-import { globalConstants } from '../../../../common/constants/globalConstants';
+} from "../../../../common/components/FormComponents/FormControl";
+import { GetPicklistValues } from "../../../../common/functions/getPicklistValues";
+import Accordion from "../../../../common/components/AccordionComponent/Accordion";
+import { useRole } from "../../../../store/context/RoleProvider";
+import { globalConstants } from "../../../../common/constants/globalConstants";
 
 const LeadPersonalDetails = ({
   control,
@@ -35,8 +35,8 @@ const LeadPersonalDetails = ({
       let pincodePicklist = [];
       // if (role === globalConstants.RoleNames.RM) {
       if (
-        leadSource === 'UNICO Employee' ||
-        leadSource === 'Customer Referral'
+        leadSource === "UNICO Employee" ||
+        leadSource === "Customer Referral"
       ) {
         pincodeMasterData.map((pin) => {
           pincodePicklist.push({
@@ -45,7 +45,7 @@ const LeadPersonalDetails = ({
           });
         });
       }
-      if (leadSource === 'Direct-RM' && branchName) {
+      if (leadSource === "Direct-RM" && branchName) {
         pincodeMasterData.map((pin) => {
           if (pin?.Bank_Branch__r?.Name === branchName) {
             pincodePicklist.push({
@@ -55,14 +55,14 @@ const LeadPersonalDetails = ({
           }
         });
       }
-      if ((leadSource === 'DSA' || leadSource === 'UGA') && channelName) {
+      if (leadSource === "DSA" && channelName) {
         let filteredBranch = dsaBrJnMasterData?.filter(
           (dbr) => dbr.Account__r?.Name === channelName
         );
         const bankBranchNames = filteredBranch?.map(
           (item) => item?.BanchBrch__r && item?.BanchBrch__r?.Name
         );
-        // console.log('bankBranchNames', filteredBranch, bankBranchNames);
+        // console.log("bankBranchNames", filteredBranch, bankBranchNames);
         pincodeMasterData?.map((pin) => {
           if (
             bankBranchNames &&
@@ -76,11 +76,37 @@ const LeadPersonalDetails = ({
           }
         });
       }
-      // console.log('Pincode Picklist', pincodePicklist);
+
+      if (leadSource === "UGA") {
+        let bankBranchNames = [];
+        const rmBranchName = teamHeirarchyMasterData?.map((thMaster) => {
+          dsaBrJn?.map((dbr) => {
+            if (dbr?.RMUsr__c === thMaster?.Employee__c) {
+              bankBranchNames.push(thMaster?.EmpBrch__r?.Name);
+            }
+          });
+        });
+
+        pincodeMasterData?.map((pin) => {
+          if (
+            bankBranchNames &&
+            bankBranchNames?.length > 0 &&
+            bankBranchNames?.includes(pin?.Bank_Branch__r?.Name)
+          ) {
+            pincodePicklist.push({
+              label: pin?.PinCode__r?.PIN__c,
+              value: pin?.PinCode__r?.PIN__c,
+            });
+          }
+        });
+
+        // console.log("Rm Branch Name", bankBranchNames, dsaBrJn);
+      }
+      // console.log("Pincode Picklist", pincodePicklist);
       // }
       return pincodePicklist;
     } catch (error) {
-      console.log('Error GetPincodePicklist', error);
+      console.log("Error GetPincodePicklist", error);
     }
   };
   // console.log('Pincode Master Data', pincodeMasterData);
@@ -100,10 +126,10 @@ const LeadPersonalDetails = ({
   const GetBrNamePicklist = (pincode, pincodeMasterData, leadSource) => {
     let brNPicklist = [];
     if (
-      leadSource === 'UNICO Employee' ||
-      leadSource === 'Customer Referral' ||
-      leadSource === 'DSA' ||
-      leadSource === 'UGA'
+      leadSource === "UNICO Employee" ||
+      leadSource === "Customer Referral" ||
+      leadSource === "DSA" ||
+      leadSource === "UGA"
     ) {
       pincodeMasterData.map((pin) => {
         if (pincode === pin.PinCode__r?.PIN__c)
@@ -150,7 +176,7 @@ const LeadPersonalDetails = ({
 
   useEffect(() => {
     if (globalConstants.RoleNames.RM === role) {
-      const picklist = GetPicklistValues(leadMetadata, 'Customer_Profile__c');
+      const picklist = GetPicklistValues(leadMetadata, "Customer_Profile__c");
       setCustomerProfilePicklist(picklist);
     }
   }, [leadMetadata]);
@@ -168,8 +194,8 @@ const LeadPersonalDetails = ({
 
   return (
     <Accordion
-      title={'Personal Details'}
-      Id={'PersonalDetails'}
+      title={"Personal Details"}
+      Id={"PersonalDetails"}
       collapsedError={collapsedError}
       initialState={false}
     >
@@ -275,7 +301,7 @@ const LeadPersonalDetails = ({
         options={brNamePicklist}
         isVisible={
           role === globalConstants.RoleNames.RM &&
-          watch().LeadSource !== 'Direct-RM'
+          watch().LeadSource !== "Direct-RM"
             ? true
             : role === globalConstants.RoleNames.DSA
             ? true
@@ -303,7 +329,7 @@ const LeadPersonalDetails = ({
         setValue={setValue}
         required={true}
         isVisible={
-          watch().LeadSource === 'Direct-RM' &&
+          watch().LeadSource === "Direct-RM" &&
           role === globalConstants.RoleNames.RM
             ? true
             : false

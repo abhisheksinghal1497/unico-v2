@@ -4,18 +4,18 @@ import {
   StyleSheet,
   Linking,
   TouchableOpacity,
-} from 'react-native';
-import React, { useState } from 'react';
-import { Button, Icon, Switch } from 'react-native-paper';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+} from "react-native";
+import React, { useState } from "react";
+import { Button, Icon, Switch } from "react-native-paper";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
-} from '../../utils/matrcis';
-import customTheme from '../colors/theme';
-import { colors } from '../colors';
-import ModalComponent from './Modal/ScheduleMeetComponent';
+} from "../../utils/matrcis";
+import customTheme from "../colors/theme";
+import { colors } from "../colors";
+import ModalComponent from "./Modal/ScheduleMeetComponent";
 
 const LeadActivities = ({
   id,
@@ -23,7 +23,7 @@ const LeadActivities = ({
   mobileNumber,
   onEmiCalculatorClicked,
 }) => {
-  const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
+  // const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
   // -----Toggle handler---------
   // const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
@@ -43,7 +43,7 @@ const LeadActivities = ({
       >
         <Ionicons
           size={25}
-          name={'call-sharp'}
+          name={"call-sharp"}
           color={customTheme.colors.primary}
         />
         <Text style={styles.toggleLabelStyle}>Call </Text>
@@ -55,7 +55,7 @@ const LeadActivities = ({
       >
         <Ionicons
           size={25}
-          name={'calendar-number-sharp'}
+          name={"calendar-number-sharp"}
           color={customTheme.colors.primary}
         />
         <Text style={styles.toggleLabelStyle}>Schedule Meeting</Text>
@@ -66,7 +66,7 @@ const LeadActivities = ({
       >
         <Ionicons
           size={25}
-          name={'calculator-outline'}
+          name={"calculator-outline"}
           color={customTheme.colors.primary}
         />
         <Text style={styles.toggleLabelStyle}>EMI Calculator</Text>
@@ -81,15 +81,15 @@ const styles = StyleSheet.create({
   toggleViewContainer: {
     //paddingVertical: verticalScale(4),
     paddingHorizontal: horizontalScale(8),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   labelAndSwitch: {
     // paddingVertical: verticalScale(10),
     // marginHorizontal: horizontalScale(8),
     marginLeft: horizontalScale(17),
     // flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: "center",
   },
   toggleLabelStyle: {
     fontSize: customTheme.fonts.smallText.fontSize,
@@ -107,13 +107,13 @@ const styles = StyleSheet.create({
   //   //paddingRight: horizontalScale(90),
   // },
   saveAsDraftBtn: {
-    alignItems: 'center',
+    alignItems: "center",
     // width: '40%',
     borderRadius: customTheme.shape.roundness,
   },
   scheduleMeeting: {
     marginLeft: horizontalScale(10),
     // flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: "center",
   },
 });

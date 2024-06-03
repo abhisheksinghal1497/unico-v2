@@ -42,7 +42,7 @@ export default function LeadList({ navigation }) {
     (state) => state.leads?.lead
   );
   const { listViews } = useSelector((state) => state.leads.leadListViews);
-  // console.log('lead$$$$$$', listViews);
+  // console.log("lead$$$$$$", listViews);
 
   const getOfflineLeadList = async () => {
     try {
@@ -64,7 +64,7 @@ export default function LeadList({ navigation }) {
     }
   };
 
-  // console.log('Leads----------->', leads);
+  // console.log("Leads----------->", leads);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
