@@ -8,7 +8,7 @@ import customTheme from "../common/colors/theme";
 import SfWebView from "../screens/WebView";
 import { useDispatch } from "react-redux";
 import { useInternet } from "../store/context/Internet";
-import { getLeadMetadata } from "../store/redux/actions/leadMetadata";
+// import { getLeadMetadata } from "../store/redux/actions/leadMetadata";
 import { SyncHandler } from "../utils/syncHandler";
 import { oauth } from "react-native-force";
 import { getTeamHeirarchyByUserId } from "../store/redux/actions/teamHeirarchy";
