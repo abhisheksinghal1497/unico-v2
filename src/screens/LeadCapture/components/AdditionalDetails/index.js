@@ -84,7 +84,12 @@ const LeadAdditionalDetails = ({
         options={productSubType}
         setValue={setValue}
         isDisabled={!isFormEditable}
-        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isVisible={
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role
+            ? true
+            : false
+        }
       />
       <FormControl
         compType={component.numberPad}
@@ -92,7 +97,12 @@ const LeadAdditionalDetails = ({
         name="Requested_loan_amount__c"
         control={control}
         required={false}
-        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isVisible={
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role
+            ? true
+            : false
+        }
         isDisabled={!isFormEditable}
       />
       <FormControl
@@ -101,7 +111,12 @@ const LeadAdditionalDetails = ({
         name="Requested_tenure_in_Months__c"
         control={control}
         required={false}
-        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isVisible={
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role
+            ? true
+            : false
+        }
         isDisabled={!isFormEditable}
       />
       <FormControl
@@ -110,7 +125,12 @@ const LeadAdditionalDetails = ({
         name="Physical_Application_Number__c"
         control={control}
         required={false}
-        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isVisible={
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role
+            ? true
+            : false
+        }
         isDisabled={!isFormEditable}
       />
       <FormControl
@@ -121,7 +141,12 @@ const LeadAdditionalDetails = ({
         required={false}
         options={propertyIdentified}
         setValue={setValue}
-        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isVisible={
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role
+            ? true
+            : false
+        }
         isDisabled={!isFormEditable}
       />
     </Accordion>

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		23CB1CD62C10929200FDBA8D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 23CB1CD52C10929200FDBA8D /* GoogleService-Info.plist */; };
+		23CB1CD82C1092CD00FDBA8D /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 23CB1CD72C1092CD00FDBA8D /* Fonts */; };
 		48C3AB3278B80FC23EF4090B /* libPods-unico.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 761166C03BE75265E01C0F19 /* libPods-unico.a */; };
 		4F3AFF401DC2C79E006FF6B0 /* InitialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AFF3E1DC2C79E006FF6B0 /* InitialViewController.m */; };
 		B7168FBE1FACC7EB00A48DB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B7168FBD1FACC7EB00A48DB5 /* LaunchScreen.storyboard */; };
@@ -23,6 +25,8 @@
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = unico/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = unico/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = unico/main.m; sourceTree = "<group>"; };
+		23CB1CD52C10929200FDBA8D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		23CB1CD72C1092CD00FDBA8D /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		4F3AFF3D1DC2C79E006FF6B0 /* InitialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitialViewController.h; path = unico/InitialViewController.h; sourceTree = "<group>"; };
 		4F3AFF3E1DC2C79E006FF6B0 /* InitialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitialViewController.m; path = unico/InitialViewController.m; sourceTree = "<group>"; };
 		4FF12F8E1DCA93E2004D9EF9 /* unico.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = unico.entitlements; path = unico/unico.entitlements; sourceTree = "<group>"; };
@@ -86,13 +90,14 @@
 				B3D2FA597E700F4248586159 /* Pods-unico.debug.xcconfig */,
 				B0103B5B7DE1D462FE9A5044 /* Pods-unico.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				23CB1CD72C1092CD00FDBA8D /* Fonts */,
+				23CB1CD52C10929200FDBA8D /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* unico */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				8247C65FF541771FE4BE4486 /* Pods */,
@@ -184,7 +189,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23CB1CD82C1092CD00FDBA8D /* Fonts in Resources */,
 				B77BD8AF2113632C0036B284 /* bootconfig.plist in Resources */,
+				23CB1CD62C10929200FDBA8D /* GoogleService-Info.plist in Resources */,
 				CEA8CA061F071C3300448B51 /* Images.xcassets in Resources */,
 				B7168FBE1FACC7EB00A48DB5 /* LaunchScreen.storyboard in Resources */,
 			);
@@ -205,7 +212,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=/Users/unicohousingfinance/.nvm/versions/node/v21.7.1/bin/node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		7183CB1923B3359EFDE7D88F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -288,6 +295,7 @@
 				CODE_SIGN_ENTITLEMENTS = unico/unico.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = G5X5DF822N;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -320,6 +328,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = unico/unico.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G5X5DF822N;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,

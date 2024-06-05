@@ -207,7 +207,12 @@ const LeadPersonalDetails = ({
         setValue={setValue}
         required={false}
         options={customerProfilePicklist}
-        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isVisible={
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role
+            ? true
+            : false
+        }
         isDisabled={!isFormEditable}
       />
       <FormControl
@@ -256,7 +261,12 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={false}
-        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isVisible={
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role
+            ? true
+            : false
+        }
         isDisabled={!isFormEditable}
       />
       <FormControl
@@ -266,7 +276,12 @@ const LeadPersonalDetails = ({
         control={control}
         setValue={setValue}
         required={false}
-        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isVisible={
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role
+            ? true
+            : false
+        }
         isDisabled={!isFormEditable}
       />
       <FormControl
@@ -277,7 +292,12 @@ const LeadPersonalDetails = ({
         setValue={setValue}
         required={false}
         autoCapitalize="sentences"
-        isVisible={role === globalConstants.RoleNames.RM ? true : false}
+        isVisible={
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role
+            ? true
+            : false
+        }
         isDisabled={!isFormEditable}
       />
       <FormControl
@@ -300,7 +320,8 @@ const LeadPersonalDetails = ({
         required={true}
         options={brNamePicklist}
         isVisible={
-          role === globalConstants.RoleNames.RM &&
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role &&
           watch().LeadSource !== "Direct-RM"
             ? true
             : role === globalConstants.RoleNames.DSA
@@ -330,7 +351,8 @@ const LeadPersonalDetails = ({
         required={true}
         isVisible={
           watch().LeadSource === "Direct-RM" &&
-          role === globalConstants.RoleNames.RM
+          globalConstants.RoleNames.DSA !== role &&
+          globalConstants.RoleNames.UGA !== role
             ? true
             : false
         }

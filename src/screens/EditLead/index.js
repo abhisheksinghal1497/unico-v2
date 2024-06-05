@@ -406,22 +406,23 @@ export default function EditLeadScreen({ navigation }) {
           })}
         >
           <ScrollView>
-            {globalConstants.RoleNames.RM === empRole && (
-              <LeadSourceDetails
-                leadMetadata={leadMetadata}
-                dsaBrJn={dsaBrJnData}
-                customerMasterData={customerMasterData}
-                teamHeirarchyMasterData={teamHeirarchyMasterData}
-                control={control}
-                setValue={setValue}
-                watch={watch}
-                collapsedError={hasErrors}
-                pincodeMasterData={pincodeMasterData}
-                dsaBrJnMasterData={dsaBrJnMasterData}
-                isFormEditable={isFormEditable}
-                teamHeirarchyByUserId={teamHeirarchyByUserId}
-              />
-            )}
+            {globalConstants.RoleNames.DSA !== empRole &&
+              globalConstants.RoleNames.UGA !== empRole && (
+                <LeadSourceDetails
+                  leadMetadata={leadMetadata}
+                  dsaBrJn={dsaBrJnData}
+                  customerMasterData={customerMasterData}
+                  teamHeirarchyMasterData={teamHeirarchyMasterData}
+                  control={control}
+                  setValue={setValue}
+                  watch={watch}
+                  collapsedError={hasErrors}
+                  pincodeMasterData={pincodeMasterData}
+                  dsaBrJnMasterData={dsaBrJnMasterData}
+                  isFormEditable={isFormEditable}
+                  teamHeirarchyByUserId={teamHeirarchyByUserId}
+                />
+              )}
             <LeadPersonalDetails
               leadMetadata={leadMetadata}
               control={control}

@@ -314,22 +314,23 @@ const AddLead = ({ navigation }) => {
           keyboardVerticalOffset={Platform.select({ ios: 125, android: 500 })}
         >
           <ScrollView>
-            {globalConstants.RoleNames.RM === empRole && (
-              <LeadSourceDetails
-                leadMetadata={leadMetadata}
-                dsaBrJn={dsaBrJnData}
-                customerMasterData={customerMasterData}
-                teamHeirarchyMasterData={teamHeirarchyMasterData}
-                control={control}
-                setValue={setValue}
-                watch={watch}
-                collapsedError={hasErrors}
-                pincodeMasterData={pincodeMasterData}
-                dsaBrJnMasterData={dsaBrJnMasterData}
-                teamHeirarchyByUserId={teamHeirarchyByUserId}
-                isFormEditable={isFormEditable}
-              />
-            )}
+            {globalConstants.RoleNames.DSA !== empRole &&
+              globalConstants.RoleNames.UGA !== empRole && (
+                <LeadSourceDetails
+                  leadMetadata={leadMetadata}
+                  dsaBrJn={dsaBrJnData}
+                  customerMasterData={customerMasterData}
+                  teamHeirarchyMasterData={teamHeirarchyMasterData}
+                  control={control}
+                  setValue={setValue}
+                  watch={watch}
+                  collapsedError={hasErrors}
+                  pincodeMasterData={pincodeMasterData}
+                  dsaBrJnMasterData={dsaBrJnMasterData}
+                  teamHeirarchyByUserId={teamHeirarchyByUserId}
+                  isFormEditable={isFormEditable}
+                />
+              )}
             <LeadPersonalDetails
               leadMetadata={leadMetadata}
               control={control}
