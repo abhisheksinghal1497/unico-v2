@@ -14,6 +14,7 @@ export const RoleProvider = ({ children }) => {
   const { dsaBrJnData } = useSelector((state) => state.masterData.dsaBrJn);
   const dispatch = useDispatch();
   // console.log("userInfoMasterData", userInfoMasterData, dsaBrJnData);
+
   const [empRole, setEmpRole] = useState("");
   const getRole = async (userInfoMasterData) => {
     if (
@@ -26,7 +27,7 @@ export const RoleProvider = ({ children }) => {
       let role = GetEmployeeRole(teamHeirarchyByUserId);
       // setEmpRole('DSA');
       setEmpRole(role ? role : "");
-      // console.log("Role", dsaBrJnData, role);
+      console.log("Role", dsaBrJnData, role);
       return;
     }
 

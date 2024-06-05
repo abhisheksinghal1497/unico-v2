@@ -4,7 +4,7 @@
 
 
     <string name="remoteAccessConsumerKey">
-        3MVG9duA.sPEm7m9jhl8VKAZ7.zSPxoRVnsQAl5fUWjbZP09gS_TLf3FnsOykCg6Wqu.7rT3bVjM9DvQAMSCc</string>
+        3MVG9u0ll7_j5qFzfPA0F9b6Z0_237p5FFgsIBpuIy1ljpL15GNq_7DrTBSM4wTgqM2Uu.h0kYTTB8f3bun3L</string>
     <string name="oauthRedirectURI">testsfdc:///mobilesdk/detect/oauth/done</string>
     <string-array name="oauthScopes">
         <item>api</item>

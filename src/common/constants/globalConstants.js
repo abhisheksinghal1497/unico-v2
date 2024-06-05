@@ -31,18 +31,30 @@ export const globalConstants = {
     RCM: "RCM",
   },
 };
-
+export const USERACCESS = {
+  LEAD_CAPTURE: {
+    ViewAccess: [
+      "BBH",
+      "Area Head",
+      "Zonal Head",
+      "Top Hierarchy",
+      "State Head",
+    ],
+    FullAccess: ["RM", "DSA", "UGA"],
+  },
+};
 export const ROLES = {
-  LEAD_CAPTURE: ["RM", "DSA", "UGA"],
+  LEAD_CAPTURE: [
+    "RM",
+    "DSA",
+    "UGA",
+    "BBH",
+    "Area Head",
+    "Zonal Head",
+    "Top Hierarchy",
+    "State Head",
+  ],
   WEBVIEW: ["RM", "ACM", "BCM", "RCM"],
   SCHEDULE_Meeting: ["RM"],
   // PD_LIST: ['UW', 'ACM', 'RCM', 'NCM', 'CH', 'ZCM', 'CPA'],
-};
-
-export const firebaseConfig = {
-  apiKey: "AIzaSyAH9BBOJgAnuiewnFlt-7uqloIeATeP1Ww",
-  projectId: "fedfina-sales-pro",
-  storageBucket: "fedfina-sales-pro.appspot.com",
-  messagingSenderId: "512281335360",
-  appId: "1:512281335360:android:88b537ea72a469d4c5b1a5",
 };

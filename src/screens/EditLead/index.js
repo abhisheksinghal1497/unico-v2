@@ -29,7 +29,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Button } from "react-native-paper";
 import { getThMaster } from "../../store/redux/actions/teamHeirarchy";
 import { useRole } from "../../store/context/RoleProvider";
-import { globalConstants } from "../../common/constants/globalConstants";
+import {
+  ROLES,
+  USERACCESS,
+  globalConstants,
+} from "../../common/constants/globalConstants";
 import Toast from "react-native-toast-message";
 import CustomAlert, {
   customAlertDefaultState,
@@ -177,9 +181,11 @@ export default function EditLeadScreen({ navigation }) {
           return;
         }
         // console.log('Entered', id, postData?.OwnerId, cred?.userId);
-        if (postData?.OwnerId === cred?.userId) {
-          //   console.log('Entered 2 ', cred);
-          setFormEditable(true);
+        if (USERACCESS.LEAD_CAPTURE.FullAccess.includes(empRole)) {
+          if (postData?.OwnerId === cred?.userId) {
+            //   console.log('Entered 2 ', cred);
+            setFormEditable(true);
+          }
           return;
         }
 
@@ -193,7 +199,7 @@ export default function EditLeadScreen({ navigation }) {
 
   useEffect(() => {
     checkOwner(postData);
-  }, [id, postData]);
+  }, [id, postData, empRole]);
 
   useEffect(() => {
     if (Object.keys(postData).length > 0) {
