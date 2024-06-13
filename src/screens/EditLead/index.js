@@ -305,13 +305,6 @@ export default function EditLeadScreen({ navigation }) {
       //   setCurrentPosition((prev) => prev + 1);
       setAddLoading(false);
     } catch (error) {
-      //   setAddLoading(false);
-
-      //   Toast.show({
-      //     type: 'error',
-      //     text1: 'Failed to create lead',
-      //     position: 'top',
-      //   });
       console.log("Error in handleSubmit: ", error);
     }
   };

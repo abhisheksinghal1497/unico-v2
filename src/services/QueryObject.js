@@ -1,4 +1,4 @@
-import { net } from 'react-native-force';
+import { net } from "react-native-force";
 
 export const QueryObject = (query) => {
   return new Promise((resolve, reject) => {
