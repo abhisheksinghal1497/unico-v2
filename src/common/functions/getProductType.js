@@ -14,7 +14,7 @@ export const getProductType = (productMappingData) => {
       return [];
     }
   } catch (error) {
-    console.log('Error in get Product Type Function', error);
+    console.log('Error in get Product Type Function');
     return [];
   }
 };

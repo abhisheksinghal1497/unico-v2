@@ -12,16 +12,16 @@
 		2373F0122BBC0557004602BA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 2373F0112BBC0557004602BA /* assets */; };
 		2373F0142BBC0577004602BA /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 2373F0132BBC0577004602BA /* Fonts */; };
 		2373F0152BBC05DB004602BA /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
-		2A90C415C6232DFBB08AB3A6 /* libPods-unico.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E37643224D36EE3F2C35C05E /* libPods-unico.a */; };
 		4F3AFF401DC2C79E006FF6B0 /* InitialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AFF3E1DC2C79E006FF6B0 /* InitialViewController.m */; };
+		9D16175CE77A867DB6C61A83 /* libPods-unico.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 761166C03BE75265E01C0F19 /* libPods-unico.a */; };
 		B7168FBE1FACC7EB00A48DB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B7168FBD1FACC7EB00A48DB5 /* LaunchScreen.storyboard */; };
 		B77BD8AF2113632C0036B284 /* bootconfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = B77BD8AE2113632C0036B284 /* bootconfig.plist */; };
+		B83372CF2C1C68C4005D295E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B83372CE2C1C68C4005D295E /* GoogleService-Info.plist */; };
 		CEA8CA061F071C3300448B51 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA8CA051F071C3300448B51 /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		0D8CDE8158AC70656CC3EE20 /* Pods-unico.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-unico.debug.xcconfig"; path = "Pods/Target Support Files/Pods-unico/Pods-unico.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* unico.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = unico.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = unico/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = unico/AppDelegate.m; sourceTree = "<group>"; };
@@ -32,11 +32,14 @@
 		4F3AFF3D1DC2C79E006FF6B0 /* InitialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitialViewController.h; path = unico/InitialViewController.h; sourceTree = "<group>"; };
 		4F3AFF3E1DC2C79E006FF6B0 /* InitialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitialViewController.m; path = unico/InitialViewController.m; sourceTree = "<group>"; };
 		4FF12F8E1DCA93E2004D9EF9 /* unico.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = unico.entitlements; path = unico/unico.entitlements; sourceTree = "<group>"; };
-		AE79D28E6E57F5B77FA24716 /* Pods-unico.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-unico.release.xcconfig"; path = "Pods/Target Support Files/Pods-unico/Pods-unico.release.xcconfig"; sourceTree = "<group>"; };
+		761166C03BE75265E01C0F19 /* libPods-unico.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-unico.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0103B5B7DE1D462FE9A5044 /* Pods-unico.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-unico.release.xcconfig"; path = "Target Support Files/Pods-unico/Pods-unico.release.xcconfig"; sourceTree = "<group>"; };
+		B3D2FA597E700F4248586159 /* Pods-unico.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-unico.debug.xcconfig"; path = "Target Support Files/Pods-unico/Pods-unico.debug.xcconfig"; sourceTree = "<group>"; };
 		B7168FBD1FACC7EB00A48DB5 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = "../mobile_sdk/SalesforceMobileSDK-iOS/shared/resources/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		B77BD8AE2113632C0036B284 /* bootconfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = bootconfig.plist; path = unico/bootconfig.plist; sourceTree = "<group>"; };
+		B83372CE2C1C68C4005D295E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B83372D02C215D79005D295E /* unicoDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = unicoDebug.entitlements; path = unico/unicoDebug.entitlements; sourceTree = "<group>"; };
 		CEA8CA051F071C3300448B51 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "../mobile_sdk/SalesforceMobileSDK-iOS/shared/resources/Images.xcassets"; sourceTree = "<group>"; };
-		E37643224D36EE3F2C35C05E /* libPods-unico.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-unico.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A90C415C6232DFBB08AB3A6 /* libPods-unico.a in Frameworks */,
+				9D16175CE77A867DB6C61A83 /* libPods-unico.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +57,7 @@
 		13B07FAE1A68108700A75B9A /* unico */ = {
 			isa = PBXGroup;
 			children = (
+				B83372D02C215D79005D295E /* unicoDebug.entitlements */,
 				4FF12F8E1DCA93E2004D9EF9 /* unico.entitlements */,
 				4F3AFF421DC2C856006FF6B0 /* Classes */,
 				4F3AFF431DC2C869006FF6B0 /* Supporting Files */,
@@ -85,24 +89,25 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		6473DB45A273CC31E19C4F9A /* Pods */ = {
+		8247C65FF541771FE4BE4486 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0D8CDE8158AC70656CC3EE20 /* Pods-unico.debug.xcconfig */,
-				AE79D28E6E57F5B77FA24716 /* Pods-unico.release.xcconfig */,
+				B3D2FA597E700F4248586159 /* Pods-unico.debug.xcconfig */,
+				B0103B5B7DE1D462FE9A5044 /* Pods-unico.release.xcconfig */,
 			);
-			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				B83372CE2C1C68C4005D295E /* GoogleService-Info.plist */,
 				2373F0132BBC0577004602BA /* Fonts */,
 				2373F0112BBC0557004602BA /* assets */,
 				13B07FAE1A68108700A75B9A /* unico */,
 				83CBBA001A601CBA00E9B192 /* Products */,
-				6473DB45A273CC31E19C4F9A /* Pods */,
-				C73512AABD4BDBC0734E686B /* Frameworks */,
+				8247C65FF541771FE4BE4486 /* Pods */,
+				FD44A3BF77FE279830B1CDDE /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -116,10 +121,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C73512AABD4BDBC0734E686B /* Frameworks */ = {
+		FD44A3BF77FE279830B1CDDE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E37643224D36EE3F2C35C05E /* libPods-unico.a */,
+				761166C03BE75265E01C0F19 /* libPods-unico.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -131,13 +136,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "unico" */;
 			buildPhases = (
-				0D1647048E9655B7745B0762 /* [CP] Check Pods Manifest.lock */,
+				7183CB1923B3359EFDE7D88F /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				B891CA51A709510414527DB8 /* [CP] Embed Pods Frameworks */,
-				00DC77A9A87EDA30467C15DD /* [CP] Copy Pods Resources */,
+				96EA6D6BEB1E62641E1DA51B /* [CP] Embed Pods Frameworks */,
+				BF2336E1B8FA5BA8670DFFED /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -196,29 +201,13 @@
 				2373F0122BBC0557004602BA /* assets in Resources */,
 				CEA8CA061F071C3300448B51 /* Images.xcassets in Resources */,
 				B7168FBE1FACC7EB00A48DB5 /* LaunchScreen.storyboard in Resources */,
+				B83372CF2C1C68C4005D295E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		00DC77A9A87EDA30467C15DD /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-unico/Pods-unico-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-unico/Pods-unico-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-unico/Pods-unico-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -231,18 +220,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=/usr/local/bin/node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		0D1647048E9655B7745B0762 /* [CP] Check Pods Manifest.lock */ = {
+		7183CB1923B3359EFDE7D88F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-unico-checkManifestLockResult.txt",
 			);
@@ -251,7 +244,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B891CA51A709510414527DB8 /* [CP] Embed Pods Frameworks */ = {
+		96EA6D6BEB1E62641E1DA51B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -266,6 +259,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-unico/Pods-unico-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BF2336E1B8FA5BA8670DFFED /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-unico/Pods-unico-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-unico/Pods-unico-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-unico/Pods-unico-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -286,13 +296,14 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0D8CDE8158AC70656CC3EE20 /* Pods-unico.debug.xcconfig */;
+			baseConfigurationReference = B3D2FA597E700F4248586159 /* Pods-unico.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = unico/unico.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_ENTITLEMENTS = unico/unicoDebug.entitlements;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = G5X5DF822N;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -304,6 +315,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -321,12 +333,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AE79D28E6E57F5B77FA24716 /* Pods-unico.release.xcconfig */;
+			baseConfigurationReference = B0103B5B7DE1D462FE9A5044 /* Pods-unico.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = unico/unico.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = G5X5DF822N;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -338,6 +351,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

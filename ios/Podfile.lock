@@ -249,13 +249,13 @@ PODS:
     - React-Core
   - react-native-date-picker (4.4.2):
     - React-Core
-  - react-native-netinfo (11.3.1):
+  - react-native-netinfo (11.3.2):
     - React-Core
   - react-native-safe-area-context (3.4.1):
     - React-Core
-  - react-native-slider (4.5.0):
+  - react-native-slider (4.5.2):
     - React-Core
-  - react-native-webview (13.8.4):
+  - react-native-webview (13.10.3):
     - React-Core
   - React-perflogger (0.70.6)
   - React-RCTActionSheet (0.70.6):
@@ -323,13 +323,13 @@ PODS:
     - React-jsi (= 0.70.6)
     - React-logger (= 0.70.6)
     - React-perflogger (= 0.70.6)
-  - RNBackgroundFetch (4.2.4):
+  - RNBackgroundFetch (4.2.5):
     - React-Core
   - RNCMaskedView (0.2.9):
     - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNScreens (3.4.0):
+  - RNScreens (3.31.1):
     - React-Core
     - React-RCTImage
   - RNVectorIcons (9.2.0):
@@ -561,10 +561,10 @@ SPEC CHECKSUMS:
   React-logger: 1623c216abaa88974afce404dc8f479406bbc3a0
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-date-picker: 312c387d2ff873c66c5e4cf78ff6827fa91644e2
-  react-native-netinfo: bdb108d340cdb41875c9ced535977cac6d2ff321
+  react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
-  react-native-slider: 323128c304ef8282671d185a09928d62415b400d
-  react-native-webview: 17d6151e9c25e90a2755e5a2b393c47e5d16f157
+  react-native-slider: bc212e8d10ee28f51cd0db28c7f23827e6adec0a
+  react-native-webview: bbe76e4df57707c717f3c417ec0441f2a1848bba
   React-perflogger: 8c79399b0500a30ee8152d0f9f11beae7fc36595
   React-RCTActionSheet: 7316773acabb374642b926c19aef1c115df5c466
   React-RCTAnimation: 5341e288375451297057391227f691d9b2326c3d
@@ -577,10 +577,10 @@ SPEC CHECKSUMS:
   React-RCTVibration: c75ceef7aa60a33b2d5731ebe5800ddde40cefc4
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
-  RNBackgroundFetch: 7c2d0c55e2b8924ecbdcd56b010feddff0f8463d
+  RNBackgroundFetch: 2f800a04434620db15ede2e8f21886608a2d1743
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNScreens: 21b73c94c9117e1110a79ee0ee80c93ccefed8ce
+  RNScreens: b940b46ae5987e138c4fadb6b264d09177932b4d
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SalesforceAnalytics: c1bee566991448139a6bad8d3e749929ea99bb9a
   SalesforceReact: 5205ba8f3af788d3f03f6e35f1c36c20f5019b28
@@ -590,6 +590,6 @@ SPEC CHECKSUMS:
   SQLCipher: 838309284f29953a28ad2e81d87d55ea6b7c74fd
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
 
-PODFILE CHECKSUM: 5ca12f7734fd27660b43ebe3d9f5ebe947392fa9
+PODFILE CHECKSUM: 07c8eba88f9772e030f1175f91c631b341f129d2
 
 COCOAPODS: 1.15.2

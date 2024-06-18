@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { screens } from '../common/constants/screen';
-import CustomNavigationBar from './customNavigationBar';
-import SfWebView from '../screens/WebView';
-import { Platform } from 'react-native';
-import LeadList from '../screens/LeadList';
-import AddLead from '../screens/LeadCapture';
-import EditLeadScreen from '../screens/EditLead';
-import MeetingList from '../screens/MeetingList';
+import React, { useEffect } from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { screens } from "../common/constants/screen";
+import CustomNavigationBar from "./customNavigationBar";
+import SfWebView from "../screens/WebView";
+import { Platform } from "react-native";
+import LeadList from "../screens/LeadList";
+import AddLead from "../screens/LeadCapture";
+import EditLeadScreen from "../screens/EditLead";
+import MeetingList from "../screens/MeetingList";
+import PdList from "../screens/PdList";
 
 const Stack = createStackNavigator();
 
@@ -35,10 +36,12 @@ const SharedStackNavigator = () => {
             component={SfWebView}
             options={() => {
               return {
-                headerShown: Platform.OS === 'ios' ? true : false,
+                headerShown: Platform.OS === "ios" ? true : false,
               };
             }}
           />
+        ) : defaultScreen === screens.pdList ? (
+          <Stack.Screen name={screens.pdList} component={PdList} />
         ) : null
       }
       {

@@ -24,24 +24,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, StatusBar } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, Text, View, FlatList, StatusBar } from "react-native";
 
-import { NavigationContainer } from '@react-navigation/native';
-import SplashScreen from './src/common/components/Loading/SplashScreen';
-import { PaperProvider } from 'react-native-paper';
-import customTheme from './src/common/colors/theme';
-import MainNavigator from './src/navigation/mainNavigation';
-import { Provider as Reduxprovider } from 'react-redux';
+import { NavigationContainer } from "@react-navigation/native";
+import SplashScreen from "./src/common/components/Loading/SplashScreen";
+import { PaperProvider } from "react-native-paper";
+import customTheme from "./src/common/colors/theme";
+import MainNavigator from "./src/navigation/mainNavigation";
+import { Provider as Reduxprovider } from "react-redux";
 
-import store from './src/store/redux';
-import { useEffect } from 'react';
-import { oauth } from 'react-native-force';
-import { syncTeamHierarchyData } from './src/store/soups/MasterDataSoups/TeamHierarchy';
-import { syncDSABrJnData } from './src/store/soups/MasterDataSoups/DsaBrachJunction';
-import { RoleProvider } from './src/store/context/RoleProvider';
-import { syncUserInfoData } from './src/store/soups/MasterDataSoups/UserInfoMaster';
-import Toast from 'react-native-toast-message';
+import store from "./src/store/redux";
+import { useEffect } from "react";
+import { oauth } from "react-native-force";
+import { syncTeamHierarchyData } from "./src/store/soups/MasterDataSoups/TeamHierarchy";
+import { syncDSABrJnData } from "./src/store/soups/MasterDataSoups/DsaBrachJunction";
+import { RoleProvider } from "./src/store/context/RoleProvider";
+import { syncUserInfoData } from "./src/store/soups/MasterDataSoups/UserInfoMaster";
+import Toast from "react-native-toast-message";
 
 export const App = function () {
   const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +62,7 @@ export const App = function () {
       },
       (err) => {
         setIsLoading(false);
-        console.log('Error getting Auth Credentials in Sync Handler ', err);
+        console.log("Error getting Auth Credentials in Sync Handler ");
       }
     );
   }, []);
@@ -93,7 +93,7 @@ export const App = function () {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    fontWeight: '400',
+    fontWeight: "400",
     backgroundColor: customTheme.colors.background,
   },
 });

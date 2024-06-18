@@ -20,7 +20,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-project.xcworkspace
+ios/unico.xcworkspace
 
 # Android/IJ
 #
@@ -46,3 +46,6 @@ package-lock.json.*
 
 mobile_sdk/
 ios/Pods/
+text.txt
+
+android/app/release

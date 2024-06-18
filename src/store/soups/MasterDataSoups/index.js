@@ -1,6 +1,6 @@
-import { mobilesync } from 'react-native-force';
-import { EventEmitter } from '../../../utils/event';
-import { promises } from '../../../utils/smartStorePromiser';
+import { mobilesync } from "react-native-force";
+import { EventEmitter } from "../../../utils/event";
+import { promises } from "../../../utils/smartStorePromiser";
 
 const eventEmitter = new EventEmitter();
 
@@ -11,8 +11,8 @@ function emitSmartStoreChanged(SMARTSTORE_CHANGED) {
 export const firstTimeSyncData = async (soupName, objectName, index = []) => {
   try {
     const indexSpecs = [
-      { path: '__local__', type: 'string' },
-      { path: 'Id', type: 'string' },
+      { path: "__local__", type: "string" },
+      { path: "Id", type: "string" },
       ...index,
     ];
     await promises.registerSoup(false, soupName, indexSpecs);
@@ -40,7 +40,7 @@ export const syncDownData = async (
   syncInFlight = true;
 
   const target = {
-    type: 'soql',
+    type: "soql",
     query: query,
   };
 
@@ -49,8 +49,8 @@ export const syncDownData = async (
       false,
       target,
       soupName,
-      { mergeMode: mobilesync.MERGE_MODE.OVERWRITE },
-      syncDownName
+      { mergeMode: mobilesync.MERGE_MODE.OVERWRITE }
+      // syncDownName
     );
 
     console.log(`${objectName} syncDown completed`);
@@ -85,10 +85,18 @@ export const syncData = async (
         objectName
       );
     } else {
-      return reSyncData(
-        sync?._soupEntryId,
+      // return reSyncData(
+      //   sync?._soupEntryId,
+      //   syncDownName,
+      //   syncInFlight,
+      //   SMARTSTORE_CHANGED,
+      //   objectName
+      // );
+      return await syncDownData(
+        query,
         syncDownName,
         syncInFlight,
+        soupName,
         SMARTSTORE_CHANGED,
         objectName
       );

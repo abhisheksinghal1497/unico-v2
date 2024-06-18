@@ -1,16 +1,16 @@
-import React from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { Text, View } from 'react-native';
-import { LeadListStyles } from '../styles/LeadListStyles';
-import StatusCard from './statusCard';
-import { colors } from '../../../common/colors';
-import Touchable from '../../../common/components/TouchableComponent/Touchable';
-import { formatDateToDDMMYYYY } from '../../../common/functions/FormatDate';
-import { StyleSheet } from 'react-native';
+import React from "react";
+import Icon from "react-native-vector-icons/AntDesign";
+import { Text, View } from "react-native";
+import { LeadListStyles } from "../styles/LeadListStyles";
+import StatusCard from "./statusCard";
+import { colors } from "../../../common/colors";
+import Touchable from "../../../common/components/TouchableComponent/Touchable";
+import { formatDateToDDMMYYYY } from "../../../common/functions/FormatDate";
+import { StyleSheet } from "react-native";
 
 const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
   const current_date = formatDateToDDMMYYYY(leadData.CreatedDate);
-  const htmlString = leadData ? leadData?.Status_Code__c : '';
+  const htmlString = leadData ? leadData?.Status_Code__c : "";
 
   function extractStatusName(htmlString) {
     // Regular expression to match the status name in the src attribute
@@ -24,12 +24,12 @@ const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
       // Extracted status name
       let sName = match[1];
       // Add spacing after every capital letter
-      const formattedStatusName = sName?.replace(/([A-Z])/g, ' $1').trim();
+      const formattedStatusName = sName?.replace(/([A-Z])/g, " $1").trim();
 
       return formattedStatusName;
     } else {
       // Return null if no match is found
-      return '';
+      return "";
     }
   }
   const statusName = extractStatusName(htmlString);
@@ -37,12 +37,12 @@ const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
   // const regex = /<a [^>]*>(.*?)<\/a>/;
   // Use the regular expression to extract the value
   // const match = htmlString ? htmlString.match(regex) : '';
-  let loanApplicationNum = leadData?.hasOwnProperty('LoanApplication__c')
-    ? leadData?.LoanApplication__c
-    : null;
+  // let loanApplicationNum = leadData?.hasOwnProperty('LoanApplication__c')
+  //   ? leadData?.LoanApplication__c
+  //   : null;
   // Extracted value will be in match[1]
   // console.log('-loanApplicationNum------------>', loanApplicationNum);
-  // console.log('Lead Data', leadData);
+  // console.log("Lead Data", leadData);
   // const leadId = match ? match[1] : null;
   return (
     <Touchable
@@ -51,7 +51,9 @@ const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
     >
       <View style={styles.headWrapper}>
         <View style={styles.idWrapper}>
-          <Text style={styles.id}>{leadData?.Lead_Id__c}</Text>
+          <Text style={styles.id}>
+            {leadData?.LeadIdFormula__c ? leadData?.LeadIdFormula__c : ""}
+          </Text>
         </View>
 
         <View>
@@ -62,19 +64,19 @@ const LeadItem = ({ leadData, handleRenderItem, isOnline }) => {
       <View style={styles.nameDateWrapper}>
         <View>
           <Text style={styles.fullName}>{`${
-            leadData?.FirstName ? leadData.FirstName : ''
-          } ${leadData?.LastName ? leadData.LastName : ''}`}</Text>
+            leadData?.FirstName ? leadData.FirstName : ""
+          } ${leadData?.LastName ? leadData.LastName : ""}`}</Text>
 
           <Text style={styles.date}>{current_date}</Text>
         </View>
 
         <View>
           <Text style={styles.branchChannelName}>
-            {leadData?.Bank_Branch__r ? leadData?.Bank_Branch__r?.Name : ''}
+            {leadData?.Bank_Branch__r ? leadData?.Bank_Branch__r?.Name : ""}
           </Text>
 
           <Text style={styles.branchChannelName}>
-            {leadData?.Channel_Name__r ? leadData?.Channel_Name__r?.Name : ''}
+            {leadData?.LeadSource ? leadData?.LeadSource : ""}
           </Text>
         </View>
       </View>
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
 
     // paddingHorizontal: 16,
 
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
 
     borderRadius: 10,
 
-    shadowColor: '#000',
+    shadowColor: "#000",
 
     shadowOffset: {
       width: 20,
@@ -158,15 +160,15 @@ const styles = StyleSheet.create({
   },
 
   headWrapper: {
-    flexDirection: 'row',
+    flexDirection: "row",
 
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
 
-    alignItems: 'center',
+    alignItems: "center",
 
     borderBottomWidth: 0.5,
 
-    borderBottomColor: '#c0c0c0',
+    borderBottomColor: "#c0c0c0",
 
     paddingBottom: 5,
   },
@@ -174,22 +176,22 @@ const styles = StyleSheet.create({
   nameDateWrapper: {
     marginTop: 5,
 
-    flexDirection: 'row',
+    flexDirection: "row",
 
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
 
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   branchChannelName: {
     fontSize: 14,
 
-    color: 'black',
-    textAlign: 'right',
+    color: "black",
+    textAlign: "right",
   },
 
   status: {
-    color: 'black',
+    color: "black",
 
     fontSize: 12,
 
@@ -199,15 +201,15 @@ const styles = StyleSheet.create({
   },
 
   id: {
-    color: 'black',
+    color: "black",
 
     fontSize: 18,
 
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   date: {
-    color: 'gray',
+    color: "gray",
 
     fontSize: 14,
   },
@@ -215,8 +217,8 @@ const styles = StyleSheet.create({
   fullName: {
     fontSize: 14,
 
-    fontWeight: 'bold',
+    fontWeight: "bold",
 
-    color: 'black',
+    color: "black",
   },
 });

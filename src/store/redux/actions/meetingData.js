@@ -1,8 +1,8 @@
-import { meetingdataActions } from '../slices/MeetingDataSlice';
-import { startOfWeek, endOfWeek } from 'date-fns';
-import { convertToDateString } from '../../../common/functions/ConvertToDateString';
-import { QueryObject } from '../../../services/QueryObject';
-import { query } from '../../../common/constants/Queries';
+import { meetingdataActions } from "../slices/MeetingDataSlice";
+import { startOfWeek, endOfWeek } from "date-fns";
+import { convertToDateString } from "../../../common/functions/ConvertToDateString";
+import { QueryObject } from "../../../services/QueryObject";
+import { query } from "../../../common/constants/Queries";
 
 export const getMeetingData = () => {
   const date = new Date();
@@ -11,7 +11,7 @@ export const getMeetingData = () => {
 
   const startDate = convertToDateString(startWeekDate);
   const endDate = convertToDateString(endWeekDate);
-  console.log('Meeting Data called in action');
+  console.log("Meeting Data called in action");
   console.log(startDate, endDate);
 
   return async (dispatch) => {
@@ -27,12 +27,12 @@ export const getMeetingData = () => {
       const meetingListdata = await QueryObject(
         query.getMeetingData(startDate, endDate)
       );
-      console.log(
-        'Meeting Data called in action Try',
-        meetingListdata.records,
-        query.getMeetingData(startDate, endDate)
-      );
-      console.log('meeting list records', meetingListdata);
+      // console.log(
+      //   "Meeting Data called in action Try",
+      //   meetingListdata.records,
+      //   query.getMeetingData(startDate, endDate)
+      // );
+      // console.log('meeting list records', meetingListdata);
       dispatch(
         meetingdataActions.getMeetingData({
           meetingdata: meetingListdata.records,
@@ -41,7 +41,7 @@ export const getMeetingData = () => {
         })
       );
     } catch (error) {
-      console.log('Meeting Data called in action Catch', error);
+      console.log("Meeting Data called in action Catch", error);
 
       dispatch(
         meetingdataActions.getMeetingData({

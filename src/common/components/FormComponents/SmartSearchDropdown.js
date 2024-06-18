@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet } from "react-native";
 
 import {
   Button,
@@ -9,14 +9,14 @@ import {
   Dialog,
   Searchbar,
   Portal,
-} from 'react-native-paper';
+} from "react-native-paper";
 
-import { Controller } from 'react-hook-form';
-import { colors } from '../../colors';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import customTheme from '../../colors/theme';
-import { horizontalScale, verticalScale } from '../../../utils/matrcis';
-import Touchable from '../TouchableComponent/Touchable';
+import { Controller } from "react-hook-form";
+import { colors } from "../../colors";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
+import customTheme from "../../colors/theme";
+import { horizontalScale, verticalScale } from "../../../utils/matrcis";
+import Touchable from "../TouchableComponent/Touchable";
 
 const SmartSearchDropdown = ({
   control,
@@ -42,7 +42,7 @@ const SmartSearchDropdown = ({
   const [visible, setVisible] = useState(false);
 
   const [optionData, setOptionData] = useState(options);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [optionsVisible, setOptionsVisible] = useState(false);
 
   const showDialog = () => {
@@ -55,7 +55,7 @@ const SmartSearchDropdown = ({
   const hideDialog = () => {
     setVisible(false);
 
-    setSearchQuery('');
+    setSearchQuery("");
 
     setOptionsVisible(false);
 
@@ -70,11 +70,11 @@ const SmartSearchDropdown = ({
 
   const handleSearch = (query) => {
     const formattedQuery = query.toLowerCase().trim();
-    console.log('formattedQuery', formattedQuery);
+    // console.log('formattedQuery', formattedQuery);
     if (formattedQuery) {
       // Filter the data based on the search query
 
-      if (formattedQuery === '%') {
+      if (formattedQuery === "%") {
         // Show all options when '%' Sign is there
         setOptionsVisible(true);
         setOptionData(options);
@@ -87,11 +87,11 @@ const SmartSearchDropdown = ({
 
         //   return itemText.includes(formattedQuery);
         // });,console.log()
-        console.log('options Data', options);
+        // console.log("options Data", options);
         const filteredList = options.filter((item) => {
           const itemText = item?.label?.toLowerCase();
           if (formattedQuery.length === 1) {
-            const itemWords = itemText?.split(' ');
+            const itemWords = itemText?.split(" ");
             const match = itemWords?.some((word) => {
               return word.charAt(0) === formattedQuery;
             });
@@ -117,8 +117,8 @@ const SmartSearchDropdown = ({
 
   const handleSelect = (item) => {
     setValue(name, item.value);
-    if (name === 'Pincode__c' && watch().LeadSource !== 'Direct-RM') {
-      setValue('Br_Manager_Br_Name', '');
+    if (name === "Pincode__c" && watch().LeadSource !== "Direct-RM") {
+      setValue("Br_Manager_Br_Name", "");
     }
 
     hideDialog();
@@ -148,7 +148,7 @@ const SmartSearchDropdown = ({
               </View>
               <Touchable disabled={isDisabled} onPress={showDialog}>
                 <TextInput
-                  value={value ? value : 'Select'}
+                  value={value ? value : "Select"}
                   onChangeText={(value) => onChange(value)}
                   onPress={showDialog}
                   editable={false}
@@ -158,7 +158,7 @@ const SmartSearchDropdown = ({
                   returnKeyType="done"
                   right={
                     <TextInput.Icon
-                      icon={visible ? 'chevron-up' : 'chevron-down'}
+                      icon={visible ? "chevron-up" : "chevron-down"}
                       onPress={showDialog}
                     />
                   }
@@ -183,7 +183,7 @@ const SmartSearchDropdown = ({
                       onChangeText={handleSearch}
                       value={searchQuery}
                       onClearIconPress={() => {
-                        setSearchQuery('');
+                        setSearchQuery("");
                         setOptionsVisible(false);
                         setOptionData(options);
                       }}
@@ -247,8 +247,8 @@ const styles = StyleSheet.create({
     maxHeight: verticalScale(280), // Set the maximum height for the scrollable list
   },
   labelContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    alignItems: "flex-end",
     marginBottom: 2,
   },
 

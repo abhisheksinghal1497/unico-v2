@@ -26,9 +26,9 @@ export const FormatFormJson = (json) => {
         question?.respType === globalConstants.dynamicFormDataTypes.video
       ) {
         if (question.quesResp) {
-          console.log(' question.quesResp');
+          // console.log(' question.quesResp');
           question.quesResp = JSON.parse(question.quesResp);
-          console.log(' question.quesResp', question.quesResp);
+          // console.log(' question.quesResp', question.quesResp);
         } else {
           question.quesResp = [];
         }

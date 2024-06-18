@@ -54,12 +54,14 @@ public class MainApplication extends Application implements ReactApplication {
 		protected List<ReactPackage> getPackages() {
 			@SuppressWarnings("UnnecessaryLocalVariable")
 			List<ReactPackage> packages = new PackageList(this).getPackages();
-			// Packages that cannot be autolinked yet can be added manually here, for example:
+			// Packages that cannot be autolinked yet can be added manually here, for
+			// example:
 			// packages.add(new MyReactNativePackage());
+			new NotificationModulePackage();
+
 			packages.add(SalesforceReactSDKManager.getInstance().getReactPackage());
 			return packages;
 		}
-
 
 		@Override
 		protected String getJSMainModuleName() {
@@ -79,19 +81,23 @@ public class MainApplication extends Application implements ReactApplication {
 		SalesforceReactSDKManager.initReactNative(getApplicationContext(), MainActivity.class);
 
 		/*
-         * Uncomment the following line to enable IDP login flow. This will allow the user to
-         * either authenticate using the current app or use a designated IDP app for login.
-         * Replace 'idpAppURIScheme' with the URI scheme of the IDP app meant to be used.
-         */
+		 * Uncomment the following line to enable IDP login flow. This will allow the
+		 * user to
+		 * either authenticate using the current app or use a designated IDP app for
+		 * login.
+		 * Replace 'idpAppURIScheme' with the URI scheme of the IDP app meant to be
+		 * used.
+		 */
 		// SalesforceReactSDKManager.getInstance().setIDPAppURIScheme(idpAppURIScheme);
 
-        /*
+		/*
 		 * Un-comment the line below to enable push notifications in this app.
-		 * Replace 'pnInterface' with your implementation of 'PushNotificationInterface'.
+		 * Replace 'pnInterface' with your implementation of
+		 * 'PushNotificationInterface'.
 		 * Add your Google package ID in 'bootconfig.xml', as the value
 		 * for the key 'androidPushNotificationClientId'.
 		 */
-        // SalesforceReactSDKManager.getInstance().setPushNotificationReceiver(pnInterface);
+		// SalesforceReactSDKManager.getInstance().setPushNotificationReceiver(pnInterface);
 
 		// try{
     

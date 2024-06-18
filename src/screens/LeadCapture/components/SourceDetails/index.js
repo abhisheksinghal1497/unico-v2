@@ -23,6 +23,7 @@ const LeadSourceDetails = ({
 }) => {
   const [leadSourcePicklist, setLeadSourcePicklist] = useState([]);
   const [channelNamePicklist, setChannelNamePicklist] = useState([]);
+  const [customerNamePicklist, setCustomerNamePicklist] = useState([]);
   const [branchNamePicklist, setBranchNamePicklist] = useState([]);
   const [empCodePicklist, setEmpCodePicklist] = useState([]);
 
@@ -34,17 +35,8 @@ const LeadSourceDetails = ({
     setLeadSourcePicklist(picklist);
   }, [leadMetadata]);
   // console.log('Dsa Br Jn Data', dsaBrJn, teamHeirarchyByUserId);
-  const GetChannelName = (dsaBrJn, leadSource, customerMasterData) => {
+  const GetChannelName = (dsaBrJn, leadSource) => {
     let channelNames = [];
-    if (leadSource === `Customer Referral`) {
-      customerMasterData?.map((value) => {
-        channelNames.push({
-          label: value?.Name,
-          value: value?.Name,
-        });
-      });
-      return channelNames;
-    }
     if (leadSource === 'DSA') {
       dsaBrJnMasterData.map((value) => {
         if (
@@ -72,6 +64,20 @@ const LeadSourceDetails = ({
 
     return channelNames;
   };
+
+  const GetCustomerIdPicklist =(customerMasterData,leadSource)=>{
+    let customerNames = [];
+    if (leadSource === `Customer Referral`) {
+      customerMasterData?.map((value) => {
+        customerNames.push({
+          label: value?.Name,
+          value: value?.Name,
+        });
+      });
+      return customerNames;
+    }
+    return customerNames
+  }
 
   const GetBranchPicklist = (pincodeMasterData) => {
     const branchSet = new Set();
@@ -135,23 +141,24 @@ const LeadSourceDetails = ({
   useEffect(() => {
     let channelPicklist = GetChannelName(
       dsaBrJn,
-      watch()?.LeadSource,
-      customerMasterData
+      watch()?.LeadSource
     );
     // console.log('Channel Picklist', channelPicklist.length);
     setChannelNamePicklist(channelPicklist);
-  }, [dsaBrJn, watch()?.LeadSource, customerMasterData]);
+  }, [dsaBrJn, watch()?.LeadSource]);
 
   useEffect(() => {
     if (watch().LeadSource === 'Customer Referral') {
       let customerName = customerMasterData?.find(
-        (value) => value.Name === watch().Channel_Name
+        (value) => value.Name === watch().Cust_ID
       );
+      let cusNamePicklist = GetCustomerIdPicklist(customerMasterData,watch().LeadSource)
+      setCustomerNamePicklist(cusNamePicklist)
       if (customerName) {
         setValue('Customer_Name__c', customerName?.Customer_Name__c);
       }
     }
-  }, [watch().leadSource, customerMasterData, watch().Channel_Name]);
+  }, [watch().LeadSource, customerMasterData, watch().Cust_ID]);
 
   useEffect(() => {
     if (watch().LeadSource === 'DSA' || watch().LeadSource === 'UGA') {
@@ -162,7 +169,7 @@ const LeadSourceDetails = ({
         setValue('DSA_Code__c', dsaUgaCode?.DSA_UGA_Code__c);
       }
     }
-  }, [watch().leadSource, dsaBrJn, watch().Channel_Name]);
+  }, [watch().LeadSource, dsaBrJn, watch().Channel_Name]);
 
   return (
     <Accordion
@@ -184,11 +191,7 @@ const LeadSourceDetails = ({
 
       <FormControl
         compType={component.searchDropdown}
-        label={
-          watch().LeadSource === 'Customer Referral'
-            ? 'Customer ID'
-            : 'Channel Name'
-        }
+        label={'Channel Name'}
         name="Channel_Name"
         control={control}
         setValue={setValue}
@@ -196,7 +199,21 @@ const LeadSourceDetails = ({
         options={channelNamePicklist}
         isVisible={
           watch().LeadSource === 'DSA' ||
-          watch().LeadSource === 'UGA' ||
+          watch().LeadSource === 'UGA' 
+            ? true
+            : false
+        }
+        isDisabled={!isFormEditable}
+      />
+       <FormControl
+        compType={component.searchDropdown}
+        label={'Customer ID' }
+        name="Cust_ID"
+        control={control}
+        setValue={setValue}
+        required={true}
+        options={customerNamePicklist}
+        isVisible={
           watch().LeadSource === 'Customer Referral'
             ? true
             : false
@@ -237,7 +254,7 @@ const LeadSourceDetails = ({
       />
       <FormControl
         compType={component.readOnly}
-        label="RM/SM Name"
+        label="RM Name"
         name="RM_SM_Name"
         control={control}
         setValue={setValue}

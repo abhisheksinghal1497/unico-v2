@@ -51,6 +51,7 @@ export default function OtpInput({
             // onBlur={onBlur}
             keyboardType="numeric"
             cursorColor={colors.tertiary}
+            returnKeyType="done"
             // error={error?.message}
             disabled={isDisabled}
             onChangeText={(text) => handleTextChange(text, index)}

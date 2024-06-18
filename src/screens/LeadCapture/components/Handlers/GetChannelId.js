@@ -74,3 +74,19 @@ export const GetBrNameByBrId = (pincodeMasterData, brId) => {
     return '';
   }
 };
+
+
+export const GetCustomerId = (customerMasterData , custId)=>{
+  try {
+    let cId = customerMasterData?.find((value)=>value?.Name === custId)
+
+    if(cId){
+      return cId?.Id
+    }else{
+      return ''
+    }
+  } catch (error) {
+    console.log('GetCustomerId',error);
+    return ''
+  }
+}

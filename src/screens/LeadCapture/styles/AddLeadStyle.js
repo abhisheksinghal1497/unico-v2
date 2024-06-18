@@ -47,13 +47,14 @@ export const addLeadStyle = StyleSheet.create({
     //paddingRight: horizontalScale(90),
   },
   cancelButton: {
-    marginHorizontal: horizontalScale(4),
+    marginHorizontal: horizontalScale(8),
     fontSize: customTheme.fonts.labelLarge.fontSize,
     color: colors.black,
     fontFamily: customTheme.fonts.labelLarge.fontFamily,
     fontWeight: customTheme.fonts.labelLarge.fontWeight,
     borderRadius: 8,
     borderColor: colors.bgDark,
+    marginBottom:verticalScale(6)
   },
   saveAsDraftBtnStyle: {
     marginTop: verticalScale(10),

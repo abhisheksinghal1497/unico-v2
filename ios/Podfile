@@ -49,7 +49,7 @@ post_install do |installer|
   # Needed with Xcode 14.3
   installer.pods_project.targets.each do |target|
     if target.name == "React-Codegen" 
-      change_deployment_target(target, '17.0')
+      change_deployment_target(target, '12.0')
     end
   end
     

@@ -1,8 +1,8 @@
-import { leadActions } from '../slices/LeadSlice';
-import { QueryObject } from '../../../services/QueryObject';
-import { GetListViews } from '../../../services/GetRequestService/GetListViews';
-import { GetListViewMetadata } from '../../../services/GetRequestService/GetListViewMetadata';
-import { ModifySqlOrderClause } from '../../../utils/modifySqlOrderClause';
+import { leadActions } from "../slices/LeadSlice";
+import { QueryObject } from "../../../services/QueryObject";
+import { GetListViews } from "../../../services/GetRequestService/GetListViews";
+import { GetListViewMetadata } from "../../../services/GetRequestService/GetListViewMetadata";
+import { ModifySqlOrderClause } from "../../../utils/modifySqlOrderClause";
 
 export const getLeadsByQuery = (query) => {
   return async (dispatch) => {
@@ -26,7 +26,7 @@ export const getLeadsByQuery = (query) => {
           lead: { hasError: true, leads: [], loading: false },
         })
       );
-      console.log('Get Leads Error', error);
+      console.log("Get Leads Error", error);
     }
   };
 };
@@ -44,7 +44,7 @@ export const getLeadById = (query) => {
       dispatch(
         leadActions.getLeadById({ singleLead: { hasError: true, lead: [] } })
       );
-      console.log('Get Leads Error', error);
+      console.log("Get Leads Error", error);
     }
   };
 };
@@ -60,16 +60,16 @@ export const getLeadListViews = () => {
           },
         })
       );
-      let leadListViews = await GetListViews('Lead');
+      let leadListViews = await GetListViews("Lead");
       // console.log('leadListViews--------->', leadListViews);
       //   let defaultListView = await GetDefaultListView();
       let filteredList = leadListViews?.filter((list) => {
-        if (list.developerName === 'AllOpenLeads') {
+        if (list.developerName === "AllOpenLeads") {
           list.default = true;
         } else {
           list.default = false;
         }
-        return list.developerName != 'RecentlyViewedLeads';
+        return list.developerName != "RecentlyViewedLeads";
       });
       // console.log('filteredList--------->', filteredList);
 
@@ -80,8 +80,8 @@ export const getLeadListViews = () => {
       let mappedListView = await Promise.all(
         filteredList.map(async (value) => {
           let formattedUrl = value?.describeUrl
-            ? value.describeUrl.split('/').splice(3).join('/')
-            : '';
+            ? value.describeUrl.split("/").splice(3).join("/")
+            : "";
           let listViewMetadata = await GetListViewMetadata(formattedUrl);
           value.query = ModifySqlOrderClause(listViewMetadata?.query);
           return value;
@@ -111,7 +111,7 @@ export const getLeadListViews = () => {
           },
         })
       );
-      console.log('Error LeadListViews', error);
+      console.log("Error LeadListViews", error);
     }
   };
 };

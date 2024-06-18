@@ -1,22 +1,23 @@
-import * as React from 'react';
-import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
-import { screens } from '../common/constants/screen';
-import { colors } from '../common/colors';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import SharedStackNavigator from './sharedStackNavigation';
-import customTheme from '../common/colors/theme';
-import SfWebView from '../screens/WebView';
-import { useDispatch } from 'react-redux';
-import { useInternet } from '../store/context/Internet';
-import { getLeadMetadata } from '../store/redux/actions/leadMetadata';
-import { SyncHandler } from '../utils/syncHandler';
-import { oauth } from 'react-native-force';
-import { useEffect } from 'react';
-import { getTeamHeirarchyByUserId } from '../store/redux/actions/teamHeirarchy';
-import { ROLES } from '../common/constants/globalConstants';
-import UnauthorizedScreen from '../common/constants/unAuthScreen';
-import { useRole } from '../store/context/RoleProvider';
-import { getCredentials } from '../store/redux/actions/credentials';
+import * as React from "react";
+import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
+import { screens } from "../common/constants/screen";
+import { colors } from "../common/colors";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import SharedStackNavigator from "./sharedStackNavigation";
+import customTheme from "../common/colors/theme";
+import SfWebView from "../screens/WebView";
+import { useDispatch } from "react-redux";
+import { useInternet } from "../store/context/Internet";
+import { getLeadMetadata } from "../store/redux/actions/leadMetadata";
+import { SyncHandler } from "../utils/syncHandler";
+import { oauth } from "react-native-force";
+import { getTeamHeirarchyByUserId } from "../store/redux/actions/teamHeirarchy";
+import { ROLES } from "../common/constants/globalConstants";
+import { useEffect } from "react";
+import UnauthorizedScreen from "../common/constants/unAuthScreen";
+import { useRole } from "../store/context/RoleProvider";
+import { CameraPermission } from "../store/context/AndroidPermissions";
+import { Platform } from "react-native";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -30,24 +31,44 @@ export const BottomTabContext = React.createContext({
 // ----------------------Main Tab Navigator---------------------------------
 const MainNavigator = () => {
   const [hideBottomTab, setHideBottomTab] = React.useState(false);
+  const [isAuthorized, setIsAuthorized] = React.useState(false);
   // const { teamHeirarchyByUserId } = useSelector((state) => state.teamHeirarchyByUserId);
 
   // const empRole = GetEmployeeRole(teamHeirarchyByUserId);
   const empRole = useRole();
+
+  console.log("Includes Role", ROLES.WEBVIEW.includes(empRole));
+
+  useEffect(() => {
+    if (
+      ROLES.LEAD_CAPTURE.includes(empRole) ||
+      ROLES.WEBVIEW.includes(empRole) ||
+      ROLES.SCHEDULE_Meeting.includes(empRole)
+    ) {
+      setIsAuthorized(true);
+    } else {
+      setIsAuthorized(false);
+    }
+  }, [empRole]);
+
   // console.log('empRole', empRole);
   const dispatch = useDispatch();
   const isOnline = useInternet();
   useEffect(() => {
-    dispatch(getCredentials());
+    // dispatch(getCredentials());
     dispatch(getTeamHeirarchyByUserId());
     // dispatch(getLeadMetadata());
     if (isOnline) {
       oauth.getAuthCredentials(
         async (res) => {
           await SyncHandler();
+          // console.log("Camera Permission Platform", Platform);
+          if (Platform.OS === "android") {
+            await CameraPermission();
+          }
         },
         (err) => {
-          console.log('Error getting Auth Credentials', err);
+          console.log("Error getting Auth Credentials", err);
         }
       );
     }
@@ -61,18 +82,20 @@ const MainNavigator = () => {
 
   const tabsForLead = (
     <>
-      <Tab.Screen
-        name={screens.leadListStack}
-        component={
-          ROLES.LEAD_CAPTURE.includes(empRole)
-            ? SharedStackNavigator
-            : UnauthorizedScreen
-        }
-        options={navOptionHandler}
-        initialParams={{
-          defaultScreen: screens.leadList,
-        }}
-      />
+      {ROLES.LEAD_CAPTURE.includes(empRole) && (
+        <Tab.Screen
+          name={screens.leadListStack}
+          component={
+            ROLES.LEAD_CAPTURE.includes(empRole)
+              ? SharedStackNavigator
+              : UnauthorizedScreen
+          }
+          options={navOptionHandler}
+          initialParams={{
+            defaultScreen: screens.leadList,
+          }}
+        />
+      )}
       {ROLES.SCHEDULE_Meeting.includes(empRole) && (
         <Tab.Screen
           name="Meeting List"
@@ -88,56 +111,68 @@ const MainNavigator = () => {
           component={SfWebView}
           options={() => {
             return {
-              tabBarStyle: { display: 'none' },
+              tabBarStyle: { display: "none" },
               tabBarVisible: false,
               headerShown: true,
             };
           }}
-          // initialParams={{ employeeRole: empRole }}
         />
       )}
     </>
   );
-
+  // console.log("emp Role", empRole);
   return (
-    <BottomTabContext.Provider value={{ hideBottomTab, setHideBottomTab }}>
-      <Tab.Navigator
-        initialRouteName={screens.leadList}
-        activeColor={colors.tertiary}
-        inactiveColor={colors.gray250}
-        barStyle={{
-          ...customTheme.tab.barStyle,
-          display: hideBottomTab ? 'none' : 'flex',
-        }}
-        compact={true}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            let rn = route.name;
+    <>
+      {empRole && (
+        <>
+          {isAuthorized ? (
+            <BottomTabContext.Provider
+              value={{ hideBottomTab, setHideBottomTab }}
+            >
+              <Tab.Navigator
+                initialRouteName={screens.leadList}
+                activeColor={colors.tertiary}
+                inactiveColor={colors.gray250}
+                barStyle={{
+                  ...customTheme.tab.barStyle,
+                  display: hideBottomTab ? "none" : "flex",
+                }}
+                compact={true}
+                screenOptions={({ route }) => ({
+                  tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+                    let rn = route.name;
 
-            if (rn === screens.AddLeadStack) {
-              iconName = focused ? 'person-add' : 'person-add-outline';
-            } else if (rn === screens.leadListStack) {
-              iconName = focused ? 'list' : 'list-outline';
-            } else if (rn === screens.WebViewStack) {
-              iconName = focused ? 'globe' : 'globe-outline';
-            } else if (rn === 'Meeting List') {
-              iconName = focused ? 'calendar' : 'calendar-outline';
-            }
-            // else if (rn === screens.pdList) {
-            //   iconName = focused ? "chatbubbles" : "chatbubbles-outline";
-            // }
+                    if (rn === screens.AddLeadStack) {
+                      iconName = focused ? "person-add" : "person-add-outline";
+                    } else if (rn === screens.leadListStack) {
+                      iconName = focused ? "list" : "list-outline";
+                    } else if (rn === screens.WebViewStack) {
+                      iconName = focused ? "globe" : "globe-outline";
+                    } else if (rn === "Meeting List") {
+                      iconName = focused ? "calendar" : "calendar-outline";
+                    } else if (rn === screens.pdList) {
+                      iconName = focused
+                        ? "chatbubbles"
+                        : "chatbubbles-outline";
+                    }
 
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={20} color={color} />;
-          },
-          tabBarHideOnKeyboard: true,
-        })}
-      >
-        {/* ----------------Tab1---------------------- */}
-        {tabsForLead}
-      </Tab.Navigator>
-    </BottomTabContext.Provider>
+                    // You can return any component that you like here!
+                    return <Ionicons name={iconName} size={20} color={color} />;
+                  },
+                  tabBarHideOnKeyboard: true,
+                })}
+              >
+                {/* ----------------Tab1---------------------- */}
+                {tabsForLead}
+              </Tab.Navigator>
+            </BottomTabContext.Provider>
+          ) : (
+            <UnauthorizedScreen />
+          )}
+        </>
+      )}
+    </>
   );
 };
 export default MainNavigator;

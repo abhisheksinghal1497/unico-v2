@@ -1,8 +1,8 @@
-import { oauth } from 'react-native-force';
-import { soupConfig } from '../../../common/constants/soupConstants';
-import { QuerySoup } from '../../../services/QuerySoup';
-import { masterDataAction } from '../slices/MasterData';
-import { getAuthCredentials } from '../../../services/GetRequestService/GetAuthCredentials';
+import { oauth } from "react-native-force";
+import { soupConfig } from "../../../common/constants/soupConstants";
+import { QuerySoup } from "../../../services/QuerySoup";
+import { masterDataAction } from "../slices/MasterData";
+import { getAuthCredentials } from "../../../services/GetRequestService/GetAuthCredentials";
 
 export const getDsaBrJn = () => {
   return async (dispatch) => {
@@ -20,7 +20,7 @@ export const getDsaBrJn = () => {
       );
 
       // console.log(
-      //   'Dsa Branch Junction',
+      //   "Dsa Branch Junction",
       //   dsaBrJn,
       //   userDetails,
       //   dsaBrJnDataByUserId
@@ -42,7 +42,7 @@ export const getDsaBrJn = () => {
           },
         })
       );
-      console.log('getDsaBrJn Error', error);
+      console.log("getDsaBrJn Error", error);
     }
   };
 };
@@ -72,7 +72,7 @@ export const getDsaBrJnMaster = () => {
           },
         })
       );
-      console.log('getDsaBrJn Error', error);
+      console.log("getDsaBrJn Error", error);
     }
   };
 };
@@ -105,7 +105,7 @@ export const getLocationMaster = () => {
           },
         })
       );
-      console.log('getLocationMaster Error', error);
+      console.log("getLocationMaster Error", error);
     }
   };
 };
@@ -137,7 +137,7 @@ export const getProductMapping = () => {
           },
         })
       );
-      console.log('getProductMapping Error', error);
+      console.log("getProductMapping Error", error);
     }
   };
 };
@@ -168,7 +168,7 @@ export const getCustomerMaster = () => {
           },
         })
       );
-      console.log('getProductMapping Error', error);
+      console.log("getProductMapping Error", error);
     }
   };
 };
@@ -199,7 +199,7 @@ export const getBankBranchMaster = () => {
           },
         })
       );
-      console.log('getProductMapping Error', error);
+      console.log("getProductMapping Error", error);
     }
   };
 };
@@ -230,7 +230,7 @@ export const getLocationBrJnMaster = () => {
           },
         })
       );
-      console.log('getProductMapping Error', error);
+      console.log("getProductMapping Error", error);
     }
   };
 };
@@ -263,7 +263,7 @@ export const getPincodeMaster = () => {
           },
         })
       );
-      console.log('getProductMapping Error', error);
+      console.log("getProductMapping Error", error);
     }
   };
 };
@@ -296,7 +296,7 @@ export const getUserInfoMaster = () => {
           },
         })
       );
-      console.log('getProductMapping Error', error);
+      console.log("getProductMapping Error", error);
     }
   };
 };

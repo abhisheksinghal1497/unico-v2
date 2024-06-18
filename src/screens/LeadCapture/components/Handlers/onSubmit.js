@@ -11,6 +11,7 @@ import { GetBrManagerId } from './GetBranchManagerId';
 import {
   GetBrIdByBrName,
   GetChannelId,
+  GetCustomerId,
   GetRmBranchName,
   GetRmIdByRmName,
 } from './GetChannelId';
@@ -33,7 +34,7 @@ export const OnSubmitLead = async (
   productMappingData,
   pincodeMasterData,
   setIsMobileNumberChanged,
-  dsaBrJnMasterData
+  dsaBrJnMasterData,customerMasterData
 ) => {
   try {
     // RM Data Mapping And Lead assignment
@@ -51,6 +52,7 @@ export const OnSubmitLead = async (
         data?.Requested_tenure_in_Months__c != 0
           ? data?.Requested_tenure_in_Months__c
           : null;
+      data.Cust_ID__c = await GetCustomerId(customerMasterData,data?.Cust_ID)
       data.Channel_Name__c = await GetChannelId(
         dsaBrJnMasterData,
         data.Channel_Name
@@ -132,7 +134,7 @@ export const OnSubmitLead = async (
       // assigning lead to branch manager
       data.OwnerId = data.Branch_Manager__c;
     }
-
+data.Company =  data.LastName
     // console.log('On submit Data', data);
 
     // Saving the Data locally

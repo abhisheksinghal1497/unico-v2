@@ -1,12 +1,18 @@
-import React from 'react';
-import { Text, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Dialog, List, Portal, Button } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { colors } from '../../../common/colors';
-import { LeadListStyles } from '../styles/LeadListStyles';
-import { screens } from '../../../common/constants/screen';
-import Touchable from '../../../common/components/TouchableComponent/Touchable';
+import React from "react";
+import { Text, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { Dialog, List, Portal, Button } from "react-native-paper";
+import Icon from "react-native-vector-icons/AntDesign";
+import { colors } from "../../../common/colors";
+import { LeadListStyles } from "../styles/LeadListStyles";
+import { screens } from "../../../common/constants/screen";
+import Touchable from "../../../common/components/TouchableComponent/Touchable";
+import {
+  ROLES,
+  USERACCESS,
+  globalConstants,
+} from "../../../common/constants/globalConstants";
+import { useRole } from "../../../store/context/RoleProvider";
 
 const Filter = ({
   pickerData,
@@ -18,6 +24,7 @@ const Filter = ({
   navigation,
   isOnline,
 }) => {
+  const empRole = useRole();
   return (
     <>
       <View style={LeadListStyles.menuViewContainer}>
@@ -75,17 +82,18 @@ const Filter = ({
             </Dialog.Actions>
           </Dialog>
         </Portal>
-
-        <View style={LeadListStyles.newLeadBtn}>
-          <Button
-            style={LeadListStyles.button}
-            icon="account-plus-outline"
-            mode="contained"
-            onPress={() => navigation.navigate(screens.addLead)}
-          >
-            New Lead
-          </Button>
-        </View>
+        {USERACCESS.LEAD_CAPTURE.FullAccess.includes(empRole) && (
+          <View style={LeadListStyles.newLeadBtn}>
+            <Button
+              style={LeadListStyles.button}
+              icon="account-plus-outline"
+              mode="contained"
+              onPress={() => navigation.navigate(screens.addLead)}
+            >
+              New Lead
+            </Button>
+          </View>
+        )}
       </View>
     </>
   );

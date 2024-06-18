@@ -8,7 +8,7 @@ export const SearchLead = (searchString, query) => {
       // `FIND {${searchString}} IN ALL FIELDS RETURNING ${query} `,
       // status !== ''? `FIND {${searchString}} IN ALL FIELDS RETURNING Lead(Id, Name, Status, LeadSource, Lead_Id__c,CreatedDate WHERE Status='${status}' ORDER BY LASTMODIFIEDDATE DESC)`
       //   :
-      `FIND {${searchString}} IN ALL FIELDS RETURNING Lead(Id, Name,FirstName,LastName, Status, LeadSource, Lead_Id__c,Status_Code__c,Bank_Branch__r.Name,Bank_Branch__c,CreatedDate,Branch_Name__c,Channel_Name__r.Name ORDER BY LASTMODIFIEDDATE DESC)`,
+      `FIND {${searchString}} IN ALL FIELDS RETURNING Lead(Id,Name,FirstName,LastName,Status,LeadSource,Lead_Id__c,LeadIdFormula__c,Status_Code__c,Bank_Branch__r.Name,Bank_Branch__c,CreatedDate,Branch_Name__c,Channel_Name__r.Name ORDER BY LASTMODIFIEDDATE DESC)`,
       (res) => {
         resolve(res);
         // console.log('Search response', res);

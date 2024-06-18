@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Modal, View, ScrollView } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Modal, View, ScrollView } from "react-native";
 import {
   Button,
   Text,
@@ -7,19 +7,20 @@ import {
   Dialog,
   IconButton,
   Divider,
-} from 'react-native-paper';
-import { colors } from '../../colors';
+} from "react-native-paper";
+import { colors } from "../../colors";
 // import Ionicons from 'react-native-vector-icons/Ionicons';
-import { moderateScale, verticalScale } from '../../../utils/matrcis';
-import customTheme from '../../colors/theme';
+import { moderateScale, verticalScale } from "../../../utils/matrcis";
+import customTheme from "../../colors/theme";
 // import CustomDatepicker from '../FormComponents/Datepicker';
-import { FormControl, component } from '../FormComponents/FormControl';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { convertToDateString } from '../../functions/ConvertToDateString';
-import { postObjectData } from '../../../services/PostRequestService/PostObjectData';
-import Toast from 'react-native-toast-message';
+import { FormControl, component } from "../FormComponents/FormControl";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { convertToDateString } from "../../functions/ConvertToDateString";
+import { postObjectData } from "../../../services/PostRequestService/PostObjectData";
+import Toast from "react-native-toast-message";
+import { format, parse, parseISO } from "date-fns";
 const ScheduleMeetComponent = ({
   visible,
   title,
@@ -30,24 +31,28 @@ const ScheduleMeetComponent = ({
   leadId,
 }) => {
   const validationSchema = yup.object().shape({
+    Subject: yup
+      .string()
+      .max(50, "Input cannot be more than 50 characters")
+      .required("Subject is required"),
     StartDateTime: yup
       .string()
-      .required('Start Date and Time Is Required')
+      .required("Start Date and Time Is Required")
       .nullable(),
     EndDateTime: yup
       .string()
-      .required('End Date and Time Is Required')
+      .required("End Date and Time Is Required")
       .test({
-        name: 'conditional',
-        message: 'End Date and Time should be greater than Start Date and Time',
+        name: "conditional",
+        message: "End Date and Time should be greater than Start Date and Time",
         test: function (value) {
           let dateComparison = CompareDate(this.parent.StartDateTime, value);
 
           if (!dateComparison) {
-            console.log('False', dateComparison);
+            // console.log('False', dateComparison);
             return false; // Channel Name is required for Connector/DSA Lead Source
           }
-          console.log('True', dateComparison);
+          // console.log('True', dateComparison);
 
           return true; // Validation passes if not a Connector/DSA Lead Source
         },
@@ -55,16 +60,16 @@ const ScheduleMeetComponent = ({
       .nullable(),
     ReminderDateTime: yup
       .string()
-      .required('Reminder Time Is Required')
+      .required("Reminder Time Is Required")
       .nullable(),
   });
 
   const defaultValues = {
-    Subject: 'Meeting',
-    StartDateTime: '',
-    EndDateTime: '',
-    Description: '',
-    ReminderDateTime: '',
+    Subject: "",
+    StartDateTime: "",
+    EndDateTime: "",
+    Description: "",
+    ReminderDateTime: "",
     IsReminderSet: true,
     WhoId: leadId,
   };
@@ -79,7 +84,7 @@ const ScheduleMeetComponent = ({
   } = useForm({
     defaultValues,
     resolver: yupResolver(validationSchema),
-    mode: 'all',
+    mode: "all",
   });
 
   const onSubmit = async (data) => {
@@ -102,32 +107,32 @@ const ScheduleMeetComponent = ({
       data.StartDateTime = convertToDateString(passedStartDate);
       data.EndDateTime = convertToDateString(passedEndDate);
 
-      let res = await postObjectData('Event', data);
+      let res = await postObjectData("Event", data);
       if (res.success) {
         //  console.log('Success');
 
         Toast.show({
-          type: 'success',
-          text1: 'Meeting Scheduled Successfully',
-          position: 'top',
+          type: "success",
+          text1: "Meeting Scheduled Successfully",
+          position: "top",
         });
         setAddLoading(false);
         reset();
       } else {
-        console.log('Error');
+        // console.log('Error');
 
         Toast.show({
-          type: 'error',
-          text1: 'Something Went Wrong',
-          position: 'top',
+          type: "error",
+          text1: "Something Went Wrong",
+          position: "top",
         });
         setAddLoading(false);
       }
-      // console.log(res);
+      console.log(res);
 
       onDismiss();
     } catch (error) {
-      console.log('Error', error);
+      console.log("Error onSubmit schdeule meet component");
       setAddLoading(false);
     }
   };
@@ -137,25 +142,26 @@ const ScheduleMeetComponent = ({
 
     let timeAdded;
     switch (rdate) {
-      case '15 Minutes':
+      case "15 Minutes":
         timeAdded = 15;
         break;
-      case '30 Minutes':
+      case "30 Minutes":
         timeAdded = 30;
         break;
-      case '1 Hour':
+      case "1 Hour":
         timeAdded = 60;
         break;
-      case '2 Hour':
+      case "2 Hour":
         timeAdded = 120;
         break;
       default:
         break;
     }
 
-    d.setHours(d.getHours(), d.getMinutes() + timeAdded, 0, 0);
+    d.setHours(d.getHours(), d.getMinutes() - timeAdded, 0, 0);
 
     let passingDate = d;
+    // console.log("passing Date", passingDate);
     // let passingDate = d
     // let passingDate = passedDate
 
@@ -163,15 +169,15 @@ const ScheduleMeetComponent = ({
   };
 
   const remindDateTimePicklist = [
-    { label: '30 Minutes', value: '30 Minutes' },
-    { label: '15 Minutes', value: '15 Minutes' },
-    { label: '1 Hour', value: '1 Hour' },
-    { label: '2 Hour', value: '2 Hour' },
+    { label: "30 Minutes", value: "30 Minutes" },
+    { label: "15 Minutes", value: "15 Minutes" },
+    { label: "1 Hour", value: "1 Hour" },
+    { label: "2 Hour", value: "2 Hour" },
   ];
 
   const CompareDate = (sDate, eDate) => {
-    console.log('sDate', sDate);
-    console.log('eDate', eDate);
+    // console.log("sDate", sDate);
+    // console.log("eDate", eDate);
     let dateString = convertToDateString(sDate);
     // console.log('Date String', dateString);
     if (!dateString) {
@@ -183,11 +189,11 @@ const ScheduleMeetComponent = ({
 
     // Calculate the time difference in milliseconds
     const timeDifference = endDate - startDate;
-    console.log('timeDifference', timeDifference);
+    // console.log("timeDifference", timeDifference);
 
     // Convert milliseconds to minutes
     const minutesDifference = timeDifference / (1000 * 60);
-    console.log('minutesDifference', minutesDifference);
+    // console.log("minutesDifference", minutesDifference);
 
     // Check if the difference is more than 2 minutes
     if (minutesDifference > 2) {
@@ -198,7 +204,7 @@ const ScheduleMeetComponent = ({
   };
 
   return (
-    <Dialog visible={visible} onDismiss={onDismiss}>
+    <Dialog visible={visible} onDismiss={onDismiss} style={styles.modalContainer} >
       <IconButton
         icon="close"
         iconColor={colors.gray300}
@@ -208,12 +214,12 @@ const ScheduleMeetComponent = ({
           onDismiss();
         }}
         style={{
-          position: 'absolute',
+          position: "absolute",
           right: -20,
           top: -40,
           borderColor: colors.gray300,
           borderWidth: 2,
-          backgroundColor: 'white',
+          backgroundColor: "white",
         }}
       />
       <Dialog.Title>
@@ -221,10 +227,10 @@ const ScheduleMeetComponent = ({
       </Dialog.Title>
       <Divider />
 
-      <ScrollView style={{ height: '50%' }}>
+      <ScrollView style={{ height: "50%" }}>
         <Dialog.Content>
           <FormControl
-            compType={component.readOnly}
+            compType={component.input}
             control={control}
             watch={watch}
             required={true}
@@ -286,39 +292,40 @@ const ScheduleMeetComponent = ({
 
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // flex: 1,
+    // justifyContent: "center",
+    // alignItems: "center",
+    height:'80%'
   },
   blurBackground: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
     borderRadius: 10,
     padding: moderateScale(25),
-    width: '80%',
+    width: "80%",
     backgroundColor: colors.bgLight,
   },
   labelContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    alignItems: "flex-end",
     marginBottom: 2,
   },
   alertIcon: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginVertical: verticalScale(10),
   },
   title: {
-    textAlign: 'center',
-    fontFamily: 'Inter',
+    textAlign: "center",
+    fontFamily: "Inter",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    flexDirection: "row",
+    justifyContent: "space-evenly",
     margin: verticalScale(20),
   },
   button: {
